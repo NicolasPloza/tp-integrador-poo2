@@ -22,11 +22,12 @@ public class Inmueble {
 	private List<Servicio> servicios;
 	private PoliticaDeCancelacion politicaDeCancelacion;
 	private List<Periodo> periodos;
+	private GestionadorDeNotificaciones gestionadorDeNotificaciones;
 	
 	public Inmueble(double superficie, String pais, String ciudad, int capacidad, String checkIn, String checkOut,
 			List<Calificacion> calificaciones, double precioDefault, TipoInmueble tipoDeInmueble, List<MedioDePago> mediosDePago,
 			List<Servicio> servicios, Propietario propietario, List<Foto> fotos,
-			PoliticaDeCancelacion politica, List<Periodo> periodos) {
+			PoliticaDeCancelacion politica, List<Periodo> periodos, GestionadorDeNotificaciones gestionador) {
 		this.superficie = superficie;
 		this.pais = pais;
 		this.ciudad = ciudad;
@@ -43,6 +44,7 @@ public class Inmueble {
 		this.fotos = fotos;
 		this.politicaDeCancelacion = politica;
 		this.periodos = periodos;
+		this.gestionadorDeNotificaciones = gestionador;
 	}
 	
 	public String getPais() {

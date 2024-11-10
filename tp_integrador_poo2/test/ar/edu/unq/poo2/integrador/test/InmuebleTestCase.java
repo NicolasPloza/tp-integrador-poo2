@@ -33,6 +33,7 @@ class InmuebleTestCase {
 	Inmueble alquiler1;
 	PoliticaDeCancelacion cancelacion;
 	List<Periodo> periodos;
+	GestionadorDeNotificaciones gestionador;
 	
 	@BeforeEach
 	void setUp() {
@@ -52,7 +53,7 @@ class InmuebleTestCase {
 	void testInicializacion() {
 		Inmueble alquiler = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
 				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos,
-				cancelacion, periodos);
+				cancelacion, periodos, gestionador);
 		
 		assertEquals(casa, alquiler.getTipoDeInmueble());
 		assertEquals(servicios, alquiler.getServicio());
