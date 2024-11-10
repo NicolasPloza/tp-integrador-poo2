@@ -3,6 +3,7 @@ package ar.edu.unq.poo2.integrador.inmueble;
 import java.util.List;
 
 import ar.edu.unq.poo2.integrador.*;
+import ar.edu.unq.poo2.integrador.test.Reserva;
 
 public class Inmueble {
 
@@ -112,7 +113,22 @@ public class Inmueble {
 	}
 
 	public void setPrecioDefault(double nuevoPrecioDefault) {
+		if(nuevoPrecioDefault < this.getPrecioDefault()) {
+			this.notificarBajaDePrecio(nuevoPrecioDefault);
+		} 
 		this.precioDefault = nuevoPrecioDefault;
+	}
+	
+	private void notificarBajaDePrecio(double precioANotificar) {
+		this.getGestionadorDeNotificaciones().notificarBajaDePrecio(this.getTipoDeInmueble(), precioANotificar);
+	}
+	
+	public GestionadorDeNotificaciones getGestionadorDeNotificaciones() {
+		return gestionadorDeNotificaciones;
+	}
+
+	public double costoDeCancelacion(Reserva reserva) {
+		return this.getPoliticaDeCancelacion().costo(reserva, this);
 	}
 	
 }

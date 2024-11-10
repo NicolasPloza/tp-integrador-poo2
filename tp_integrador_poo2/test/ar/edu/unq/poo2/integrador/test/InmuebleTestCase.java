@@ -15,6 +15,7 @@ import ar.edu.unq.poo2.integrador.inmueble.MedioDePago;
 import ar.edu.unq.poo2.integrador.inmueble.Periodo;
 import ar.edu.unq.poo2.integrador.inmueble.PoliticaDeCancelacion;
 import ar.edu.unq.poo2.integrador.inmueble.Servicio;
+import ar.edu.unq.poo2.integrador.inmueble.SinCancelacion;
 import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
 
 import static org.mockito.Mockito.*;
@@ -41,11 +42,12 @@ class InmuebleTestCase {
 		servicios = Arrays.asList(mock(Servicio.class), mock(Servicio.class));
 		mediosDePago = Arrays.asList(mock(MedioDePago.class), mock(MedioDePago.class));
 		fotos = Arrays.asList(mock(Foto.class), mock(Foto.class));
-		alquiler1 = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
-				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
-				cancelacion, periodos);
+		gestionador = mock(GestionadorDeNotificaciones.class);
 		cancelacion = mock(Cancelacion.class);
 		periodos = Arrays.asList(mock(Periodo.class), mock(Periodo.class));
+		alquiler1 = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
+				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
+				cancelacion, periodos, gestionador);
 	}
 	
 	@Test
@@ -71,6 +73,9 @@ class InmuebleTestCase {
 		assertEquals(x, alquiler.getPropietario());
 		assertEquals(x, alquiler.getPropietario());
 		assertEquals(cancelacion, alquiler.getPoliticaDeCancelacion());
+		assertEquals(gestionador, alquiler.getGestionadorDeNotificaciones());
+		assertEquals(false, alquiler.getAlquilado());
+		assertEquals(fotos, alquiler.getFotos());
 	}
 	
 	@Test
@@ -87,11 +92,37 @@ class InmuebleTestCase {
 	}
 	
 	@Test
-	void testCambiarPrecio() {
+	void testCambiarPrecioAPrecioMayor() {
 		//exercise
 		alquiler1.setPrecioDefault(4000.0);
 		
 		//verify
 		assertEquals(4000.0, alquiler1.getPrecioDefault());
 	}
+	
+	@Test
+	//verifica que se notifique al gestionador de dependencia que se bajo el precio a uno menor al que tenia
+	void testCambiarPrecioAPrecioMenorYSeNotifica() {
+		//exercise
+		alquiler1.setPrecioDefault(1000.0);
+		
+		//verify
+		verify(alquiler1.getGestionadorDeNotificaciones()).notificarBajaDePrecio(casa, 1000.0);
+	}
+	
+	@Test
+	void testCostoDeCancelacionParaPoliticaSinCancelacion() {
+		//setUp
+		Reserva reserva = mock(Reserva.class);
+		when(reserva.precioParaFechaElegida()).thenReturn(1000.0);
+		SinCancelacion sinCancelacion = mock(SinCancelacion.class);
+		Inmueble casaSinCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
+				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
+				sinCancelacion, periodos, gestionador);
+		when(sinCancelacion.costo(reserva, casaSinCancelacion)).thenReturn(1000.0);
+		
+		//verify
+		assertEquals(1000.0, casaSinCancelacion.costoDeCancelacion(reserva));
+	}
+	
 }
