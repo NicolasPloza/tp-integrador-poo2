@@ -11,6 +11,7 @@ import ar.edu.unq.poo2.integrador.Propietario;
 import ar.edu.unq.poo2.integrador.inmueble.Cancelacion;
 import ar.edu.unq.poo2.integrador.inmueble.Foto;
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
+import ar.edu.unq.poo2.integrador.inmueble.Intermedia;
 import ar.edu.unq.poo2.integrador.inmueble.MedioDePago;
 import ar.edu.unq.poo2.integrador.inmueble.Periodo;
 import ar.edu.unq.poo2.integrador.inmueble.PoliticaDeCancelacion;
@@ -115,14 +116,50 @@ class InmuebleTestCase {
 		//setUp
 		Reserva reserva = mock(Reserva.class);
 		when(reserva.precioParaFechaElegida()).thenReturn(1000.0);
+		
 		SinCancelacion sinCancelacion = mock(SinCancelacion.class);
+		
 		Inmueble casaSinCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
 				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
 				sinCancelacion, periodos, gestionador);
+		
 		when(sinCancelacion.costo(reserva, casaSinCancelacion)).thenReturn(1000.0);
 		
 		//verify
 		assertEquals(1000.0, casaSinCancelacion.costoDeCancelacion(reserva));
+	}
+	
+	@Test 
+	void testCostoDeCancelacionParaPoliticaCancelacion() {
+		//setUp
+		Reserva reserva = mock(Reserva.class);
+		when(reserva.precioParaFechaElegida()).thenReturn(1000.0);
+		
+		Cancelacion cancelacion = mock(Cancelacion.class);
+		
+		Inmueble casaConCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
+				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
+				cancelacion, periodos, gestionador);
+		
+		when(cancelacion.costo(reserva, casaConCancelacion)).thenReturn(100.0);
+		
+		//verify
+		assertEquals(100, casaConCancelacion.costoDeCancelacion(reserva));
+	}
+	
+	@Test
+	void testCostoDeCancelacionParaPoliticaIntermedia() {
+		Reserva reserva = mock(Reserva.class);
+		when(reserva.precioParaFechaElegida()).thenReturn(500.0);
+		Intermedia intermedia = mock(Intermedia.class);
+		
+		Inmueble casaConIntermedia = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
+				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
+				intermedia, periodos, gestionador);
+		
+		when(intermedia.costo(reserva, casaConIntermedia)).thenReturn(250.0);
+		
+		assertEquals(250, casaConIntermedia.costoDeCancelacion(reserva));
 	}
 	
 }
