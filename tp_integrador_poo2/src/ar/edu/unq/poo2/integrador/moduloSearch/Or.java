@@ -1,7 +1,9 @@
-package ar.edu.unq.poo2.integrador;
+package ar.edu.unq.poo2.integrador.moduloSearch;
 
 import java.util.List;
 import java.util.stream.Stream;
+
+import ar.edu.unq.poo2.integrador.Inmueble;
 
 public class Or implements Search {
 	

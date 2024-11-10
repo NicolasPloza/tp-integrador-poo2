@@ -1,5 +1,11 @@
 package ar.edu.unq.poo2.integrador.test;
 import ar.edu.unq.poo2.integrador.*;
+import ar.edu.unq.poo2.integrador.moduloSearch.And;
+import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorCantidadHuespedes;
+import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorCiudad;
+import ar.edu.unq.poo2.integrador.moduloSearch.Or;
+import ar.edu.unq.poo2.integrador.moduloSearch.Search;
+
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
