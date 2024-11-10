@@ -1,5 +1,6 @@
 package ar.edu.unq.poo2.integrador.test;
 import ar.edu.unq.poo2.integrador.*;
+import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 import ar.edu.unq.poo2.integrador.moduloSearch.And;
 import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorCantidadHuespedes;
 import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorCiudad;
