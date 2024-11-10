@@ -11,21 +11,21 @@ public class SitioWeb implements Interesado {
 	}
 
 	@Override
-	public void notificarCancelacion(TipoInmueble tipoDeInmueble) {
+	public void notificarCancelacion(TipoInmueble tipoDeInmueble, String email) {
 		
 	}
 
 	@Override
-	public void notificarReserva() {
+	public void notificarReserva(String email) {
 		
 	}
 
 	@Override
-	public void notificarBajaDePrecio(TipoInmueble tipoDeInmueble, float precio) {
+	public void notificarBajaDePrecio(TipoInmueble tipoDeInmueble, double precio) {
 		this.page.publish(this.mensaje(tipoDeInmueble.getNombre(), precio));
 	}
 	
-	private String mensaje(String tipoDeInmueble, float precio) {
+	private String mensaje(String tipoDeInmueble, double precio) {
 		return "No te pierdas esta oferta: Un inmueble " + tipoDeInmueble + " a tan sólo " + precio + " pesos";
 	}
 
