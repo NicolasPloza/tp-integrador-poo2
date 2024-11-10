@@ -1,6 +1,7 @@
 package ar.edu.unq.poo2.integrador.inmueble;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import ar.edu.unq.poo2.integrador.*;
 import ar.edu.unq.poo2.integrador.test.Reserva;
@@ -130,5 +131,15 @@ public class Inmueble {
 	public double costoDeCancelacion(Reserva reserva) {
 		return this.getPoliticaDeCancelacion().costo(reserva, this);
 	}
-	
+
+	public void agregarCalificacion(Calificacion calificacion) {
+		this.calificaciones.addFirst(calificacion);
+	}
+
+	public int getPromedio(Categoria categoria) {
+		List<Calificacion> categoriasIguales = this.getCalificaciones().stream().filter(calificacion1 -> calificacion1.getCategoria().getNombre() == categoria.getNombre()).toList();
+		int cantidadDeCategoriasIguales = categoriasIguales.size();
+		int puntajeTotalDeUnaMismaCategoria = categoriasIguales.stream().mapToInt(c->c.getPuntaje()).sum();
+		return puntajeTotalDeUnaMismaCategoria / cantidadDeCategoriasIguales;
+	}
 }

@@ -22,6 +22,7 @@ import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +47,7 @@ class InmuebleTestCase {
 		gestionador = mock(GestionadorDeNotificaciones.class);
 		cancelacion = mock(Cancelacion.class);
 		periodos = Arrays.asList(mock(Periodo.class), mock(Periodo.class));
+		calificaciones = new ArrayList<Calificacion>();
 		alquiler1 = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
 				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
 				cancelacion, periodos, gestionador);
@@ -160,6 +162,46 @@ class InmuebleTestCase {
 		when(intermedia.costo(reserva, casaConIntermedia)).thenReturn(250.0);
 		
 		assertEquals(250, casaConIntermedia.costoDeCancelacion(reserva));
+	}
+	
+	@Test
+	void seAgregaUnaCalificacionAlInmueble() {
+		alquiler1.agregarCalificacion(mock(Calificacion.class));
+		
+		assertEquals(1, alquiler1.getCalificaciones().size());
+	}
+	
+	@Test
+	void seCalculaElPromedioDeLaCategoriaBuenTrato() {
+		//setUp
+		calificaciones = new ArrayList<Calificacion>();
+		Categoria buenTrato = mock(Categoria.class);
+		when(buenTrato.getNombre()).thenReturn("buen trato");
+		Categoria buenTrato1 = mock(Categoria.class);
+		when(buenTrato1.getNombre()).thenReturn("buen trato");
+		Categoria iluminacion = mock(Categoria.class);
+		when(iluminacion.getNombre()).thenReturn("iluminacion");
+		
+		Calificacion cBuenTrato = mock(Calificacion.class);
+		when(cBuenTrato.getCategoria()).thenReturn(buenTrato);
+		when(cBuenTrato.getPuntaje()).thenReturn(5);
+		Calificacion cBuenTrato1 = mock(Calificacion.class);
+		when(cBuenTrato1.getCategoria()).thenReturn(buenTrato);
+		when(cBuenTrato1.getPuntaje()).thenReturn(5);
+		Calificacion cIluminacion = mock(Calificacion.class);
+		when(cIluminacion.getCategoria()).thenReturn(iluminacion);
+		
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
+				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
+				cancelacion, periodos, gestionador);
+		
+		hotel.agregarCalificacion(cIluminacion);
+		hotel.agregarCalificacion(cBuenTrato1);
+		hotel.agregarCalificacion(cBuenTrato);
+		
+		assertEquals(5, hotel.getPromedio(buenTrato));
+		
+		
 	}
 	
 }
