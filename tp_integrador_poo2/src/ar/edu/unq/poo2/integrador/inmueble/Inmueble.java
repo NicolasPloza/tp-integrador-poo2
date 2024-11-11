@@ -1,5 +1,8 @@
 package ar.edu.unq.poo2.integrador.inmueble;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -25,6 +28,7 @@ public class Inmueble {
 	private PoliticaDeCancelacion politicaDeCancelacion;
 	private List<Periodo> periodos;
 	private GestionadorDeNotificaciones gestionadorDeNotificaciones;
+	private List<String> comentarios = new ArrayList<String>();
 	
 	public Inmueble(double superficie, String pais, String ciudad, int capacidad, String checkIn, String checkOut,
 			List<Calificacion> calificaciones, double precioDefault, TipoInmueble tipoDeInmueble, List<MedioDePago> mediosDePago,
@@ -141,5 +145,38 @@ public class Inmueble {
 		int cantidadDeCategoriasIguales = categoriasIguales.size();
 		int puntajeTotalDeUnaMismaCategoria = categoriasIguales.stream().mapToInt(c->c.getPuntaje()).sum();
 		return puntajeTotalDeUnaMismaCategoria / cantidadDeCategoriasIguales;
+	}
+
+	public double getPrecioDePeriodo(LocalDate fechaDeInicio, LocalDate fechaDeFin) {
+		double precioDePeriodo = 0.0;
+		while(!fechaDeInicio.isAfter(fechaDeFin.plusDays(1))) {
+			if(this.perteneceAAlgunPeriodo(fechaDeInicio)) {
+				precioDePeriodo += this.getPeriodo(fechaDeInicio).getPrecioPorDia();
+			} else {
+				precioDePeriodo += this.getPrecioDefault();
+			}
+			fechaDeInicio.plusDays(1);
+		} 
+		return precioDePeriodo;
+	}
+	
+	private Periodo getPeriodo(LocalDate fechaDeInicio) {
+		return this.getPeriodos().stream().filter(p->p.esFechaDePeriodo(fechaDeInicio)).findFirst().orElse(null);
+	}
+	
+	private boolean perteneceAAlgunPeriodo(LocalDate fechaDeInicio) {
+		return this.getPeriodos().stream().anyMatch(p->p.esFechaDePeriodo(fechaDeInicio));
+	}
+	
+	public List<Periodo> getPeriodos() {
+		return periodos;
+	}
+
+	public void agregarComentario(String comentario) {
+		this.comentarios.add(comentario);
+	}
+
+	public List<String> getComentarios() {
+		return comentarios;
 	}
 }

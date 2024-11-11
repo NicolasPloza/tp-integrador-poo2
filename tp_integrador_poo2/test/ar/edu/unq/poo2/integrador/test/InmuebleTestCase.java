@@ -22,8 +22,10 @@ import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Array;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 class InmuebleTestCase {
@@ -104,7 +106,7 @@ class InmuebleTestCase {
 	}
 	
 	@Test
-	//verifica que se notifique al gestionador de dependencia que se bajo el precio a uno menor al que tenia
+	//verifica que se1|notifique al gestionador de dependencia que se bajo el precio a uno menor al que tenia
 	void testCambiarPrecioAPrecioMenorYSeNotifica() {
 		//exercise
 		alquiler1.setPrecioDefault(1000.0);
@@ -200,8 +202,38 @@ class InmuebleTestCase {
 		hotel.agregarCalificacion(cBuenTrato);
 		
 		assertEquals(5, hotel.getPromedio(buenTrato));
-		
-		
 	}
+	
+	@Test
+	void seAñadeUnComentarioALaListaDeComentariosDelInmueble() {
+		alquiler1.agregarComentario("es un buen hotel");
+		
+		assertEquals(1, alquiler1.getComentarios().size());
+	}
+	@Test
+	void seObtieneLaListaDePeriodosDeUnInmueble() {
+		assertEquals(2,alquiler1.getPeriodos().size());
+	}
+	
+	/*
+	 * @Test
+	void seCalculaElPrecioParaUnPeriodoEntreDosFechas() {
+		//setUp
+		List<Periodo> periodos1 = new ArrayList<Periodo>();
+		Periodo festival = mock(Periodo.class);
+		when(festival.getPrecioPorDia()).thenReturn(200.0);
+		when(festival.esFechaDePeriodo(null)).thenReturn(true);
+		periodos1.add(festival);
+		
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
+				calificaciones, 100.0, casa, mediosDePago, servicios, x, fotos, 
+				cancelacion, periodos1, gestionador);
+		
+		//verify
+		assertEquals(600.0, hotel.getPrecioDePeriodo(LocalDate.of(2002, 3, 1), LocalDate.of(2002, 3, 5)));
+		verify(festival).getPrecioPorDia();
+		verify(festival).esFechaDePeriodo(mock(LocalDate.class));
+	}
+	 * */
 	
 }
