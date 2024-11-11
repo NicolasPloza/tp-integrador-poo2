@@ -13,7 +13,7 @@ public class Reserva {
 	private Inquilino potencialInquilino;
 	private Propietario propietario;
 	private Inmueble inmueble;
-	private Date fechaIInicio;
+	private Date fechaInicio;
 	private Date fechaFin;
 	private MedioDePago medioDePago;
 	private List<Inquilino> inquilinosInteresados;
@@ -24,7 +24,7 @@ public class Reserva {
 		this.potencialInquilino=inquilino;
 		this.propietario=propietario;
 		this.inmueble=inmueble;
-		this.fechaIInicio=inicio;
+		this.fechaInicio=inicio;
 		this.fechaFin=fin;
 		this.medioDePago=medioDePago;
 		this.inquilinosInteresados=new ArrayList<Inquilino>();
@@ -57,7 +57,7 @@ public class Reserva {
 	}
 	
 	public void notificarCancelacion() {
-		this.gestionador.notificarCancelacion(this.getTipoDeInmueble(), getEmailDelPropietario());
+		this.gestionador.notificarCancelacion(this.getTipoDeInmueble(), this.getEmailDelPropietario());
 	}
 	
 	private TipoInmueble getTipoDeInmueble() {
@@ -79,6 +79,10 @@ public class Reserva {
 	public void procesarCola() {
 		this.setPotenciaInquilino(this.inquilinosInteresados.get(0));
 		this.inquilinosInteresados.remove(0);
+	}
+	
+	public double precioParaFechaElegida() {
+		return this.inmueble.getPrecioParaFecha(this.fechaInicio, this.fechaFin);
 	}
 
 }
