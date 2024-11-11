@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import ar.edu.unq.poo2.integrador.*;
-import ar.edu.unq.poo2.integrador.test.Reserva;
 
 public class Inmueble {
 

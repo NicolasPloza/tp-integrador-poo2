@@ -1,6 +1,6 @@
 package ar.edu.unq.poo2.integrador.inmueble;
 
-import ar.edu.unq.poo2.integrador.test.Reserva;
+import ar.edu.unq.poo2.integrador.Reserva;
 
 public class Cancelacion extends PoliticaDeCancelacion {
 
