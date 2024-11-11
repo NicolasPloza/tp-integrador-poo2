@@ -22,19 +22,19 @@ public class GestionadorDeNotificaciones implements Interesado {
 	}
 
 	@Override
-	public void notificarCancelacion(TipoInmueble tipoDeInmueble) {
+	public void notificarCancelacion(TipoInmueble tipoDeInmueble, String email) {
 		this.interesados.stream()
-		.forEach(interesado -> interesado.notificarCancelacion(tipoDeInmueble));
+		.forEach(interesado -> interesado.notificarCancelacion(tipoDeInmueble, email));
 	}
 
 	@Override
-	public void notificarReserva() {
+	public void notificarReserva(String email) {
 		this.interesados.stream()
-		.forEach(interesado -> interesado.notificarReserva());
+		.forEach(interesado -> interesado.notificarReserva(email));
 	}
 
 	@Override
-	public void notificarBajaDePrecio(TipoInmueble tipoDeInmueble, float precio) {
+	public void notificarBajaDePrecio(TipoInmueble tipoDeInmueble, double precio) {
 		this.interesados.stream()
 		.forEach(interesado -> interesado.notificarBajaDePrecio(tipoDeInmueble, precio));
 	}

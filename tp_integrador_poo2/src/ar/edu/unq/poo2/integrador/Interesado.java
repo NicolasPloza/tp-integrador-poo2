@@ -4,10 +4,10 @@ import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
 
 public interface Interesado {
 	
-	public void notificarCancelacion(TipoInmueble tipoDeInmueble);
+	public void notificarCancelacion(TipoInmueble tipoDeInmueble, String email);
 	
-	public void notificarReserva();
+	public void notificarReserva(String email);
 	
-	public void notificarBajaDePrecio(TipoInmueble tipoDeInmueble, float precio);
+	public void notificarBajaDePrecio(TipoInmueble tipoDeInmueble, double precio);
 
 }

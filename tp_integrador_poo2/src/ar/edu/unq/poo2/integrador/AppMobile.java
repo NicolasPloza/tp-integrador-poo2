@@ -15,17 +15,17 @@ public class AppMobile implements Interesado {
 	}
 
 	@Override
-	public void notificarCancelacion(TipoInmueble tipoDeInmueble) {
+	public void notificarCancelacion(TipoInmueble tipoDeInmueble, String email) {
 		this.window.popUp(this.mensaje(tipoDeInmueble.getNombre()), this.color, this.frontSize);
 	}
 
 	@Override
-	public void notificarReserva() {
+	public void notificarReserva(String email) {
 		
 	}
 
 	@Override
-	public void notificarBajaDePrecio(TipoInmueble tipoDeInmueble, float precio) {
+	public void notificarBajaDePrecio(TipoInmueble tipoDeInmueble, double precio) {
 		
 	}
 	
