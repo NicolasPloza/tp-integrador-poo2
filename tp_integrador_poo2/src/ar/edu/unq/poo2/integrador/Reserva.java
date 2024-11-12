@@ -1,7 +1,7 @@
 package ar.edu.unq.poo2.integrador;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
@@ -13,8 +13,8 @@ public class Reserva {
 	private Inquilino potencialInquilino;
 	private Propietario propietario;
 	private Inmueble inmueble;
-	private Date fechaInicio;
-	private Date fechaFin;
+	private LocalDate fechaInicio;
+	private LocalDate fechaFin;
 	private MedioDePago medioDePago;
 	private List<Inquilino> inquilinosInteresados;
 	private EstadoReserva estado;
@@ -85,11 +85,11 @@ public class Reserva {
 		return this.inmueble.getPrecioParaFecha(this.fechaInicio, this.fechaFin);
 	}
 	
-	public Date getFechaInicio() {
+	public LocalDate getFechaInicio() {
 		return this.fechaInicio;
 	}
 	
-	public Date getFechaFin() {
+	public LocalDate getFechaFin() {
 		return this.fechaFin;
 	}
 
