@@ -84,5 +84,13 @@ public class Reserva {
 	public double precioParaFechaElegida() {
 		return this.inmueble.getPrecioParaFecha(this.fechaInicio, this.fechaFin);
 	}
+	
+	public Date getFechaInicio() {
+		return this.fechaInicio;
+	}
+	
+	public Date getFechaFin() {
+		return this.fechaFin;
+	}
 
 }
