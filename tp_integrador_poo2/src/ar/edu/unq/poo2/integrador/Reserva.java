@@ -20,7 +20,7 @@ public class Reserva {
 	private EstadoReserva estado;
 	private GestionadorDeNotificaciones gestionador;
 	
-	public Reserva(Inquilino inquilino, Propietario propietario, Inmueble inmueble, Date inicio, Date fin, MedioDePago medioDePago, GestionadorDeNotificaciones gestionador) {
+	public Reserva(Inquilino inquilino, Propietario propietario, Inmueble inmueble, LocalDate inicio, LocalDate fin, MedioDePago medioDePago, GestionadorDeNotificaciones gestionador) {
 		this.potencialInquilino=inquilino;
 		this.propietario=propietario;
 		this.inmueble=inmueble;
