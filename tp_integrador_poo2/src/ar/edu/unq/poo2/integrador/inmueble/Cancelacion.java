@@ -8,7 +8,7 @@ public class Cancelacion extends PoliticaDeCancelacion {
 
 	@Override
 	public double costo(Reserva reserva, Inmueble inmueble) {
-		if(LocalDate.now().isBefore(reserva.getFechaInicio().minusDays(10))) {
+		if(reserva.getFechaInicio().minusDays(10).isBefore(LocalDate.now())) {
 			return inmueble.getPrecioDefault() * 2;
 		}
 		else {

@@ -22,11 +22,11 @@ class SinCancelacionTestCase {
 	void testSeCalculaElCostoDeCancelacionDeLaPolitica() {
 		Reserva reserva = mock(Reserva.class);
 		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 11, 11));
+		when(reserva.precioParaFechaElegida()).thenReturn(3000.0);
 		Inmueble hotel = mock(Inmueble.class);
-		when(hotel.getPrecioDefault()).thenReturn(200.0);
 		
 		SinCancelacion sinCancelacion = new SinCancelacion();
 		
-		assertEquals(400.0, sinCancelacion.costo(reserva, hotel));
+		assertEquals(3000.0, sinCancelacion.costo(reserva, hotel));
 	}
 }
