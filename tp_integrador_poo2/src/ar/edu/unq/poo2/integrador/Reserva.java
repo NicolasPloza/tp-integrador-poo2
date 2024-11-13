@@ -20,7 +20,7 @@ public class Reserva {
 	private EstadoReserva estado;
 	private GestionadorDeNotificaciones gestionador;
 	
-	public Reserva(Inquilino inquilino, Propietario propietario, Inmueble inmueble, LocalDate inicio, LocalDate fin, MedioDePago medioDePago, GestionadorDeNotificaciones gestionador) {
+	public Reserva(Inquilino inquilino, Propietario propietario, Inmueble inmueble, LocalDate inicio, LocalDate fin, MedioDePago medioDePago) {
 		this.potencialInquilino=inquilino;
 		this.propietario=propietario;
 		this.inmueble=inmueble;
@@ -28,7 +28,7 @@ public class Reserva {
 		this.fechaFin=fin;
 		this.medioDePago=medioDePago;
 		this.inquilinosInteresados=new ArrayList<Inquilino>();
-		this.gestionador=gestionador;
+		this.gestionador=new GestionadorDeNotificaciones();
 		this.estado=Pendiente.getInstance();
 	}
 	
@@ -82,7 +82,7 @@ public class Reserva {
 	}
 	
 	public double precioParaFechaElegida() {
-		return this.inmueble.getPrecioParaFecha(this.fechaInicio, this.fechaFin);
+		return this.inmueble.getPrecioDePeriodo(this.fechaInicio, this.fechaFin);
 	}
 	
 	public LocalDate getFechaInicio() {
@@ -91,6 +91,10 @@ public class Reserva {
 	
 	public LocalDate getFechaFin() {
 		return this.fechaFin;
+	}
+	
+	public boolean estaFinalizada() {
+		return this.fechaFin.isBefore(LocalDate.now()) && (this.estado == Aceptada.getInstance());
 	}
 
 }
