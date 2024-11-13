@@ -102,9 +102,9 @@ class UsuarioTestCase {
 		usuarioDePrueba.agregarCalificacion(puntualidad_calificacion);
 		
 		//exercise	
-		double promedio_serv = usuarioDePrueba.getPromedio(servicio.getNombre());
-		double promedio_trato = usuarioDePrueba.getPromedio(buenTrato.getNombre());
-		double promedio_puntualidad = usuarioDePrueba.getPromedio(puntualidad.getNombre());
+		double promedio_serv = usuarioDePrueba.getPromedio(servicio);
+		double promedio_trato = usuarioDePrueba.getPromedio(buenTrato);
+		double promedio_puntualidad = usuarioDePrueba.getPromedio(puntualidad);
 			
 		
 		//verify
@@ -128,7 +128,7 @@ class UsuarioTestCase {
 	
 	private Categoria crearMockCategoria(String nombre, String descripcion){
 		
-		Calificacion mockCategoria = mock(Categoria.class);
+		Categoria mockCategoria = mock(Categoria.class);
 		
 		when(mockCategoria.getNombre()).thenReturn(nombre);
 		when(mockCategoria.getDescripcion()).thenReturn(descripcion);

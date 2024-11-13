@@ -4,7 +4,7 @@ public interface Rankeable {
 	
 	public void agregarCalificacion(Calificacion calificacion);
 	
-	public double getPromedio(String nombreDeCategoria);
+	public double getPromedio(Categoria categoria);
 	
 	public double getPromedioTotalDePuntajes();
 }

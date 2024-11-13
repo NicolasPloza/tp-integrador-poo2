@@ -2,13 +2,10 @@ package ar.edu.unq.poo2.integrador.inmueble;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Stream;
-
 import ar.edu.unq.poo2.integrador.*;
 
-public class Inmueble {
+public class Inmueble implements Rankeable{
 
 	private String pais;
 	private String ciudad;
@@ -139,7 +136,7 @@ public class Inmueble {
 		this.calificaciones.addFirst(calificacion);
 	}
 
-	public int getPromedio(Categoria categoria) {
+	public double getPromedio(Categoria categoria) {
 		List<Calificacion> categoriasIguales = this.getCalificaciones().stream().filter(calificacion1 -> calificacion1.getCategoria().getNombre() == categoria.getNombre()).toList();
 		int cantidadDeCategoriasIguales = categoriasIguales.size();
 		int puntajeTotalDeUnaMismaCategoria = categoriasIguales.stream().mapToInt(c->c.getPuntaje()).sum();
@@ -177,5 +174,22 @@ public class Inmueble {
 
 	public List<String> getComentarios() {
 		return comentarios;
+	}
+	
+	public double getPromedioTotalDePuntajes() {
+		
+		long cantidadDePuntajes;
+		Double totalPuntajes;
+		
+		totalPuntajes=calificaciones.stream()
+									.mapToDouble( c -> c.getPuntaje() )
+									.sum();
+		
+		cantidadDePuntajes =  calificaciones.stream()
+											.count();
+		
+		double promedio = totalPuntajes/cantidadDePuntajes;
+		
+		return Math.round(promedio * 100.0) / 100.0;
 	}
 }

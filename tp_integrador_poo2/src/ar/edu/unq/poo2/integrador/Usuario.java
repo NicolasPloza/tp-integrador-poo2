@@ -55,21 +55,24 @@ public class Usuario implements Rankeable{
 		cantidadDePuntajes =  calificaciones.stream()
 											.count();
 		
-		return totalPuntajes/cantidadDePuntajes;
+		double promedio = totalPuntajes/cantidadDePuntajes;
+		
+		return Math.round(promedio * 100.0) / 100.0;
 	}
 
-	public double getPromedio(String categoria) {
+	
+	public double getPromedio(Categoria categoria) {
 		
 		long cantidadDePuntajes;
 		double totalPuntajes;
 		
 		totalPuntajes=calificaciones.stream()
-							.filter( c -> c.getCategoria().getNombre() == categoria )
+							.filter( c -> c.getCategoria().getNombre() == categoria.getNombre() )
 							.mapToDouble( c -> c.getPuntaje() )
 							.sum();
 		
 		cantidadDePuntajes =  calificaciones.stream()
-							.filter( c -> c.getCategoria().getNombre() == categoria )
+							.filter( c -> c.getCategoria().getNombre() == categoria.getNombre() )
 							.count();
 		
 		
