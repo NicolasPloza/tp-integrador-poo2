@@ -14,4 +14,8 @@ public class TipoInmueble {
 		return this.nombre;
 	}
 
+	public Object getDescripcion() {
+		return descripcion;
+	}
+
 }

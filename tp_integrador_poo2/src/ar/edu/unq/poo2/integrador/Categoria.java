@@ -12,4 +12,8 @@ public class Categoria {
 	public String getNombre() {
 		return nombre;
 	}
+
+	public Object getDescripcion() {
+		return descripcion;
+	}
 }
