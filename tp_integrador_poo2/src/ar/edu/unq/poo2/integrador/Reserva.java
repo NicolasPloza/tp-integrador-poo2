@@ -96,5 +96,17 @@ public class Reserva {
 	public boolean estaFinalizada() {
 		return this.fechaFin.isBefore(LocalDate.now()) && (this.estado == Aceptada.getInstance());
 	}
+	
+	public Inquilino getPotencialInquilino() {
+		return this.potencialInquilino;
+	}
+	
+	public Propietario getPropietario() {
+		return this.propietario;
+	}
+	
+	public Inmueble getInmueble() {
+		return this.inmueble;
+	}
 
 }
