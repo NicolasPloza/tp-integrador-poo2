@@ -29,7 +29,7 @@ public class AppMobile implements Interesado {
 		
 	}
 	
-	private String mensaje(String tipoDeInmueble) {
+	public String mensaje(String tipoDeInmueble) {
 		return "El/la " + tipoDeInmueble + " que te interesa se ha liberado! Corre a reservarlo!";
 	}
 

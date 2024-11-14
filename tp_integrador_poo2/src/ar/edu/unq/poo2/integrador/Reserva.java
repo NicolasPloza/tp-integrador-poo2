@@ -52,7 +52,7 @@ public class Reserva {
 		this.gestionador.notificarReserva(this.getEmailDelInquilino());
 	}
 	
-	private String getEmailDelInquilino() {
+	public String getEmailDelInquilino() {
 		return this.potencialInquilino.getEmail();
 	}
 	
@@ -60,11 +60,11 @@ public class Reserva {
 		this.gestionador.notificarCancelacion(this.getTipoDeInmueble(), this.getEmailDelPropietario());
 	}
 	
-	private TipoInmueble getTipoDeInmueble() {
+	public TipoInmueble getTipoDeInmueble() {
 		return this.inmueble.getTipoDeInmueble();
 	}
 	
-	private String getEmailDelPropietario() {
+	public String getEmailDelPropietario() {
 		return this.propietario.getEmail();
 	}
 	
@@ -94,7 +94,7 @@ public class Reserva {
 	}
 	
 	public boolean estaFinalizada() {
-		return this.fechaFin.isBefore(LocalDate.now()) && (this.estado == Aceptada.getInstance());
+		return this.fechaFin.isBefore(LocalDate.now()) && (this.estado.estaAceptada());
 	}
 	
 	public Inquilino getPotencialInquilino() {
@@ -107,6 +107,10 @@ public class Reserva {
 	
 	public Inmueble getInmueble() {
 		return this.inmueble;
+	}
+	
+	public void setGestionador(GestionadorDeNotificaciones gestionador) {
+		this.gestionador = gestionador;
 	}
 
 }

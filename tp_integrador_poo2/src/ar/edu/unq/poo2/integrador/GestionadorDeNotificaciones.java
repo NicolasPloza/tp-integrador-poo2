@@ -20,6 +20,10 @@ public class GestionadorDeNotificaciones implements Interesado {
 	public void unregister(Interesado interesado) {
 		this.interesados.remove(interesado);
 	}
+	
+	public boolean tieneInteresados() {
+		return !this.interesados.isEmpty();
+	}
 
 	@Override
 	public void notificarCancelacion(TipoInmueble tipoDeInmueble, String email) {

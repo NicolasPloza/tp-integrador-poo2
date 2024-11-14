@@ -5,5 +5,7 @@ public interface EstadoReserva {
 	public void concretar(Reserva reserva);
 	
 	public void cancelar(Reserva reserva);
+	
+	public boolean estaAceptada();
 
 }

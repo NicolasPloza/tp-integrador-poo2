@@ -25,7 +25,7 @@ public class SitioWeb implements Interesado {
 		this.page.publish(this.mensaje(tipoDeInmueble.getNombre(), precio));
 	}
 	
-	private String mensaje(String tipoDeInmueble, double precio) {
+	public String mensaje(String tipoDeInmueble, double precio) {
 		return "No te pierdas esta oferta: Un inmueble " + tipoDeInmueble + " a tan sólo " + precio + " pesos";
 	}
 

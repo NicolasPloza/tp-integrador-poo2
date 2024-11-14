@@ -26,4 +26,9 @@ public class Pendiente implements EstadoReserva {
 		
 	}
 
+	@Override
+	public boolean estaAceptada() {
+		return false;
+	}
+
 }

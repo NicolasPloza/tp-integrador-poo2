@@ -25,4 +25,9 @@ public class Cancelada implements EstadoReserva {
 		
 	}
 
+	@Override
+	public boolean estaAceptada() {
+		return false;
+	}
+
 }
