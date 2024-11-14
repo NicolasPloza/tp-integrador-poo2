@@ -11,8 +11,8 @@ public class Propietario extends Usuario{
 		
 	}
 	
-	public Propietario(String nombre, String email, int tel, LocalDate fechaDeIngreso) {
-		super(nombre,email,tel);
+	public Propietario(String nombre, String email, int tel, LocalDate fechaDeIngreso, Sistema sistema) {
+		super(nombre,email,tel,sistema);
 		this.fechaDeIngreso = fechaDeIngreso;
 	}
 

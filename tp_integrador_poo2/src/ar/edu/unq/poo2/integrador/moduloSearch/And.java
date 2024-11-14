@@ -1,23 +1,28 @@
 package ar.edu.unq.poo2.integrador.moduloSearch;
 
-import java.util.List;
-
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public class And implements Search {
+public class And extends Search {
 	
-	private Search s1;
-	private Search s2;
+	private Search searchIzquierdo;
+	private Search searchDerecho;
 	
 	public And(Search s1, Search s2) {
-		this.s1 = s1;
-		this.s2 = s2;
+		this.searchIzquierdo = s1;
+		this.searchDerecho = s2;
 	}
 	
-	@Override
-	public List<Inmueble> filtrar(List<Inmueble> inmuebles) {
+	/*public List<Inmueble> filtrar(List<Inmueble> inmuebles) {
 		
-		return  s2.filtrar(s1.filtrar(inmuebles)) ;
+		return inmuebles.stream()
+				.filter((i)-> cumpleCondicion(i))
+				.toList();
+	}*/
+	
+	@Override
+	public boolean cumpleCondicion(Inmueble inmueble) {
+		return 	searchIzquierdo.cumpleCondicion(inmueble) && 
+				searchDerecho.cumpleCondicion(inmueble);
 	}
 
 }

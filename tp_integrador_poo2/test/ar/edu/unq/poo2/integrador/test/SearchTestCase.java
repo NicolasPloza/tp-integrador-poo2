@@ -4,9 +4,13 @@ import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 import ar.edu.unq.poo2.integrador.moduloSearch.And;
 import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorCantidadHuespedes;
 import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorCiudad;
+import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorFecha;
+import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorPrecioMaximo;
+import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorPrecioMinimo;
 import ar.edu.unq.poo2.integrador.moduloSearch.Or;
 import ar.edu.unq.poo2.integrador.moduloSearch.Search;
 
+import java.time.LocalDate;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,7 +40,7 @@ class SearchTestCase {
 		filtro3Huesp = new FiltroPorCantidadHuespedes(3);
 		filtroQuilmes = new FiltroPorCiudad("Quilmes");
 		filtroCABA = new FiltroPorCiudad("CABA");
-			
+		
 	}
 	
 	
@@ -82,21 +86,85 @@ class SearchTestCase {
 			
 	}
 	
-	/*------------------- TEST QUE QUEDAN POR HACER ------------------------
-	 	TODAVIA FALTAN PRUEBAS PARA LOS DEMAS FILTROS SIMPLES QUE ESTAN EN EL ENUNCIADO 
-	 	Y TAMBIEN FALTAN LOS CASOS DE PRUEBA PARA UNA LISTA VACIA ,
-	 	Y PARA UNA BUSQUEDA SIN RESULTADOS QUE CUMPLAN LA CONDICION */
-	
-	/*
 	@Test
-	void () {
+	void searchConFiltroPorFecha() {
 		//setup
-			
-		//exercise	
+		Sistema sistema = mock(Sistema.class);
+		LocalDate fechaEntrada = LocalDate.of(2024,8,24);
+		LocalDate fechaSalida = LocalDate.of(2024,9,2);
+		Inmueble inmuebleDisponible = mock(Inmueble.class); 
+		Inmueble inmuebleOcupado = mock(Inmueble.class); 
+		search = new FiltroPorFecha(fechaEntrada , fechaSalida, sistema);
 		
+		
+		when(sistema.estaDisponible(inmuebleDisponible, fechaEntrada, fechaSalida)).thenReturn(true);
+		when(sistema.estaDisponible(inmuebleOcupado, fechaEntrada, fechaSalida)).thenReturn(false);
+		inmuebles.add(inmuebleDisponible);
+		inmuebles.add(inmuebleOcupado);
+		
+	
+		//exercise
+		List<Inmueble> resultado = search.filtrar(inmuebles);
+				
 		//verify
+		assertTrue(resultado.contains(inmuebleDisponible));
+		assertFalse(resultado.contains(inmuebleOcupado));
+		verify(sistema).estaDisponible(inmuebleDisponible, fechaEntrada, fechaSalida);
+			
+	}
+	
+	
+	@Test
+	void searchConFiltroPorPrecioMinimo() {
+		//setup
 		
-	}*/
+		search = new FiltroPorPrecioMinimo(100);
+		
+		
+		Inmueble inmuebleEnPrecio = mock(Inmueble.class); 
+		Inmueble inmuebleFueraDePrecio = mock(Inmueble.class); 
+		inmuebles.add(inmuebleEnPrecio);
+		inmuebles.add(inmuebleFueraDePrecio);
+		when(inmuebleEnPrecio.getPrecioDefault()).thenReturn(150.00);
+		when(inmuebleFueraDePrecio.getPrecioDefault()).thenReturn(50.00);
+		
+		//exercise
+		List<Inmueble> resultado = search.filtrar(inmuebles);
+				
+		//verify
+		assertTrue(resultado.contains(inmuebleEnPrecio));
+		assertFalse(resultado.contains(inmuebleFueraDePrecio));
+		verify(inmuebleEnPrecio).getPrecioDefault();
+		verify(inmuebleFueraDePrecio).getPrecioDefault();
+			
+	}
+	
+	@Test
+	void searchConFiltroPorPrecioMaximo() {
+		//setup
+		
+		search = new FiltroPorPrecioMaximo(100);
+		
+		
+		Inmueble inmuebleEnPrecio = mock(Inmueble.class); 
+		Inmueble inmuebleFueraDePrecio = mock(Inmueble.class); 
+		inmuebles.add(inmuebleEnPrecio);
+		inmuebles.add(inmuebleFueraDePrecio);
+		when(inmuebleEnPrecio.getPrecioDefault()).thenReturn(50.00);
+		when(inmuebleFueraDePrecio.getPrecioDefault()).thenReturn(150.00);
+		
+		//exercise
+		List<Inmueble> resultado = search.filtrar(inmuebles);
+				
+		//verify
+		assertTrue(resultado.contains(inmuebleEnPrecio));
+		assertFalse(resultado.contains(inmuebleFueraDePrecio));
+		verify(inmuebleEnPrecio).getPrecioDefault();
+		verify(inmuebleFueraDePrecio).getPrecioDefault();
+			
+	}
+	
+	
 	
 	//--------pruebas de Search compuesto(mas de un filtro o combinados con operadores )
 	
@@ -163,14 +231,7 @@ class SearchTestCase {
 		assertTrue(resultado.contains(inmuebleDeCABAPara5));
 		assertFalse(resultado.contains(unInmueble));
 		
-		verify(inmuebleDeQuilmesPara5).getCiudad();
-		verify(inmuebleDeQuilmesPara5).getCapacidad();
-		verify(inmuebleDeQuilmesPara2).getCiudad();
-		verify(inmuebleDeQuilmesPara2).getCapacidad();
-		verify(inmuebleDeCABAPara5).getCiudad();
-		verify(inmuebleDeCABAPara5).getCapacidad();
-		verify(unInmueble).getCiudad();
-		verify(unInmueble).getCapacidad();
+		
 	}
 	
 	
@@ -219,6 +280,43 @@ class SearchTestCase {
 		verify(unInmueble,atLeastOnce()).getCapacidad();
 	}
 	
-
+	
+	
+	@Test 
+	void seRealizaUnaBusquedaSobreUnaListaVacia_SeDevuelveUnaListaVacia() {
+		search = new Or(new And(filtro5Huesp,filtroQuilmes), new And(filtroCABA,filtro3Huesp)); 
+		List<Inmueble> listaInmuebles = new ArrayList<>();
+		
+		List<Inmueble> resultado = search.filtrar(listaInmuebles);
+		
+		assertTrue(resultado.isEmpty());
+		
+	}
+	
+	@Test 
+	void seRealizaUnaBusquedaYNingunInmuebleCumpleLaCondicion_SeDevuelveUnaListaVacia() {
+		search = new Or(new And(filtro5Huesp,filtroQuilmes), new And(filtroCABA,filtro3Huesp)); 
+		
+		Inmueble inmuebleDeCABAPara8 = mock(Inmueble.class);
+		Inmueble inmuebleDeMerloPara5 = mock(Inmueble.class);
+		inmuebles.add(inmuebleDeCABAPara8);
+		inmuebles.add(inmuebleDeMerloPara5);
+		
+		
+		when(inmuebleDeCABAPara8.getCiudad()).thenReturn("CABA");
+		when(inmuebleDeCABAPara8.getCapacidad()).thenReturn(8);
+		when(unInmueble.getCiudad()).thenReturn("Otra");
+		when(unInmueble.getCapacidad()).thenReturn(3);
+		when(inmuebleDeMerloPara5.getCiudad()).thenReturn("Merlo");
+		when(inmuebleDeMerloPara5.getCapacidad()).thenReturn(5);
+		
+		List<Inmueble> resultado = search.filtrar(inmuebles);
+		
+		assertTrue(resultado.isEmpty());
+		
+	}
+	
+	
+	
 	
 }

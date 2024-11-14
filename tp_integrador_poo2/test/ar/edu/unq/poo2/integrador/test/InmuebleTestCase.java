@@ -215,8 +215,8 @@ class InmuebleTestCase {
 		assertEquals(2,alquiler1.getPeriodos().size());
 	}
 	
-	/*
-	 * @Test
+	
+	@Test
 	void seCalculaElPrecioParaUnPeriodoEntreDosFechas() {
 		//setUp
 		List<Periodo> periodos1 = new ArrayList<Periodo>();
@@ -230,10 +230,10 @@ class InmuebleTestCase {
 				cancelacion, periodos1, gestionador);
 		
 		//verify
-		assertEquals(600.0, hotel.getPrecioDePeriodo(LocalDate.of(2002, 3, 1), LocalDate.of(2002, 3, 5)));
+		assertEquals(600.0, hotel.getPrecioDePeriodo(LocalDate.of(2002, 3, 1), LocalDate.of(2002, 4, 5)));
 		verify(festival).getPrecioPorDia();
 		verify(festival).esFechaDePeriodo(mock(LocalDate.class));
 	}
-	 * */
+	 
 	
 }

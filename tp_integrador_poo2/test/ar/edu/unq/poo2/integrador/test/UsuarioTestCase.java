@@ -16,10 +16,12 @@ class UsuarioTestCase {
 	private Categoria servicio;
 	private Categoria buenTrato ;
 	private Categoria puntualidad ;
+	private Sistema sistema;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		usuarioDePrueba = new Usuario("nombre apellido", "email@mail.com", 1554987566);
+		sistema = mock(Sistema.class);
+		usuarioDePrueba = new Usuario("nombre apellido", "email@mail.com", 1554987566, sistema);
 		puntualidad = crearMockCategoria("Puntualidad", "descripcion");
 		buenTrato = crearMockCategoria("Buen trato", "descripcion");
 		servicio = crearMockCategoria("Servicio", "descripcion");
@@ -31,7 +33,7 @@ class UsuarioTestCase {
 		String email = "useremail@mail.com";
 		int tel = 1522334455;
 		
-		Usuario user = new Usuario(nombre, email, tel);
+		Usuario user = new Usuario(nombre, email, tel, sistema);
 		
 		assertEquals(nombre, user.getNombre());
 		assertEquals(email, user.getEmail());

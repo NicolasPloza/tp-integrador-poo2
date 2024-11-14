@@ -1,10 +1,8 @@
 package ar.edu.unq.poo2.integrador.moduloSearch;
 
-import java.util.List;
-
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public class FiltroPorCiudad implements Search {
+public class FiltroPorCiudad extends Search {
 
 	private String ciudad;
 	
@@ -18,14 +16,12 @@ public class FiltroPorCiudad implements Search {
 		return this.ciudad;
 	}
 	
-	@Override
-	public List<Inmueble> filtrar(List<Inmueble> inmuebles) {
-		
-		return inmuebles.stream()
-						.filter((i)-> i.getCiudad() == this.getCiudad())
-						.toList();
-	}
 	
+	
+	@Override
+	public boolean cumpleCondicion(Inmueble inmueble){
+		return inmueble.getCiudad() == this.getCiudad();
+	}
 	
 	
 }

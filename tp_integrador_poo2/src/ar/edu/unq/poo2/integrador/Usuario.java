@@ -7,18 +7,19 @@ public class Usuario implements Rankeable{
 	private String nombre;
 	private String email;
 	private int telefono;
+	private Sistema sistema;
 	private List<Calificacion> calificaciones = new ArrayList<Calificacion>();
 	
 	public Usuario() {
 		
 	}
 	
-	public Usuario(String nombre, String email, int tel) {
+	public Usuario(String nombre, String email, int tel, Sistema sistema) {
 		super();
 		this.nombre = nombre;
 		this.email = email;
 		this.telefono = tel;
-				
+		this.sistema = sistema;	
 	}
 
 	public String getNombre() {

@@ -151,7 +151,7 @@ public class Inmueble implements Rankeable{
 			} else {
 				precioDePeriodo += this.getPrecioDefault();
 			}
-			fechaDeInicio.plusDays(1);
+			fechaDeInicio = fechaDeInicio.plusDays(1);
 		} 
 		return precioDePeriodo;
 	}

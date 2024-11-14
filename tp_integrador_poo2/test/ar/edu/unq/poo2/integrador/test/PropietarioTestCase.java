@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ar.edu.unq.poo2.integrador.Propietario;
+import ar.edu.unq.poo2.integrador.Sistema;
+import static org.mockito.Mockito.*;
 
 class PropietarioTestCase {
 	
@@ -23,9 +25,10 @@ class PropietarioTestCase {
 		String nombre = "Juan Rodrigez";
 		String email = "email@mail.com";
 		int tel = 1554987566;
+		Sistema sistema = mock(Sistema.class);
 		LocalDate fechaDeIngreso = LocalDate.of(2022, 8, 24);
 		
-		Propietario juan = new Propietario(nombre, email, tel, fechaDeIngreso);
+		Propietario juan = new Propietario(nombre, email, tel, fechaDeIngreso, sistema);
 		
 		assertEquals(juan.getNombre() , nombre);
 		assertEquals(juan.getEmail() , email);

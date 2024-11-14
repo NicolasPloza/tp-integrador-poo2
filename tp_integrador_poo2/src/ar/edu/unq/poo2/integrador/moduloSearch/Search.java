@@ -3,6 +3,16 @@ import java.util.*;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public interface Search {
-	public List<Inmueble> filtrar(List<Inmueble> inmuebles);
+public abstract class Search {
+
+	
+	public final List<Inmueble> filtrar(List<Inmueble> inmuebles) {
+		
+		return inmuebles.stream()
+						.filter((i) -> this.cumpleCondicion(i))
+						.toList();
+	}
+	
+	public abstract boolean cumpleCondicion(Inmueble inmueble);
+	
 }

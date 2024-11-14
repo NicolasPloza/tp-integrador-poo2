@@ -1,10 +1,8 @@
 package ar.edu.unq.poo2.integrador.moduloSearch;
 
-import java.util.List;
-
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public class FiltroPorCantidadHuespedes implements Search {
+public class FiltroPorCantidadHuespedes extends Search {
 	
 	private int cantHuespedes;
 	
@@ -18,11 +16,8 @@ public class FiltroPorCantidadHuespedes implements Search {
 	}
 	
 	@Override
-	public List<Inmueble> filtrar(List<Inmueble> inmuebles) {
-		
-		return inmuebles.stream()
-						.filter((i) -> i.getCapacidad() == this.getCantidadHuespedes())
-						.toList();
+	public boolean cumpleCondicion(Inmueble inmueble){
+		return inmueble.getCapacidad() == this.getCantidadHuespedes();
 	}
-
+	
 }
