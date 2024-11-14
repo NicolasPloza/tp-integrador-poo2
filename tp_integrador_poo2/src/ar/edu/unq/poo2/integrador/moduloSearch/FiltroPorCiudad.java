@@ -6,7 +6,6 @@ public class FiltroPorCiudad extends Search {
 
 	private String ciudad;
 	
-	
 	public FiltroPorCiudad(String ciudad) {
 		this.ciudad = ciudad;	
 	}
