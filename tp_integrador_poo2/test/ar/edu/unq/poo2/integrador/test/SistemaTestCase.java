@@ -5,6 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -207,6 +209,48 @@ class SistemaTestCase {
 		sis.registrar(reserva2);
 		
 		assertEquals(reservasDeInquilino, sis.reservasDeInquilinoEnCiudad(x, "Rosario"));
+	}
+	
+	@Test
+	void testSeVerificaQueUnInmuebleEsteDisponibleEnUnPeriodo() {	
+		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024,11, 3));
+		when(reserva.getInmueble()).thenReturn(casa);
+		when(reserva.getFechaFin()).thenReturn(LocalDate.of(2024,11, 10));
+		
+		when(reserva1.getFechaInicio()).thenReturn(LocalDate.of(2024,11, 5));
+		when(reserva1.getInmueble()).thenReturn(hotel);
+		when(reserva1.getFechaFin()).thenReturn(LocalDate.of(2024,11, 15));
+		
+		when(reserva2.getFechaInicio()).thenReturn(LocalDate.of(2024,12, 5));
+		when(reserva2.getInmueble()).thenReturn(hotel);
+		when(reserva2.getFechaFin()).thenReturn(LocalDate.of(2024,12, 30));
+		
+		sis.registrar(reserva);
+		sis.registrar(reserva1);
+		sis.registrar(reserva2);
+		
+		assertTrue(sis.estaDisponible(casa, LocalDate.of(2024, 11, 5), LocalDate.of(2024, 11, 8)));
+	}
+	
+	@Test
+	void seObtieneLasReservasParaUnPeriodoDado() {
+		List<Reserva> reservas = new ArrayList<Reserva>();
+		reservas.add(reserva);
+		reservas.add(reserva1);
+		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024,11, 3));
+		when(reserva.getFechaFin()).thenReturn(LocalDate.of(2024,11, 10));
+
+		when(reserva1.getFechaInicio()).thenReturn(LocalDate.of(2024,11, 5));
+		when(reserva1.getFechaFin()).thenReturn(LocalDate.of(2024,11, 15));
+		
+		when(reserva2.getFechaInicio()).thenReturn(LocalDate.of(2024,12, 5));
+		when(reserva2.getFechaFin()).thenReturn(LocalDate.of(2024,12, 15));
+		
+		sis.registrar(reserva);
+		sis.registrar(reserva1);
+		sis.registrar(reserva2);
+		
+		assertEquals(reservas, sis.getReservasParaPeriodo(LocalDate.of(2024, 11, 1), LocalDate.of(2024,11,30)));
 	}
 	
 }

@@ -110,15 +110,11 @@ public class Sistema {
 				.anyMatch( r -> r.getInmueble() == inmuebleDisponible);
 	}
 
-	private List<Reserva> getReservasParaPeriodo(LocalDate fechaEntrada, LocalDate fechaSalida) {
+	public List<Reserva> getReservasParaPeriodo(LocalDate fechaEntrada, LocalDate fechaSalida) {
 		
 		return this.getReservas()
 				   .stream()
 				   .filter( r -> r.getFechaInicio().isAfter(fechaEntrada) && r.getFechaInicio().isBefore(fechaSalida))
 				   .toList();
 	}
-
-	
-
-	
 }

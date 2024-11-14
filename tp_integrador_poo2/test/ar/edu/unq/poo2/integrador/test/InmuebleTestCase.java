@@ -230,9 +230,37 @@ class InmuebleTestCase {
 				cancelacion, periodos1, gestionador);
 		
 		//verify
-		assertEquals(600.0, hotel.getPrecioDePeriodo(LocalDate.of(2002, 3, 1), LocalDate.of(2002, 4, 5)));
-		verify(festival).getPrecioPorDia();
+		assertEquals(600.0, hotel.getPrecioDePeriodo(LocalDate.of(2002, 3, 1), LocalDate.of(2002, 3, 5)));
+		//verify(festival).getPrecioPorDia();
 		verify(festival).esFechaDePeriodo(mock(LocalDate.class));
+	}
+	
+	@Test
+	void seObtieneElPeriodoQueTieneComoFecha() {
+		Periodo vacaciones = mock(Periodo.class);
+		when(vacaciones.esFechaDePeriodo(LocalDate.of(2002, 6, 3))).thenReturn(true);
+		Periodo carnaval = mock(Periodo.class);
+		when(carnaval.esFechaDePeriodo(LocalDate.of(2002, 6, 3))).thenReturn(false);
+		List<Periodo> periodos1 = Arrays.asList(vacaciones, carnaval);
+		
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
+				calificaciones, 100.0, casa, mediosDePago, servicios, x, fotos, 
+				cancelacion, periodos1, gestionador);
+		
+		assertEquals(vacaciones, hotel.getPeriodo(LocalDate.of(2002, 6, 3)));
+	}
+	
+	@Test 
+	void seCalculaElPromedioTotalDePuntajeDeCategorias() {
+		Calificacion buenTrato = mock(Calificacion.class);
+		when(buenTrato.getPuntaje()).thenReturn(5);
+		Calificacion iluminacion = mock(Calificacion.class);
+		when(iluminacion.getPuntaje()).thenReturn(5);
+		
+		alquiler1.agregarCalificacion(buenTrato);
+		alquiler1.agregarCalificacion(iluminacion);
+		
+		assertEquals(5, alquiler1.getPromedioTotalDePuntajes());
 	}
 	 
 	

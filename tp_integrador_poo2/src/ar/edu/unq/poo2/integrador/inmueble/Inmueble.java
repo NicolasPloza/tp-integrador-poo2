@@ -156,7 +156,7 @@ public class Inmueble implements Rankeable{
 		return precioDePeriodo;
 	}
 	
-	private Periodo getPeriodo(LocalDate fechaDeInicio) {
+	public Periodo getPeriodo(LocalDate fechaDeInicio) {
 		return this.getPeriodos().stream().filter(p->p.esFechaDePeriodo(fechaDeInicio)).findFirst().orElse(null);
 	}
 	
