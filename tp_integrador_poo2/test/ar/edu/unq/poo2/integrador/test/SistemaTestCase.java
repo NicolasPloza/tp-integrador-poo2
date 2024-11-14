@@ -35,6 +35,7 @@ class SistemaTestCase {
 	TipoInmueble duplex;
 	List<Servicio> servicios;
 	List<TipoInmueble> tiposInmuebles;
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		sis = new Sistema();
@@ -57,6 +58,13 @@ class SistemaTestCase {
 		sis.registrar(mock(Reserva.class));
 		
 		assertEquals(1, sis.getReservas().size());
+	}
+	
+	@Test
+	void testSeRegistraUnInmueble() {
+		sis.registrarInmueble(mock(Inmueble.class));
+		
+		assertEquals(1, sis.getInmuebles().size());
 	}
 	
 	@Test

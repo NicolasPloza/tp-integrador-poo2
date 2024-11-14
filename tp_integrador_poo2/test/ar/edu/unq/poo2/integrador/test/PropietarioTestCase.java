@@ -9,25 +9,31 @@ import org.junit.jupiter.api.Test;
 
 import ar.edu.unq.poo2.integrador.Propietario;
 import ar.edu.unq.poo2.integrador.Sistema;
+import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
+
 import static org.mockito.Mockito.*;
 
 class PropietarioTestCase {
-	
-	
+	String nombre;
+	String email;
+	int tel;
+	Sistema sistema;
+	LocalDate fechaDeIngreso ;
+	Propietario propietario;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		
+		nombre = "Juan Rodrigez";
+		email = "email@mail.com";
+		tel = 1554987566;
+		sistema = mock(Sistema.class);
+		fechaDeIngreso = LocalDate.of(2022, 8, 24);
+		propietario = new Propietario(nombre, email, tel, fechaDeIngreso, sistema);
 	}
 
 	@Test
 	void test_creacionDePropietarioConSusDatos() {
-		String nombre = "Juan Rodrigez";
-		String email = "email@mail.com";
-		int tel = 1554987566;
-		Sistema sistema = mock(Sistema.class);
-		LocalDate fechaDeIngreso = LocalDate.of(2022, 8, 24);
-		
+
 		Propietario juan = new Propietario(nombre, email, tel, fechaDeIngreso, sistema);
 		
 		assertEquals(juan.getNombre() , nombre);
@@ -51,6 +57,21 @@ class PropietarioTestCase {
 		assertEquals(LocalDate.of(2022, 11, 11), propietario.getFechaDeIngreso());
 		assertEquals(2, anhosQueLlevaRegistrado);
 		
+		
+	}
+	
+	@Test
+	void test_propietarioDaDeAltaInmueble() {
+		//setup
+		Inmueble inmueble = mock(Inmueble.class);
+	
+		
+		//exercise
+		propietario.realizarAlta(inmueble);
+		
+		//verify
+		assertFalse( propietario.getInmuebles().isEmpty());
+		verify(sistema).registrarInmueble(inmueble);
 		
 	}
 	

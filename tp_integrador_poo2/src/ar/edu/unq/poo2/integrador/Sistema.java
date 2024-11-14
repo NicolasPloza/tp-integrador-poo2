@@ -1,6 +1,8 @@
 package ar.edu.unq.poo2.integrador;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
@@ -13,6 +15,18 @@ public class Sistema {
 	private List<TipoInmueble> inmueblesAceptados = new ArrayList<TipoInmueble>();
 	private List<Servicio> serviciosAceptados = new ArrayList<Servicio>();
 	private List<Usuario> usuarios = new ArrayList<Usuario>(); 
+	private List<Inmueble> inmuebles = new ArrayList<Inmueble>();
+	
+	public void registrarInmueble(Inmueble inmueble) {
+		
+		this.inmuebles.add(inmueble);
+	}
+	
+	public List<Inmueble> getInmuebles() {
+		
+		return this.inmuebles;
+	}
+	
 	public void registrar(Reserva reserva) {
 		reservas.add(reserva);
 	}
@@ -86,4 +100,25 @@ public class Sistema {
 	public List<TipoInmueble> getTipoDeInmueblesAceptados() {
 		return inmueblesAceptados;
 	}
+	
+	//------------------------------------------------------------------------------------------------------
+	
+	public boolean estaDisponible(Inmueble inmuebleDisponible, LocalDate fechaEntrada, LocalDate fechaSalida) {
+		
+		return	this.getReservasParaPeriodo(fechaEntrada, fechaSalida)
+				.stream()
+				.anyMatch( r -> r.getInmueble() == inmuebleDisponible);
+	}
+
+	private List<Reserva> getReservasParaPeriodo(LocalDate fechaEntrada, LocalDate fechaSalida) {
+		
+		return this.getReservas()
+				   .stream()
+				   .filter( r -> r.getFechaInicio().isAfter(fechaEntrada) && r.getFechaInicio().isBefore(fechaSalida))
+				   .toList();
+	}
+
+	
+
+	
 }
