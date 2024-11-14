@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import ar.edu.unq.poo2.integrador.Reserva;
 
-public class Intermedia extends PoliticaDeCancelacion {
+public class Intermedia implements PoliticaDeCancelacion {
 
 	@Override
 	public double costo(Reserva reserva, Inmueble inmueble) {
