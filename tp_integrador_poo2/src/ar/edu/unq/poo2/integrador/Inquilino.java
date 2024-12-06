@@ -1,18 +1,43 @@
 package ar.edu.unq.poo2.integrador;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
 public class Inquilino extends Usuario {
 
 	public Inquilino(String nombre, String email, int tel, Sistema sistema) {
-		super(nombre, email, tel, sistema);		
+		super(nombre, email, tel, sistema);
 	}
 
-	public void reservar(Inmueble unInmueble, LocalDate fechaInicio, LocalDate fechaFin) {
-		// TODO Auto-generated method stub
-		
+	@Override
+	public void agregarCalificacion(Calificacion calificacion) {
+		if(this.getSistema().tieneCategoriaPara(Calificable.INQUILINO, calificacion.getCategoria())) {
+			this.getCalificaciones().add(calificacion);
+		}
+	}
+	
+	public List<Reserva> getReservasFuturas() {
+		List<Reserva> reservas = this.getTodasLasReservas().stream()
+				.filter(reserva -> reserva.getFechaInicio().isAfter(LocalDate.now()))
+				.toList();
+		return reservas;
+	}
+	
+	public List<Reserva> getReservasDeCiudad(String ciudad) {
+		List<Reserva> reservas = this.getTodasLasReservas().stream()
+				.filter(reserva -> reserva.getInmueble().getCiudad().equals(ciudad))
+				.toList();
+		return reservas;
+	}
+	
+	public List<String> getCiudadesDeReservas() {
+		List<String> ciudades = this.getTodasLasReservas().stream()
+				.map(reserva -> reserva.getInmueble().getCiudad())
+				.toList();
+		return ciudades;
 	}
 	
 }

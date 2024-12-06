@@ -3,6 +3,7 @@ package ar.edu.unq.poo2.integrador;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.List;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
@@ -10,12 +11,25 @@ import ar.edu.unq.poo2.integrador.inmueble.Servicio;
 import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
 
 public class Sistema {
-	List<Reserva> reservas = new ArrayList<Reserva>();
-	private List<Categoria> categorias = new ArrayList<Categoria>();
-	private List<TipoInmueble> inmueblesAceptados = new ArrayList<TipoInmueble>();
-	private List<Servicio> serviciosAceptados = new ArrayList<Servicio>();
-	private List<Usuario> usuarios = new ArrayList<Usuario>(); 
-	private List<Inmueble> inmuebles = new ArrayList<Inmueble>();
+	
+	private List<Reserva> reservas;
+	private EnumMap<Calificable, List<Categoria>> categorias;
+	private List<TipoInmueble> inmueblesAceptados;
+	private List<Servicio> serviciosAceptados;
+	private List<Usuario> usuarios;
+	private List<Inmueble> inmuebles;
+	
+	public Sistema() {
+		this.reservas = new ArrayList<Reserva>();
+		this.categorias = new EnumMap<Calificable, List<Categoria>>(Calificable.class);
+		this.inmueblesAceptados = new ArrayList<TipoInmueble>();
+		this.serviciosAceptados = new ArrayList<Servicio>();
+		this.usuarios = new ArrayList<Usuario>();
+		this.inmuebles = new ArrayList<Inmueble>();
+		this.categorias.put(Calificable.INQUILINO, new ArrayList<Categoria>());
+		this.categorias.put(Calificable.PROPIETARIO, new ArrayList<Categoria>());
+		this.categorias.put(Calificable.INMUEBLE, new ArrayList<Categoria>());
+	}
 	
 	public void registrarInmueble(Inmueble inmueble) {
 		
@@ -35,12 +49,19 @@ public class Sistema {
 		return reservas;
 	}
 
-	public void agregarCategoria(Categoria categoria) {
-		this.categorias.add(categoria);
+	public void agregarCategoria(Calificable calificable, Categoria categoria) {
+		List<Categoria> listaDeCategorias = this.categorias.get(calificable);
+		listaDeCategorias.add(categoria);
+		this.categorias.put(calificable, listaDeCategorias);
 	}
 	
-	public List<Categoria> getCategorias() {
-		return categorias;
+	public List<Categoria> getCategoriasPara(Calificable calificable) {
+		return this.categorias.get(calificable);
+	}
+	
+	public boolean tieneCategoriaPara(Calificable calificable, Categoria categoria) {
+		List <Categoria> listaDeCategorias = this.categorias.get(calificable);
+		return listaDeCategorias.contains(categoria);
 	}
 
 	public void agregarTipoDeInmueble(TipoInmueble tipoInmueble) {
@@ -56,7 +77,7 @@ public class Sistema {
 	}
 	
 	public void añadirUsuario(Usuario usuario) {
-		this.usuarios .add(usuario);
+		this.usuarios.add(usuario);
 	}
 
 	public void cancelarReserva(Reserva reserva) {
@@ -81,20 +102,6 @@ public class Sistema {
 		return this.getReservas().stream().
 				filter(r->r.getInmueble() == inmueble)
 				.count();
-	}
-
-	public List<Reserva> reservasDeInquilino(Inquilino x) {
-		return this.getReservas().stream().filter(r->r.getPotencialInquilino() == x).toList();
-	}
-
-	public List<Reserva> reservasDeInquilinoFuturas(Inquilino inquilino) {
-		return this.reservasDeInquilino(inquilino).stream()
-				.filter(r->!r.estaFinalizada()).toList();
-	}
-
-	public List<Reserva> reservasDeInquilinoEnCiudad(Inquilino inquilino, String ciudad) {
-		return this.reservasDeInquilino(inquilino).stream()
-				.filter(r->r.getInmueble().getCiudad() == ciudad).toList();
 	}
 
 	public List<TipoInmueble> getTipoDeInmueblesAceptados() {

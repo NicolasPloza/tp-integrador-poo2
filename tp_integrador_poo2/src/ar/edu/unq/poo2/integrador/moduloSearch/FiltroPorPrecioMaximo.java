@@ -2,22 +2,17 @@ package ar.edu.unq.poo2.integrador.moduloSearch;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public class FiltroPorPrecioMaximo extends Search {
+public class FiltroPorPrecioMaximo extends FiltroOpcional {
 
-private double precioMaximo;
+	private double precioMaximo;
 	
 	public FiltroPorPrecioMaximo(double precioMaximo) {
-		this.precioMaximo = precioMaximo;
-	}
-	
-	public double getPrecioMaximo() {
-		return this.precioMaximo;
+		this.precioMaximo=precioMaximo;
 	}
 	
 	@Override
 	public boolean cumpleCondicion(Inmueble inmueble) {
-		
-		return inmueble.getPrecioDefault() <= this.getPrecioMaximo();
+		return inmueble.precioDefaultMenorOIgualA(this.precioMaximo);
 	}
 
 }

@@ -2,24 +2,22 @@ package ar.edu.unq.poo2.integrador;
 
 import java.util.*;
 
-public class Usuario implements Rankeable{
+public abstract class Usuario implements Rankeable{
 	
 	private String nombre;
 	private String email;
 	private int telefono;
 	private Sistema sistema;
-	private List<Calificacion> calificaciones = new ArrayList<Calificacion>();
-	
-	public Usuario() {
-		
-	}
+	private List<Calificacion> calificaciones;
+	private List<Reserva> reservas;
 	
 	public Usuario(String nombre, String email, int tel, Sistema sistema) {
-		super();
 		this.nombre = nombre;
 		this.email = email;
 		this.telefono = tel;
-		this.sistema = sistema;	
+		this.sistema = sistema;
+		this.calificaciones = new ArrayList<Calificacion>();
+		this.reservas = new ArrayList<Reserva>();
 	}
 
 	public String getNombre() {
@@ -34,10 +32,7 @@ public class Usuario implements Rankeable{
 		return this.telefono;
 	}
 
-	public void agregarCalificacion(Calificacion calificacion) {
-		
-		calificaciones.add(calificacion);
-	}
+	public abstract void agregarCalificacion(Calificacion calificacion);
 
 	public List<Calificacion> getCalificaciones() {
 	
@@ -97,8 +92,14 @@ public class Usuario implements Rankeable{
 		
 		this.telefono = tel;
 	}
-
 	
+	public Sistema getSistema() {
+		return this.sistema;
+	}
+
+	public List<Reserva> getTodasLasReservas() {
+		return this.reservas;
+	}
 	
 
 }

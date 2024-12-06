@@ -11,7 +11,6 @@ import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
 public class Reserva {
 	
 	private Inquilino potencialInquilino;
-	private Propietario propietario;
 	private Inmueble inmueble;
 	private LocalDate fechaInicio;
 	private LocalDate fechaFin;
@@ -20,9 +19,8 @@ public class Reserva {
 	private EstadoReserva estado;
 	private GestionadorDeNotificaciones gestionador;
 	
-	public Reserva(Inquilino inquilino, Propietario propietario, Inmueble inmueble, LocalDate inicio, LocalDate fin, MedioDePago medioDePago) {
+	public Reserva(Inquilino inquilino, Inmueble inmueble, LocalDate inicio, LocalDate fin, MedioDePago medioDePago) {
 		this.potencialInquilino=inquilino;
-		this.propietario=propietario;
 		this.inmueble=inmueble;
 		this.fechaInicio=inicio;
 		this.fechaFin=fin;
@@ -65,7 +63,7 @@ public class Reserva {
 	}
 	
 	public String getEmailDelPropietario() {
-		return this.propietario.getEmail();
+		return this.inmueble.getPropietario().getEmail();
 	}
 	
 	public void setEstado(EstadoReserva estado) {
@@ -102,7 +100,7 @@ public class Reserva {
 	}
 	
 	public Propietario getPropietario() {
-		return this.propietario;
+		return this.inmueble.getPropietario();
 	}
 	
 	public Inmueble getInmueble() {

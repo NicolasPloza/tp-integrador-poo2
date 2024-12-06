@@ -7,7 +7,7 @@ import ar.edu.unq.poo2.integrador.Reserva;
 public class Intermedia implements PoliticaDeCancelacion {
 
 	@Override
-	public double costo(Reserva reserva, Inmueble inmueble) {
+	public double costo(Reserva reserva) {
 		if(LocalDate.now().isBefore(reserva.getFechaInicio().minusDays(20))) {
 			return 0;
 		} else if(this.estaDentroDelIntervaloAceptable(reserva)) {

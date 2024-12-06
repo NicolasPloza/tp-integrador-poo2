@@ -1,28 +1,31 @@
 package ar.edu.unq.poo2.integrador.moduloSearch;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public class And extends Search {
+public class And extends FiltroOpcional {
 	
-	private Search searchIzquierdo;
-	private Search searchDerecho;
+	private List<FiltroOpcional> filtros;
 	
-	public And(Search s1, Search s2) {
-		this.searchIzquierdo = s1;
-		this.searchDerecho = s2;
+	public And(FiltroOpcional filtroIzquierdo, FiltroOpcional filtroDerecho) {
+		this.filtros=new ArrayList<FiltroOpcional>();
+		this.filtros.add(filtroIzquierdo);
+		this.filtros.add(filtroDerecho);
 	}
 	
-	/*public List<Inmueble> filtrar(List<Inmueble> inmuebles) {
-		
-		return inmuebles.stream()
-				.filter((i)-> cumpleCondicion(i))
-				.toList();
-	}*/
+	public FiltroOpcional getFiltroIzquierdo() {
+		return this.filtros.get(0);
+	}
+	
+	public FiltroOpcional getFiltroDerecho() {
+		return this.filtros.get(1);
+	}
 	
 	@Override
 	public boolean cumpleCondicion(Inmueble inmueble) {
-		return 	searchIzquierdo.cumpleCondicion(inmueble) && 
-				searchDerecho.cumpleCondicion(inmueble);
+		return 	this.getFiltroIzquierdo().cumpleCondicion(inmueble) && this.getFiltroDerecho().cumpleCondicion(inmueble);
 	}
 
 }

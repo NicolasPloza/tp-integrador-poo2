@@ -1,31 +1,31 @@
 package ar.edu.unq.poo2.integrador.moduloSearch;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public class Or extends Search {
+public class Or extends FiltroOpcional {
 	
-	private Search searchIzquierdo;
-	private Search searchDerecho;
+	private List<FiltroOpcional> filtros;
 	
-	public Or(Search s1, Search s2) {
-		this.searchIzquierdo = s1;
-		this.searchDerecho = s2;
+	public Or(FiltroOpcional filtroIzquierdo, FiltroOpcional filtroDerecho) {
+		this.filtros=new ArrayList<FiltroOpcional>();
+		this.filtros.add(filtroIzquierdo);
+		this.filtros.add(filtroDerecho);
 	}
 	
+	public FiltroOpcional getFiltroIzquierdo() {
+		return this.filtros.get(0);
+	}
 	
-	/*public List<Inmueble> filtrar(List<Inmueble> inmuebles) {
-		
-		Stream<Inmueble> primerFiltrado = searchIzquierdo.filtrar(inmuebles).stream();
-		Stream<Inmueble> segundoFiltrado = searchDerecho.filtrar(inmuebles).stream();
-		
-		return Stream.concat(primerFiltrado, segundoFiltrado)
-					 .distinct().toList();
-	}*/
+	public FiltroOpcional getFiltroDerecho() {
+		return this.filtros.get(1);
+	}
 	
 	@Override
 	public boolean cumpleCondicion(Inmueble inmueble) {
-		return 	searchIzquierdo.cumpleCondicion(inmueble) || 
-				searchDerecho.cumpleCondicion(inmueble);
+		return 	this.getFiltroIzquierdo().cumpleCondicion(inmueble) || this.getFiltroDerecho().cumpleCondicion(inmueble);
 	}
 	
 }

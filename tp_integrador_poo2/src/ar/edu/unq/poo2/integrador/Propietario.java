@@ -10,17 +10,12 @@ import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 public class Propietario extends Usuario{
 	
 	private LocalDate fechaDeIngreso;
-	private List<Inmueble> inmuebles = new ArrayList<>();
-	private Sistema sistema;
-	
-	public Propietario() {
-		
-	}
+	private List<Inmueble> inmuebles;
 	
 	public Propietario(String nombre, String email, int tel, LocalDate fechaDeIngreso, Sistema sistema) {
 		super(nombre,email,tel,sistema);
 		this.fechaDeIngreso = fechaDeIngreso;
-		this.sistema = sistema;
+		this.inmuebles = new ArrayList<Inmueble>();
 	}
 
 	public LocalDate getFechaDeIngreso() {
@@ -46,7 +41,14 @@ public class Propietario extends Usuario{
 	public void realizarAlta(Inmueble inmueble) {
 
 		this.getInmuebles().add(inmueble);
-		this.sistema.registrarInmueble(inmueble);
+		this.getSistema().registrarInmueble(inmueble);
+	}
+
+	@Override
+	public void agregarCalificacion(Calificacion calificacion) {
+		if(this.getSistema().tieneCategoriaPara(Calificable.PROPIETARIO, calificacion.getCategoria())) {
+			this.getCalificaciones().add(calificacion);
+		}
 	}
 	
 	

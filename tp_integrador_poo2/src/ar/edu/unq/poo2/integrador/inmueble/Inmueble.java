@@ -24,19 +24,22 @@ public class Inmueble implements Rankeable{
 	private PoliticaDeCancelacion politicaDeCancelacion;
 	private List<Periodo> periodos;
 	private GestionadorDeNotificaciones gestionadorDeNotificaciones;
-	private List<String> comentarios = new ArrayList<String>();
+	private List<String> comentarios;
+	private Sistema sistema;
+	private List<Reserva> reservas;
+	private List<Reserva> reservasCondicionales;
 	
 	public Inmueble(double superficie, String pais, String ciudad, int capacidad, String checkIn, String checkOut,
-			List<Calificacion> calificaciones, double precioDefault, TipoInmueble tipoDeInmueble, List<MedioDePago> mediosDePago,
+			double precioDefault, TipoInmueble tipoDeInmueble, List<MedioDePago> mediosDePago,
 			List<Servicio> servicios, Propietario propietario, List<Foto> fotos,
-			PoliticaDeCancelacion politica, List<Periodo> periodos, GestionadorDeNotificaciones gestionador) {
+			PoliticaDeCancelacion politica, List<Periodo> periodos, GestionadorDeNotificaciones gestionador, Sistema sistema) {
 		this.superficie = superficie;
 		this.pais = pais;
 		this.ciudad = ciudad;
 		this.capacidad = capacidad;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		this.calificaciones = calificaciones;
+		this.calificaciones = new ArrayList<Calificacion>();
 		this.alquilado = false;
 		this.precioDefault = precioDefault;
 		this.tipoDeInmueble = tipoDeInmueble;
@@ -47,6 +50,10 @@ public class Inmueble implements Rankeable{
 		this.politicaDeCancelacion = politica;
 		this.periodos = periodos;
 		this.gestionadorDeNotificaciones = gestionador;
+		this.comentarios = new ArrayList<String>();
+		this.sistema=sistema;
+		this.reservas = new ArrayList<Reserva>();
+		this.reservasCondicionales = new ArrayList<Reserva>();
 	}
 	
 	public String getPais() {
@@ -129,11 +136,13 @@ public class Inmueble implements Rankeable{
 	}
 
 	public double costoDeCancelacion(Reserva reserva) {
-		return this.getPoliticaDeCancelacion().costo(reserva, this);
+		return this.getPoliticaDeCancelacion().costo(reserva);
 	}
 
 	public void agregarCalificacion(Calificacion calificacion) {
-		this.calificaciones.addFirst(calificacion);
+		if(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, calificacion.getCategoria())) {
+			this.calificaciones.addFirst(calificacion);
+		}
 	}
 
 	public double getPromedio(Categoria categoria) {
@@ -192,4 +201,33 @@ public class Inmueble implements Rankeable{
 		
 		return Math.round(promedio * 100.0) / 100.0;
 	}
+
+	public boolean tieneCapacidadDe(int cantHuespedes) {
+		return this.capacidad == cantHuespedes;
+	}
+
+	public boolean esDeCiudad(String ciudad) {
+		return this.ciudad.equals(ciudad);
+	}
+
+	public boolean precioDefaultMenorOIgualA(double precioMaximo) {
+		return this.precioDefault <= precioMaximo;
+	}
+
+	public boolean precioDefaultMayorOIgualA(double precioMinimo) {
+		return this.precioDefault >= precioMinimo;
+	}
+	
+	public void reservar(Inquilino inquilino, LocalDate fechaInicial, LocalDate fechaFin, MedioDePago medioDePago) {
+		if(!this.tieneMedioDePago(medioDePago)) {
+			//Excepcion!!! a confirmar
+		}
+		Reserva reserva = new Reserva(inquilino, this, fechaInicial, fechaFin, medioDePago);
+		if(this.sistema.estaDisponible(this, fechaInicial, fechaFin)) {
+			this.reservas.add(reserva);
+		} else {
+			this.reservasCondicionales.add(reserva);
+		}
+	}
+	
 }
