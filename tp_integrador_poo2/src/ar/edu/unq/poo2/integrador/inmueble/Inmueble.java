@@ -223,17 +223,22 @@ public class Inmueble implements Rankeable{
 			Reserva reserva = new Reserva(inquilino, this, fechaInicial, fechaFin, medioDePago);
 			this.propietario.agregarReserva(reserva);
 			this.sistema.agregarReserva(reserva);
+			this.reservas.add(reserva);
 		}else {
 			//Excepcion!!! a confirmar
 		}
 	}
 
 	private boolean tieneMedioDePago(MedioDePago medioDePago) {
-		return this.mediosDePago.stream().anyMatch(p-> p == medioDePago);
+		return this.mediosDePago.stream().anyMatch(mp-> mp.getNombre().equals(medioDePago.getNombre()));
+	}
+	
+	public List<Reserva> getReservas() {
+		return reservas;
 	}
 	
 	public void agregarFoto(Foto foto) {
-		if(this.fotos.size() > 5) {
+		if(this.fotos.size() < 5) {
 			this.fotos.add(foto);
 		}
 	}

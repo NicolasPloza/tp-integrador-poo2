@@ -100,6 +100,4 @@ public abstract class Usuario implements Rankeable{
 	public List<Reserva> getTodasLasReservas() {
 		return this.reservas;
 	}
-	
-
 }

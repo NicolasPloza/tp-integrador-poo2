@@ -41,13 +41,19 @@ class InmuebleTestCase {
 	private Sistema sistema;
 	private Calificacion calificacion;
 	private Categoria ambiente;
+	private MedioDePago tarjeta;
 	
 	@BeforeEach
 	void setUp() {
+		this.fotos = new ArrayList<Foto>();
+		this.fotos.add(mock(Foto.class));
+		this.fotos.add(mock(Foto.class));
+		this.mediosDePago = new ArrayList<MedioDePago>();
+		this.tarjeta = mock(MedioDePago.class);
+		mediosDePago.add(tarjeta);
+		mediosDePago.add(mock(MedioDePago.class));
 		this.casa = mock(TipoInmueble.class);
 		this.servicios = Arrays.asList(mock(Servicio.class), mock(Servicio.class));
-		this.mediosDePago = Arrays.asList(mock(MedioDePago.class), mock(MedioDePago.class));
-		this.fotos = Arrays.asList(mock(Foto.class), mock(Foto.class));
 		this.gestionador = mock(GestionadorDeNotificaciones.class);
 		this.cancelacion = mock(Cancelacion.class);
 		this.periodos = Arrays.asList(mock(Periodo.class), mock(Periodo.class));
@@ -265,5 +271,17 @@ class InmuebleTestCase {
 		assertEquals(5, alquiler1.getPromedioTotalDePuntajes());
 	}
 	 
+	@Test
+	void testSeAgregaUnaFotoAUnInmueble() {
+		alquiler1.agregarFoto(mock(Foto.class));
+		
+		assertEquals(3, alquiler1.getFotos().size());
+	}
 	
+	@Test
+	void testSeReservaUnInmueble() {
+		when(tarjeta.getNombre()).thenReturn("tarjeta");
+		alquiler1.reservar(mock(Inquilino.class), LocalDate.of(2025, 5, 4), LocalDate.of(2025,5, 14), tarjeta);
+		assertEquals(1, alquiler1.getReservas().size());
+	}
 }

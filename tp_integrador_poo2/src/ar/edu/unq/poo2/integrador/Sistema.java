@@ -124,4 +124,8 @@ public class Sistema {
 				   .filter( r -> r.getFechaInicio().isAfter(fechaEntrada) && r.getFechaInicio().isBefore(fechaSalida))
 				   .toList();
 	}
+
+	public void agregarReserva(Reserva reserva) {
+		this.reservas.add(reserva);
+	}
 }
