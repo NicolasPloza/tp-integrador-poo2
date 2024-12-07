@@ -220,14 +220,30 @@ public class Inmueble implements Rankeable{
 	
 	public void reservar(Inquilino inquilino, LocalDate fechaInicial, LocalDate fechaFin, MedioDePago medioDePago) {
 		if(!this.tieneMedioDePago(medioDePago)) {
+			Reserva reserva = new Reserva(inquilino, this, fechaInicial, fechaFin, medioDePago);
+			this.propietario.agregarReserva(reserva);
+			this.sistema.agregarReserva(reserva);
+		}else {
 			//Excepcion!!! a confirmar
 		}
-		Reserva reserva = new Reserva(inquilino, this, fechaInicial, fechaFin, medioDePago);
-		if(this.sistema.estaDisponible(this, fechaInicial, fechaFin)) {
-			this.reservas.add(reserva);
-		} else {
-			this.reservasCondicionales.add(reserva);
+	}
+
+	private boolean tieneMedioDePago(MedioDePago medioDePago) {
+		return this.mediosDePago.stream().anyMatch(p-> p == medioDePago);
+	}
+	
+	public void agregarFoto(Foto foto) {
+		if(this.fotos.size() > 5) {
+			this.fotos.add(foto);
 		}
 	}
+	
+	/*
+	 * if(this.sistema.estaDisponible(this, fechaInicial, fechaFin)) {
+		this.reservas.add(reserva);
+	 } else {
+		this.reservasCondicionales.add(reserva);
+	}
+	 * */
 	
 }
