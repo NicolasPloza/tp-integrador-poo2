@@ -29,38 +29,38 @@ import java.util.Date;
 import java.util.List;
 
 class InmuebleTestCase {
-	TipoInmueble casa;
-	List<Servicio> servicios;
-	List<MedioDePago> mediosDePago;
-	Propietario x;
-	List<Calificacion> calificaciones;
-	List<Foto> fotos;
-	Inmueble alquiler1;
-	PoliticaDeCancelacion cancelacion;
-	List<Periodo> periodos;
-	GestionadorDeNotificaciones gestionador;
+	private TipoInmueble casa;
+	private List<Servicio> servicios;
+	private List<MedioDePago> mediosDePago;
+	private Propietario x;
+	private List<Foto> fotos;
+	private Inmueble alquiler1;
+	private PoliticaDeCancelacion cancelacion;
+	private List<Periodo> periodos;
+	private GestionadorDeNotificaciones gestionador;
+	private Sistema sistema;
+	private Calificacion calificacion;
+	private Categoria ambiente;
 	
 	@BeforeEach
 	void setUp() {
-		casa = mock(TipoInmueble.class);
-		servicios = Arrays.asList(mock(Servicio.class), mock(Servicio.class));
-		mediosDePago = Arrays.asList(mock(MedioDePago.class), mock(MedioDePago.class));
-		fotos = Arrays.asList(mock(Foto.class), mock(Foto.class));
-		gestionador = mock(GestionadorDeNotificaciones.class);
-		cancelacion = mock(Cancelacion.class);
-		periodos = Arrays.asList(mock(Periodo.class), mock(Periodo.class));
-		calificaciones = new ArrayList<Calificacion>();
-		alquiler1 = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
-				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
-				cancelacion, periodos, gestionador);
+		this.casa = mock(TipoInmueble.class);
+		this.servicios = Arrays.asList(mock(Servicio.class), mock(Servicio.class));
+		this.mediosDePago = Arrays.asList(mock(MedioDePago.class), mock(MedioDePago.class));
+		this.fotos = Arrays.asList(mock(Foto.class), mock(Foto.class));
+		this.gestionador = mock(GestionadorDeNotificaciones.class);
+		this.cancelacion = mock(Cancelacion.class);
+		this.periodos = Arrays.asList(mock(Periodo.class), mock(Periodo.class));
+		this.sistema = mock(Sistema.class);
+		this.calificacion = mock(Calificacion.class);
+		this.ambiente = mock(Categoria.class);
+		this.alquiler1 = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, casa, mediosDePago, servicios, x, fotos, cancelacion, periodos, gestionador, this.sistema);
 	}
 	
 	@Test
 	/**Este test chequea que se halla inicializado correctamente un inmueble*/
 	void testInicializacion() {
-		Inmueble alquiler = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
-				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos,
-				cancelacion, periodos, gestionador);
+		Inmueble alquiler = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, this.periodos, this.gestionador, this.sistema);
 		
 		assertEquals(casa, alquiler.getTipoDeInmueble());
 		assertEquals(servicios, alquiler.getServicio());
@@ -70,7 +70,6 @@ class InmuebleTestCase {
 		assertEquals(3, alquiler.getCapacidad());
 		assertEquals("8AM", alquiler.getCheckIn());
 		assertEquals("11PM", alquiler.getCheckOut());
-		assertEquals(calificaciones, alquiler.getCalificaciones());
 		assertEquals(3000.0, alquiler.getPrecioDefault());
 		assertEquals(casa, alquiler.getTipoDeInmueble());
 		assertEquals(mediosDePago, alquiler.getMediosDePago());
@@ -120,14 +119,10 @@ class InmuebleTestCase {
 		//setUp
 		Reserva reserva = mock(Reserva.class);
 		when(reserva.precioParaFechaElegida()).thenReturn(1000.0);
-		
 		SinCancelacion sinCancelacion = mock(SinCancelacion.class);
-		
-		Inmueble casaSinCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
-				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
-				sinCancelacion, periodos, gestionador);
-		
-		when(sinCancelacion.costo(reserva, casaSinCancelacion)).thenReturn(1000.0);
+		Inmueble casaSinCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, sinCancelacion, this.periodos, this.gestionador, this.sistema);
+		when(reserva.getInmueble()).thenReturn(casaSinCancelacion);
+		when(sinCancelacion.costo(reserva)).thenReturn(1000.0);
 		
 		//verify
 		assertEquals(1000.0, casaSinCancelacion.costoDeCancelacion(reserva));
@@ -138,14 +133,10 @@ class InmuebleTestCase {
 		//setUp
 		Reserva reserva = mock(Reserva.class);
 		when(reserva.precioParaFechaElegida()).thenReturn(1000.0);
-		
 		Cancelacion cancelacion = mock(Cancelacion.class);
-		
-		Inmueble casaConCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
-				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
-				cancelacion, periodos, gestionador);
-		
-		when(cancelacion.costo(reserva, casaConCancelacion)).thenReturn(100.0);
+		Inmueble casaConCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, casa, mediosDePago, servicios, x, fotos, cancelacion, periodos, gestionador, this.sistema);
+		when(reserva.getInmueble()).thenReturn(casaConCancelacion);
+		when(cancelacion.costo(reserva)).thenReturn(100.0);
 		
 		//verify
 		assertEquals(100, casaConCancelacion.costoDeCancelacion(reserva));
@@ -156,27 +147,37 @@ class InmuebleTestCase {
 		Reserva reserva = mock(Reserva.class);
 		when(reserva.precioParaFechaElegida()).thenReturn(500.0);
 		Intermedia intermedia = mock(Intermedia.class);
-		
-		Inmueble casaConIntermedia = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
-				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
-				intermedia, periodos, gestionador);
-		
-		when(intermedia.costo(reserva, casaConIntermedia)).thenReturn(250.0);
+		Inmueble casaConIntermedia = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, intermedia, this.periodos, this.gestionador, this.sistema);
+		when(reserva.getInmueble()).thenReturn(casaConIntermedia);
+		when(intermedia.costo(reserva)).thenReturn(250.0);
 		
 		assertEquals(250, casaConIntermedia.costoDeCancelacion(reserva));
 	}
 	
 	@Test
-	void seAgregaUnaCalificacionAlInmueble() {
-		alquiler1.agregarCalificacion(mock(Calificacion.class));
+	void testSeAgregaUnaCalificacionAlInmueble() {
+		when(this.calificacion.getCategoria()).thenReturn(this.ambiente);
+		when(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, this.ambiente)).thenReturn(true);
+		this.alquiler1.agregarCalificacion(this.calificacion);
 		
-		assertEquals(1, alquiler1.getCalificaciones().size());
+		assertEquals(1, this.alquiler1.getCalificaciones().size());
+		assertTrue(this.alquiler1.getCalificaciones().contains(this.calificacion));
+	}
+	
+	@Test
+	void testSeAgregaUnaCalificacionAlInmuebleDeUnaCategoriaQueNoTiene() {
+		when(this.calificacion.getCategoria()).thenReturn(this.ambiente);
+		when(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, this.ambiente)).thenReturn(false);
+		this.alquiler1.agregarCalificacion(this.calificacion);
+		
+		assertEquals(0, this.alquiler1.getCalificaciones().size());
+		assertFalse(this.alquiler1.getCalificaciones().contains(this.calificacion));
 	}
 	
 	@Test
 	void seCalculaElPromedioDeLaCategoriaBuenTrato() {
 		//setUp
-		calificaciones = new ArrayList<Calificacion>();
+		List<Calificacion> calificaciones = new ArrayList<Calificacion>();
 		Categoria buenTrato = mock(Categoria.class);
 		when(buenTrato.getNombre()).thenReturn("buen trato");
 		Categoria buenTrato1 = mock(Categoria.class);
@@ -193,12 +194,12 @@ class InmuebleTestCase {
 		Calificacion cIluminacion = mock(Calificacion.class);
 		when(cIluminacion.getCategoria()).thenReturn(iluminacion);
 		
-		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
-				calificaciones, 3000.0, casa, mediosDePago, servicios, x, fotos, 
-				cancelacion, periodos, gestionador);
-		
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, this.periodos, this.gestionador, this.sistema);
+		when(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, iluminacion)).thenReturn(true);
 		hotel.agregarCalificacion(cIluminacion);
+		when(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, buenTrato)).thenReturn(true);
 		hotel.agregarCalificacion(cBuenTrato1);
+		when(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, buenTrato1)).thenReturn(true);
 		hotel.agregarCalificacion(cBuenTrato);
 		
 		assertEquals(5, hotel.getPromedio(buenTrato));
@@ -225,9 +226,7 @@ class InmuebleTestCase {
 		when(festival.esFechaDePeriodo(null)).thenReturn(true);
 		periodos1.add(festival);
 		
-		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
-				calificaciones, 100.0, casa, mediosDePago, servicios, x, fotos, 
-				cancelacion, periodos1, gestionador);
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 100.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, periodos1, this.gestionador, this.sistema);
 		
 		//verify
 		assertEquals(600.0, hotel.getPrecioDePeriodo(LocalDate.of(2002, 3, 1), LocalDate.of(2002, 3, 5)));
@@ -243,9 +242,7 @@ class InmuebleTestCase {
 		when(carnaval.esFechaDePeriodo(LocalDate.of(2002, 6, 3))).thenReturn(false);
 		List<Periodo> periodos1 = Arrays.asList(vacaciones, carnaval);
 		
-		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM",
-				calificaciones, 100.0, casa, mediosDePago, servicios, x, fotos, 
-				cancelacion, periodos1, gestionador);
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 100.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, periodos1, this.gestionador, this.sistema);
 		
 		assertEquals(vacaciones, hotel.getPeriodo(LocalDate.of(2002, 6, 3)));
 	}
@@ -253,11 +250,16 @@ class InmuebleTestCase {
 	@Test 
 	void seCalculaElPromedioTotalDePuntajeDeCategorias() {
 		Calificacion buenTrato = mock(Calificacion.class);
+		Categoria cBuenTrato = mock(Categoria.class);
 		when(buenTrato.getPuntaje()).thenReturn(5);
+		when(buenTrato.getCategoria()).thenReturn(cBuenTrato);
 		Calificacion iluminacion = mock(Calificacion.class);
+		Categoria cIluminacion = mock(Categoria.class);
 		when(iluminacion.getPuntaje()).thenReturn(5);
-		
+		when(iluminacion.getCategoria()).thenReturn(cIluminacion);
+		when(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, cBuenTrato)).thenReturn(true);
 		alquiler1.agregarCalificacion(buenTrato);
+		when(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, cIluminacion)).thenReturn(true);
 		alquiler1.agregarCalificacion(iluminacion);
 		
 		assertEquals(5, alquiler1.getPromedioTotalDePuntajes());
