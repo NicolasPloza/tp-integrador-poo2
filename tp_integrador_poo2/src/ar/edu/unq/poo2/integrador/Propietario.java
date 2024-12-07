@@ -50,8 +50,4 @@ public class Propietario extends Usuario{
 			this.getCalificaciones().add(calificacion);
 		}
 	}
-
-	public void agregarReserva(Reserva reserva) {
-			this.getTodasLasReservas().add(reserva);
-	}
 }
