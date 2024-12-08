@@ -242,6 +242,11 @@ public class Inmueble implements Rankeable{
 			this.fotos.add(foto);
 		}
 	}
+
+	public boolean estaDisponibleEn(LocalDate fechaEntrada, LocalDate fechaSalida) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	/*
 	 * if(this.sistema.estaDisponible(this, fechaInicial, fechaFin)) {

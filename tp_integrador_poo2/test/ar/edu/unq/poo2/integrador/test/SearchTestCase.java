@@ -1,322 +1,103 @@
 package ar.edu.unq.poo2.integrador.test;
-import ar.edu.unq.poo2.integrador.*;
-import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
-import ar.edu.unq.poo2.integrador.moduloSearch.And;
-import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorCantidadHuespedes;
-import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorCiudad;
-import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorFecha;
-import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorPrecioMaximo;
-import ar.edu.unq.poo2.integrador.moduloSearch.FiltroPorPrecioMinimo;
-import ar.edu.unq.poo2.integrador.moduloSearch.Or;
-import ar.edu.unq.poo2.integrador.moduloSearch.Search;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-import java.util.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
+import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
+import ar.edu.unq.poo2.integrador.moduloSearch.FiltroOpcional;
+import ar.edu.unq.poo2.integrador.moduloSearch.Search;
 
 class SearchTestCase {
 	
-	private Search search;
+	private Search filtro;
+	private String ciudad;
+	private LocalDate fechaEntrada;
+	private LocalDate fechaSalida;
+	private FiltroOpcional filtroOpcional;
+	private Inmueble departamento;
+	private Inmueble casa;
+	private Inmueble duplex;
 	private List<Inmueble> inmuebles;
-	private Inmueble unInmueble;
-	
-	private Search filtro5Huesp;
-	private Search filtro3Huesp;
-	private Search filtroQuilmes;
-	private Search filtroCABA;
-	
+
 	@BeforeEach
-	void setUp() throws Exception {
-		inmuebles = new ArrayList<>();
-		unInmueble = mock(Inmueble.class);
-		inmuebles.add(unInmueble);
-		
-		filtro5Huesp = new FiltroPorCantidadHuespedes(5);
-		filtro3Huesp = new FiltroPorCantidadHuespedes(3);
-		filtroQuilmes = new FiltroPorCiudad("Quilmes");
-		filtroCABA = new FiltroPorCiudad("CABA");
-		
+	void setUp() {
+		this.ciudad = "Mar del Plata";
+		this.fechaEntrada = LocalDate.of(2030, 3, 20);
+		this.fechaSalida = LocalDate.of(2030, 4, 10);
+		this.filtroOpcional = mock(FiltroOpcional.class);
+		this.departamento = mock(Inmueble.class);
+		this.casa = mock(Inmueble.class);
+		this.duplex = mock(Inmueble.class);
+		this.filtro = new Search(this.ciudad, this.fechaEntrada, this.fechaSalida, this.filtroOpcional);
+		this.inmuebles = Arrays.asList(this.departamento, this.casa, this.duplex);
 	}
-	
-	
-	//-------------pruebas de Search simples (con 1 solo filtro)
+
 	@Test
-	void searchConFiltroPorCiudad() {
-		//setup
-		search = filtroQuilmes;
+	void testSeVerificaQueUnInmuebleCumplaLasCondicionesDeLosFiltros() {
+		when(this.departamento.esDeCiudad(this.ciudad)).thenReturn(true);
+		when(this.departamento.estaDisponibleEn(this.fechaEntrada, this.fechaSalida)).thenReturn(true);
+		when(this.filtroOpcional.cumpleCondicion(this.departamento)).thenReturn(true);
 		
-		Inmueble inmuebleDeQuilmes = mock(Inmueble.class); 
-		inmuebles.add(inmuebleDeQuilmes);
-		when(inmuebleDeQuilmes.getCiudad()).thenReturn("Quilmes");
-		when(unInmueble.getCiudad()).thenReturn("Otra");
-		
-		//exercise
-		List<Inmueble> resultado = search.filtrar(inmuebles);
-				
-		//verify
-		assertTrue(resultado.contains(inmuebleDeQuilmes));
-		assertFalse(resultado.contains(unInmueble));
-		verify(inmuebleDeQuilmes).getCiudad();
-			
-	}
-	
-	
-	@Test
-	void searchConFiltroPorCantidadDeHuespedes() {
-		//setup
-		search = filtro5Huesp;
-		
-		Inmueble inmueblePara5 = mock(Inmueble.class); 
-		inmuebles.add(inmueblePara5);
-		when(inmueblePara5.getCapacidad()).thenReturn(5);
-		when(unInmueble.getCapacidad()).thenReturn(3);
-		
-		//exercise
-		List<Inmueble> resultado = search.filtrar(inmuebles);
-				
-		//verify
-		assertTrue(resultado.contains(inmueblePara5));
-		assertFalse(resultado.contains(unInmueble));
-		verify(inmueblePara5).getCapacidad();
-			
+		assertTrue(this.filtro.cumpleCondicion(this.departamento));
+		verify(this.departamento).esDeCiudad(this.ciudad);
+		verify(this.departamento).estaDisponibleEn(this.fechaEntrada, this.fechaSalida);
+		verify(this.filtroOpcional).cumpleCondicion(this.departamento);
 	}
 	
 	@Test
-	void searchConFiltroPorFecha() {
-		//setup
-		Sistema sistema = mock(Sistema.class);
-		LocalDate fechaEntrada = LocalDate.of(2024,8,24);
-		LocalDate fechaSalida = LocalDate.of(2024,9,2);
-		Inmueble inmuebleDisponible = mock(Inmueble.class); 
-		Inmueble inmuebleOcupado = mock(Inmueble.class); 
-		search = new FiltroPorFecha(fechaEntrada , fechaSalida, sistema);
+	void testSeVerificaQueUnInmuebleCumplaDosDeLasCondicionesDeLosFiltros() {
+		when(this.departamento.esDeCiudad(this.ciudad)).thenReturn(true);
+		when(this.departamento.estaDisponibleEn(this.fechaEntrada, this.fechaSalida)).thenReturn(true);
+		when(this.filtroOpcional.cumpleCondicion(this.departamento)).thenReturn(false);
 		
-		
-		when(sistema.estaDisponible(inmuebleDisponible, fechaEntrada, fechaSalida)).thenReturn(true);
-		when(sistema.estaDisponible(inmuebleOcupado, fechaEntrada, fechaSalida)).thenReturn(false);
-		inmuebles.add(inmuebleDisponible);
-		inmuebles.add(inmuebleOcupado);
-		
-	
-		//exercise
-		List<Inmueble> resultado = search.filtrar(inmuebles);
-				
-		//verify
-		assertTrue(resultado.contains(inmuebleDisponible));
-		assertFalse(resultado.contains(inmuebleOcupado));
-		verify(sistema).estaDisponible(inmuebleDisponible, fechaEntrada, fechaSalida);
-			
-	}
-	
-	
-	@Test
-	void searchConFiltroPorPrecioMinimo() {
-		//setup
-		
-		search = new FiltroPorPrecioMinimo(100);
-		
-		
-		Inmueble inmuebleEnPrecio = mock(Inmueble.class); 
-		Inmueble inmuebleFueraDePrecio = mock(Inmueble.class); 
-		inmuebles.add(inmuebleEnPrecio);
-		inmuebles.add(inmuebleFueraDePrecio);
-		when(inmuebleEnPrecio.getPrecioDefault()).thenReturn(150.00);
-		when(inmuebleFueraDePrecio.getPrecioDefault()).thenReturn(50.00);
-		
-		//exercise
-		List<Inmueble> resultado = search.filtrar(inmuebles);
-				
-		//verify
-		assertTrue(resultado.contains(inmuebleEnPrecio));
-		assertFalse(resultado.contains(inmuebleFueraDePrecio));
-		verify(inmuebleEnPrecio).getPrecioDefault();
-		verify(inmuebleFueraDePrecio).getPrecioDefault();
-			
+		assertFalse(this.filtro.cumpleCondicion(this.departamento));
+		verify(this.departamento).esDeCiudad(this.ciudad);
+		verify(this.departamento).estaDisponibleEn(this.fechaEntrada, this.fechaSalida);
+		verify(this.filtroOpcional).cumpleCondicion(this.departamento);
 	}
 	
 	@Test
-	void searchConFiltroPorPrecioMaximo() {
-		//setup
+	void testSeVerificaQueUnInmuebleCumplaUnoDeLasCondicionesDeLosFiltros() {
+		when(this.departamento.esDeCiudad(this.ciudad)).thenReturn(true);
+		when(this.departamento.estaDisponibleEn(this.fechaEntrada, this.fechaSalida)).thenReturn(false);
 		
-		search = new FiltroPorPrecioMaximo(100);
-		
-		
-		Inmueble inmuebleEnPrecio = mock(Inmueble.class); 
-		Inmueble inmuebleFueraDePrecio = mock(Inmueble.class); 
-		inmuebles.add(inmuebleEnPrecio);
-		inmuebles.add(inmuebleFueraDePrecio);
-		when(inmuebleEnPrecio.getPrecioDefault()).thenReturn(50.00);
-		when(inmuebleFueraDePrecio.getPrecioDefault()).thenReturn(150.00);
-		
-		//exercise
-		List<Inmueble> resultado = search.filtrar(inmuebles);
-				
-		//verify
-		assertTrue(resultado.contains(inmuebleEnPrecio));
-		assertFalse(resultado.contains(inmuebleFueraDePrecio));
-		verify(inmuebleEnPrecio).getPrecioDefault();
-		verify(inmuebleFueraDePrecio).getPrecioDefault();
-			
+		assertFalse(this.filtro.cumpleCondicion(this.departamento));
+		verify(this.departamento).esDeCiudad(this.ciudad);
+		verify(this.departamento).estaDisponibleEn(this.fechaEntrada, this.fechaSalida);
+		verify(this.filtroOpcional, never()).cumpleCondicion(this.departamento);
 	}
-	
-	
-	
-	//--------pruebas de Search compuesto(mas de un filtro o combinados con operadores )
 	
 	@Test
-	void searchCompuesto_OperadorAND_ConDosFiltros() {
-		//setup
-		search = new And(filtro5Huesp ,filtroQuilmes);
+	void testSeVerificaQueUnInmuebleNoCumplaNingunaDeLasCondicionesDeLosFiltros() {
+		when(this.departamento.esDeCiudad(this.ciudad)).thenReturn(false);
 		
-		Inmueble inmuebleDeQuilmesPara5 = mock(Inmueble.class);
-		inmuebles.add(inmuebleDeQuilmesPara5);
-		
-		when(inmuebleDeQuilmesPara5.getCapacidad()).thenReturn(5);
-		when(inmuebleDeQuilmesPara5.getCiudad()).thenReturn("Quilmes");
-		
-			//inmueble de quilmes pero para 3 huespedes
-		when(unInmueble.getCapacidad()).thenReturn(3);
-		when(unInmueble.getCiudad()).thenReturn("Quilmes");
-		
-		//exercise	
-		List<Inmueble> resultado = search.filtrar(inmuebles);
-		
-		//verify
-		assertTrue(resultado.contains(inmuebleDeQuilmesPara5));
-		assertFalse(resultado.contains(unInmueble));
-		
-		verify(inmuebleDeQuilmesPara5).getCiudad();
-		verify(inmuebleDeQuilmesPara5).getCapacidad();
+		assertFalse(this.filtro.cumpleCondicion(this.departamento));
+		verify(this.departamento).esDeCiudad(this.ciudad);
+		verify(this.departamento, never()).estaDisponibleEn(this.fechaEntrada, this.fechaSalida);
+		verify(this.filtroOpcional, never()).cumpleCondicion(this.departamento);
 	}
-	
 	
 	@Test
-	void searchCompuesto_OperadorOR_ConDosFiltros() {
-		//setup
-		search = new Or(filtro5Huesp,filtroQuilmes);
+	void testSeObtienenLosInmueblesQueCumplanLaCondicionEnUnBuscador() {
+		when(this.departamento.esDeCiudad(this.ciudad)).thenReturn(true);
+		when(this.departamento.estaDisponibleEn(this.fechaEntrada, this.fechaSalida)).thenReturn(false);
+		when(this.casa.esDeCiudad(this.ciudad)).thenReturn(true);
+		when(this.casa.estaDisponibleEn(this.fechaEntrada, this.fechaSalida)).thenReturn(true);
+		when(this.filtroOpcional.cumpleCondicion(this.casa)).thenReturn(true);
+		when(this.duplex.esDeCiudad(this.ciudad)).thenReturn(false);
+		List<Inmueble> inmueblesFiltrados = this.filtro.filtrar(this.inmuebles);
 		
-		Inmueble inmuebleDeQuilmesPara5 = mock(Inmueble.class);
-		Inmueble inmuebleDeQuilmesPara2 = mock(Inmueble.class);
-		Inmueble inmuebleDeCABAPara5 = mock(Inmueble.class);
-		inmuebles.add(inmuebleDeQuilmesPara5);
-		inmuebles.add(inmuebleDeQuilmesPara2);
-		inmuebles.add(inmuebleDeCABAPara5);
-		
-			// inmuebles que cumplen busqueda
-		when(inmuebleDeQuilmesPara5.getCiudad()).thenReturn("Quilmes");
-		when(inmuebleDeQuilmesPara5.getCapacidad()).thenReturn(5);
-		
-		when(inmuebleDeQuilmesPara2.getCiudad()).thenReturn("Quilmes");
-		when(inmuebleDeQuilmesPara2.getCapacidad()).thenReturn(2);
-		
-		when(inmuebleDeCABAPara5.getCiudad()).thenReturn("CABA");
-		when(inmuebleDeCABAPara5.getCapacidad()).thenReturn(5);
-			
-			//inmuebles que no cumplen busqueda
-		when(unInmueble.getCapacidad()).thenReturn(3);
-		when(unInmueble.getCiudad()).thenReturn("Otra");
-		
-		
-		//exercise	
-		List<Inmueble> resultado = search.filtrar(inmuebles);
-		
-		//verify
-		assertTrue(resultado.contains(inmuebleDeQuilmesPara5));
-		assertTrue(resultado.contains(inmuebleDeQuilmesPara2));
-		assertTrue(resultado.contains(inmuebleDeCABAPara5));
-		assertFalse(resultado.contains(unInmueble));
-		
-		
+		assertEquals(1, inmueblesFiltrados.size());
+		assertTrue(inmueblesFiltrados.contains(this.casa));
+		assertFalse(inmueblesFiltrados.contains(this.departamento));
+		assertFalse(inmueblesFiltrados.contains(this.duplex));
 	}
-	
-	
-	@Test
-	void searchCompuesto_combinadoConSearchCompuestosYFiltros() {
-		//setup
-		search = new Or(new And(filtro5Huesp,filtroQuilmes), new And(filtroCABA,filtro3Huesp));
-		
-		Inmueble inmuebleDeQuilmesPara5 = mock(Inmueble.class);
-		Inmueble inmuebleDeCABAPara3 = mock(Inmueble.class);
-		Inmueble inmuebleDeMerloPara5 = mock(Inmueble.class);
-		inmuebles.add(inmuebleDeQuilmesPara5);
-		inmuebles.add(inmuebleDeCABAPara3);
-		inmuebles.add(inmuebleDeMerloPara5);
-		
-		//----------inmuebles que cumplen busqueda
-		when(inmuebleDeQuilmesPara5.getCiudad()).thenReturn("Quilmes");
-		when(inmuebleDeQuilmesPara5.getCapacidad()).thenReturn(5);
-		
-		when(inmuebleDeCABAPara3.getCiudad()).thenReturn("CABA");
-		when(inmuebleDeCABAPara3.getCapacidad()).thenReturn(3);
-		
-		//---------inmuebles que no cumplen busqueda
-		when(unInmueble.getCiudad()).thenReturn("Otra");
-		when(unInmueble.getCapacidad()).thenReturn(3);
-		when(inmuebleDeMerloPara5.getCiudad()).thenReturn("Merlo");
-		when(inmuebleDeMerloPara5.getCapacidad()).thenReturn(5);
-		
-		//exercise	
-		List<Inmueble> resultado = search.filtrar(inmuebles);
-		
-		//verify
-		assertTrue(resultado.contains(inmuebleDeQuilmesPara5));
-		assertTrue(resultado.contains(inmuebleDeCABAPara3));
-		
-		assertFalse(resultado.contains(inmuebleDeMerloPara5));
-		assertFalse(resultado.contains(unInmueble));
-		
-		verify(inmuebleDeQuilmesPara5,atLeastOnce()).getCiudad();
-		verify(inmuebleDeQuilmesPara5,atLeastOnce()).getCapacidad();
-		verify(inmuebleDeCABAPara3,atLeastOnce()).getCiudad();
-		verify(inmuebleDeCABAPara3,atLeastOnce()).getCapacidad();
-		verify(inmuebleDeMerloPara5,atLeastOnce()).getCiudad();
-		verify(inmuebleDeMerloPara5,atLeastOnce()).getCapacidad();
-		verify(unInmueble,atLeastOnce()).getCiudad();
-		verify(unInmueble,atLeastOnce()).getCapacidad();
-	}
-	
-	
-	
-	@Test 
-	void seRealizaUnaBusquedaSobreUnaListaVacia_SeDevuelveUnaListaVacia() {
-		search = new Or(new And(filtro5Huesp,filtroQuilmes), new And(filtroCABA,filtro3Huesp)); 
-		List<Inmueble> listaInmuebles = new ArrayList<>();
-		
-		List<Inmueble> resultado = search.filtrar(listaInmuebles);
-		
-		assertTrue(resultado.isEmpty());
-		
-	}
-	
-	@Test 
-	void seRealizaUnaBusquedaYNingunInmuebleCumpleLaCondicion_SeDevuelveUnaListaVacia() {
-		search = new Or(new And(filtro5Huesp,filtroQuilmes), new And(filtroCABA,filtro3Huesp)); 
-		
-		Inmueble inmuebleDeCABAPara8 = mock(Inmueble.class);
-		Inmueble inmuebleDeMerloPara5 = mock(Inmueble.class);
-		inmuebles.add(inmuebleDeCABAPara8);
-		inmuebles.add(inmuebleDeMerloPara5);
-		
-		
-		when(inmuebleDeCABAPara8.getCiudad()).thenReturn("CABA");
-		when(inmuebleDeCABAPara8.getCapacidad()).thenReturn(8);
-		when(unInmueble.getCiudad()).thenReturn("Otra");
-		when(unInmueble.getCapacidad()).thenReturn(3);
-		when(inmuebleDeMerloPara5.getCiudad()).thenReturn("Merlo");
-		when(inmuebleDeMerloPara5.getCapacidad()).thenReturn(5);
-		
-		List<Inmueble> resultado = search.filtrar(inmuebles);
-		
-		assertTrue(resultado.isEmpty());
-		
-	}
-	
-	
-	
-	
+
 }

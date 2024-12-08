@@ -2,11 +2,11 @@ package ar.edu.unq.poo2.integrador.moduloSearch;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public class FiltroPorPrecioMaximo implements FiltroOpcional {
+public class FiltroPrecioMaximo implements FiltroOpcional {
 
 	private double precioMaximo;
 	
-	public FiltroPorPrecioMaximo(double precioMaximo) {
+	public FiltroPrecioMaximo(double precioMaximo) {
 		this.precioMaximo=precioMaximo;
 	}
 	
