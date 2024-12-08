@@ -5,7 +5,7 @@ import java.util.List;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public class And extends FiltroOpcional {
+public class And implements FiltroOpcional {
 	
 	private List<FiltroOpcional> filtros;
 	

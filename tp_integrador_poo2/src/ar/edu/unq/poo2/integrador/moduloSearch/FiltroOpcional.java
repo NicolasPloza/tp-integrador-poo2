@@ -2,8 +2,8 @@ package ar.edu.unq.poo2.integrador.moduloSearch;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public abstract class FiltroOpcional {
+public interface FiltroOpcional {
 	
-	public abstract boolean cumpleCondicion(Inmueble inmueble);
+	public boolean cumpleCondicion(Inmueble inmueble);
 
 }

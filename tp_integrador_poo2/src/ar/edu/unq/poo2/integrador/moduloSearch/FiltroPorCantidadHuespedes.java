@@ -2,7 +2,7 @@ package ar.edu.unq.poo2.integrador.moduloSearch;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
-public class FiltroPorCantidadHuespedes extends FiltroOpcional {
+public class FiltroPorCantidadHuespedes implements FiltroOpcional {
 	
 	private int cantHuespedes;
 	
