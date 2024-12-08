@@ -13,6 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ar.edu.unq.poo2.integrador.Calificable;
 import ar.edu.unq.poo2.integrador.Categoria;
 import ar.edu.unq.poo2.integrador.Inquilino;
 import ar.edu.unq.poo2.integrador.Propietario;
@@ -24,35 +25,40 @@ import ar.edu.unq.poo2.integrador.inmueble.Servicio;
 import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
 
 class SistemaTestCase {
-	Sistema sis;
-	Reserva reserva;
-	Reserva reserva1;
-	Inquilino x;
-	Inquilino y;
-	Reserva reserva2;
-	List<Reserva> reservasDeInquilino;
-	Inmueble casa;
-	Inmueble hotel;
-	Servicio luz;
-	TipoInmueble duplex;
-	List<Servicio> servicios;
-	List<TipoInmueble> tiposInmuebles;
+	
+	private Sistema sis;
+	private Reserva reserva;
+	private Reserva reserva1;
+	private Inquilino x;
+	private Inquilino y;
+	private Reserva reserva2;
+	private List<Reserva> reservasDeInquilino;
+	private Inmueble casa;
+	private Inmueble hotel;
+	private Servicio luz;
+	private TipoInmueble duplex;
+	private List<Servicio> servicios;
+	private List<TipoInmueble> tiposInmuebles;
+	private Calificable propietario;
+	private Categoria buenServicio;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		sis = new Sistema();
-		reserva = mock(Reserva.class);
-		reserva1 = mock(Reserva.class);
-		y = mock(Inquilino.class);
-		x = mock(Inquilino.class);
-		reserva2 = mock(Reserva.class);
-		reservasDeInquilino = Arrays.asList(reserva,reserva1);
-		casa = mock(Inmueble.class);
-		hotel = mock(Inmueble.class);
-		tiposInmuebles = Arrays.asList(duplex);
-		duplex = mock(TipoInmueble.class);
-		luz = mock(Servicio.class);
-		servicios = Arrays.asList(luz);
+		this.sis = new Sistema();
+		this.reserva = mock(Reserva.class);
+		this.reserva1 = mock(Reserva.class);
+		this.y = mock(Inquilino.class);
+		this.x = mock(Inquilino.class);
+		this.reserva2 = mock(Reserva.class);
+		this.reservasDeInquilino = Arrays.asList(reserva,reserva1);
+		this.casa = mock(Inmueble.class);
+		this.hotel = mock(Inmueble.class);
+		this.tiposInmuebles = Arrays.asList(duplex);
+		this.duplex = mock(TipoInmueble.class);
+		this.luz = mock(Servicio.class);
+		this.servicios = Arrays.asList(luz);
+		this.propietario = mock(Calificable.class);
+		this.buenServicio = mock(Categoria.class);
 	}
 
 	@Test
@@ -71,24 +77,17 @@ class SistemaTestCase {
 	
 	@Test
 	void testSeAgregaUnaCategoriaAlSistema() {
-		sis.agregarCategoria(mock(Categoria.class));
+		sis.agregarCategoria(this.propietario, this.buenServicio);
 		
-		assertEquals(1, cantidadDeCategoriasDelSistema());
-	}
-	//LO CREE PARA NO ROMPER EL ENCAPSULAMIENTO
-	private int cantidadDeCategoriasDelSistema() {
-		return sis.getCategorias().size();
+		assertEquals(1, this.sis.getCategoriasPara(this.propietario).size());
+		assertTrue(this.sis.tieneCategoriaPara(this.propietario, this.buenServicio));
 	}
 	
 	@Test
 	void testSeAgregaUnTipoDeInmuebleAlSistema() {
 		sis.agregarTipoDeInmueble(mock(TipoInmueble.class));
 		
-		assertEquals(1, cantidadDeTiposDeInmeublesDeSistema());
-	}
-
-	private int cantidadDeTiposDeInmeublesDeSistema() {
-		return sis.getTipoDeInmueblesAceptados().size();
+		assertEquals(1, sis.getTipoDeInmueblesAceptados().size());
 	}
 
 	@Test

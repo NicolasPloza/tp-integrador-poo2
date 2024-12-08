@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ar.edu.unq.poo2.integrador.Calificable;
+import ar.edu.unq.poo2.integrador.Calificacion;
+import ar.edu.unq.poo2.integrador.Categoria;
 import ar.edu.unq.poo2.integrador.Propietario;
 import ar.edu.unq.poo2.integrador.Sistema;
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
@@ -14,21 +17,26 @@ import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 import static org.mockito.Mockito.*;
 
 class PropietarioTestCase {
-	String nombre;
-	String email;
-	int tel;
-	Sistema sistema;
-	LocalDate fechaDeIngreso ;
-	Propietario propietario;
+	
+	private String nombre;
+	private String email;
+	private int tel;
+	private Sistema sistema;
+	private LocalDate fechaDeIngreso;
+	private Propietario propietario;
+	private Calificacion calificacion;
+	private Categoria buenServicio;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		nombre = "Juan Rodrigez";
-		email = "email@mail.com";
-		tel = 1554987566;
-		sistema = mock(Sistema.class);
-		fechaDeIngreso = LocalDate.of(2022, 8, 24);
-		propietario = new Propietario(nombre, email, tel, fechaDeIngreso, sistema);
+		this.nombre = "Juan Rodrigez";
+		this.email = "email@mail.com";
+		this.tel = 1554987566;
+		this.sistema = mock(Sistema.class);
+		this.fechaDeIngreso = LocalDate.of(2022, 8, 24);
+		this.calificacion = mock(Calificacion.class);
+		this.buenServicio = mock(Categoria.class);
+		this.propietario = new Propietario(nombre, email, tel, fechaDeIngreso, sistema);
 	}
 
 	@Test
@@ -75,6 +83,24 @@ class PropietarioTestCase {
 		
 	}
 	
+	@Test
+	void testSeAgregaUnaCalificacionParaUnPropietario() {
+		when(this.calificacion.getCategoria()).thenReturn(this.buenServicio);
+		when(this.sistema.tieneCategoriaPara(Calificable.PROPIETARIO, this.buenServicio)).thenReturn(true);
+		this.propietario.agregarCalificacion(this.calificacion);
+		
+		assertEquals(1, this.propietario.getCalificaciones().size());
+		assertTrue(this.propietario.getCalificaciones().contains(this.calificacion));
+	}
 	
+	@Test
+	void testSeAgregaUnaCalificacionDeUnCategoriaEquivocadaParaUnPropietario() {
+		when(this.calificacion.getCategoria()).thenReturn(this.buenServicio);
+		when(this.sistema.tieneCategoriaPara(Calificable.PROPIETARIO, this.buenServicio)).thenReturn(false);
+		this.propietario.agregarCalificacion(this.calificacion);
+		
+		assertEquals(0, this.propietario.getCalificaciones().size());
+		assertFalse(this.propietario.getCalificaciones().contains(this.calificacion));
+	}
 	
 }    

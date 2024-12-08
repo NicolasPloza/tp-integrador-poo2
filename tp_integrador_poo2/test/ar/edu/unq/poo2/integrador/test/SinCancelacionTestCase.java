@@ -14,19 +14,21 @@ import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 import ar.edu.unq.poo2.integrador.inmueble.SinCancelacion;
 
 class SinCancelacionTestCase {
+	
+	private SinCancelacion politica;
+	private Reserva reserva;
+	
 	@BeforeEach
 	void setUp() throws Exception {
+		this.reserva = mock(Reserva.class);
+		this.politica = new SinCancelacion();
 	}
 
 	@Test
 	void testSeCalculaElCostoDeCancelacionDeLaPolitica() {
-		Reserva reserva = mock(Reserva.class);
-		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 11, 11));
-		when(reserva.precioParaFechaElegida()).thenReturn(3000.0);
-		Inmueble hotel = mock(Inmueble.class);
+		when(this.reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 12, 12));
+		when(this.reserva.precioParaFechaElegida()).thenReturn(3000.0);
 		
-		SinCancelacion sinCancelacion = new SinCancelacion();
-		
-		assertEquals(3000.0, sinCancelacion.costo(reserva, hotel));
+		assertEquals(3000.0, this.politica.costo(this.reserva));
 	}
 }

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import ar.edu.unq.poo2.integrador.inmueble.Foto;
 
-class TestCaseFoto {
+class FotoTestCase {
 	@Test
 	void testInicializacion() {
 		Foto living = new Foto("Living", "Amplio espacio, con televisor 4K");

@@ -10,39 +10,40 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ar.edu.unq.poo2.integrador.Reserva;
-import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 import ar.edu.unq.poo2.integrador.inmueble.Intermedia;
 
 class IntermediaTestCase {
 	
-	Reserva reserva;
-	Inmueble hotel;
-	Intermedia intermedia;
+	private Reserva reserva;
+	private Intermedia intermedia;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		reserva = mock(Reserva.class);
-		hotel = mock(Inmueble.class);
-		intermedia = new Intermedia();
+		this.reserva = mock(Reserva.class);
+		this.intermedia = new Intermedia();
 	}
 
 	@Test
-	void testSeCancelaLaReservaVeinteDiasAntesDeLaFechaDeInicio() {
-		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 12, 31));
-		assertEquals(0.0, intermedia.costo(reserva, hotel));
+	void testSeCancelaLaReservaConMasDeVeinteDiasAntesDeLaFechaDeInicio() {
+		when(this.reserva.getFechaInicio()).thenReturn(LocalDate.now().plusDays(25));
+		when(this.reserva.precioParaFechaElegida()).thenReturn(3000.0);
+		
+		assertEquals(0.0, this.intermedia.costo(this.reserva));
 	}
 	
 	@Test
 	void testSeCancelaLaReservaEnElIntervaloAceptableAntesDeLaFechaDeInicio() {
-		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 11, 27));
-		when(reserva.precioParaFechaElegida()).thenReturn(3000.0);
-		assertEquals(1500.0, intermedia.costo(reserva, hotel));
+		when(this.reserva.getFechaInicio()).thenReturn(LocalDate.now().plusDays(15));
+		when(this.reserva.precioParaFechaElegida()).thenReturn(3000.0);
+		
+		assertEquals(1500.0, this.intermedia.costo(this.reserva));
 	}
 	
 	@Test
 	void testseCancelaFueraDelIntervaloAceptableAntesDeLaFechaDeInicio() {
-		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 11, 13));
-		when(reserva.precioParaFechaElegida()).thenReturn(3000.0);
-		assertEquals(3000.0, intermedia.costo(reserva, hotel));
+		when(this.reserva.getFechaInicio()).thenReturn(LocalDate.now().plusDays(5));
+		when(this.reserva.precioParaFechaElegida()).thenReturn(3000.0);
+		
+		assertEquals(3000.0, this.intermedia.costo(this.reserva));
 	}	
 }

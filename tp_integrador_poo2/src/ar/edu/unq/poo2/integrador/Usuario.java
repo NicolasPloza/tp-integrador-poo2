@@ -63,12 +63,12 @@ public abstract class Usuario implements Rankeable{
 		double totalPuntajes;
 		
 		totalPuntajes=calificaciones.stream()
-							.filter( c -> c.getCategoria().getNombre() == categoria.getNombre() )
-							.mapToDouble( c -> c.getPuntaje() )
+							.filter(calificacion -> calificacion.getCategoria().getNombre().equals(categoria.getNombre()))
+							.mapToDouble(calificacion -> calificacion.getPuntaje())
 							.sum();
 		
 		cantidadDePuntajes =  calificaciones.stream()
-							.filter( c -> c.getCategoria().getNombre() == categoria.getNombre() )
+							.filter(calificacion -> calificacion.getCategoria().getNombre().equals(categoria.getNombre()))
 							.count();
 		
 		

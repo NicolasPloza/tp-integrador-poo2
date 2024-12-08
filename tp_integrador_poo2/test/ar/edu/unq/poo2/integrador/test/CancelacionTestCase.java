@@ -14,27 +14,33 @@ import ar.edu.unq.poo2.integrador.inmueble.Cancelacion;
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
 class CancelacionTestCase {
-	Reserva reserva;
-	Inmueble hotel;
-	Cancelacion cancelacion;
+	
+	private Reserva reserva;
+	private Cancelacion cancelacion;
+	private Inmueble inmueble;
+	
 	@BeforeEach
 	void setUp() throws Exception {
-		reserva = mock(Reserva.class);
-		hotel = mock(Inmueble.class);
-		cancelacion = new Cancelacion();
+		this.reserva = mock(Reserva.class);
+		this.inmueble = mock(Inmueble.class);
+		this.cancelacion = new Cancelacion();
 	}
 
 	@Test
 	void testSeCancelaLaReservaAntesDelPlazoDeDiezDiasPreviosAlDiaDeInicio() {
-		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 11, 25));
-		when(hotel.getPrecioDefault()).thenReturn(300.0);		
-		assertEquals(0, cancelacion.costo(reserva, hotel));
+		when(this.reserva.getInmueble()).thenReturn(this.inmueble);
+		when(this.reserva.getFechaInicio()).thenReturn(LocalDate.now().plusDays(15));
+		when(this.reserva.getInmueble().getPrecioDefault()).thenReturn(300.0);
+		
+		assertEquals(0, this.cancelacion.costo(this.reserva));
 	}
 	
 	@Test
 	void testSeCancelaLaReservaDespuesDelPlazoDeDiezDiasPreviosAlDiaDeInicio() {
-		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 11, 20));
-		when(hotel.getPrecioDefault()).thenReturn(300.0);
-		assertEquals(600.0, cancelacion.costo(reserva, hotel));
+		when(this.reserva.getInmueble()).thenReturn(this.inmueble);
+		when(this.reserva.getFechaInicio()).thenReturn(LocalDate.now().plusDays(5));
+		when(this.reserva.getInmueble().getPrecioDefault()).thenReturn(300.0);
+		
+		assertEquals(600.0, this.cancelacion.costo(this.reserva));
 	}
 }

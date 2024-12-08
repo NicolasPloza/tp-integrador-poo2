@@ -41,7 +41,7 @@ class ReservaTestCase {
 		this.inquilinosInteresados = new ArrayList<Inquilino>();
 		this.estado = mock(EstadoReserva.class);
 		this.gestionador = mock(GestionadorDeNotificaciones.class);
-		this.reserva = new Reserva(this.inquilino, this.propietario, this.inmueble, LocalDate.of(1998, 2, 20), LocalDate.of(2000, 1, 1), this.medioDepago);
+		this.reserva = new Reserva(this.inquilino, this.inmueble, LocalDate.of(1998, 2, 20), LocalDate.of(2000, 1, 1), this.medioDepago);
 	}
 
 	@Test
@@ -89,6 +89,8 @@ class ReservaTestCase {
 	
 	@Test
 	void testSeNotificaLaCancelacionDeUnInmueble() {
+		when(this.reserva.getInmueble().getPropietario()).thenReturn(this.propietario);
+		when(this.propietario.getEmail()).thenReturn("email@mail.com");
 		this.reserva.setGestionador(this.gestionador);
 		this.reserva.notificarCancelacion();
 		
@@ -121,6 +123,7 @@ class ReservaTestCase {
 	
 	@Test
 	void testSeObtieneAlPropietarioDeLaReserva() {
+		when(this.inmueble.getPropietario()).thenReturn(this.propietario);
 		Propietario propietario = this.reserva.getPropietario();
 		
 		assertEquals(propietario, this.propietario);
