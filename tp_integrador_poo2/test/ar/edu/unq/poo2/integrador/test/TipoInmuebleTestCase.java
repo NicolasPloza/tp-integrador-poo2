@@ -14,7 +14,7 @@ class TipoInmuebleTestCase {
 		TipoInmueble casa = new TipoInmueble("Casa", "3 ambientes");
 		
 		assertEquals("Casa", casa.getNombre());
-		assertEquals("3 ambiente", casa.getDescripcion());
+		assertEquals("3 ambientes", casa.getDescripcion());
 	}
 
 }

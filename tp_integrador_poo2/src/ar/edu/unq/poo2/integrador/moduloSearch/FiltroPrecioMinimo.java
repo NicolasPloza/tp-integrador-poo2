@@ -7,7 +7,7 @@ public class FiltroPrecioMinimo implements FiltroOpcional {
 	private double precioMinimo;
 	
 	public FiltroPrecioMinimo(double precioMinimo) {
-		this.precioMinimo=precioMinimo;
+		this.precioMinimo = precioMinimo;
 	}
 	
 	@Override

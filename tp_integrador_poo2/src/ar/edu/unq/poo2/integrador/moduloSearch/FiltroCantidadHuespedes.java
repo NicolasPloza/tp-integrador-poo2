@@ -7,7 +7,7 @@ public class FiltroCantidadHuespedes implements FiltroOpcional {
 	private int cantHuespedes;
 	
 	public FiltroCantidadHuespedes(int cantidadDeHuespedes){
-		this.cantHuespedes=cantidadDeHuespedes;
+		this.cantHuespedes = cantidadDeHuespedes;
 	}
 	
 	@Override
