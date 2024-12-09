@@ -20,13 +20,8 @@ import ar.edu.unq.poo2.integrador.inmueble.SinCancelacion;
 import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
 
 import static org.mockito.Mockito.*;
-
-import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 class InmuebleTestCase {
 	private TipoInmueble casa;
@@ -183,7 +178,7 @@ class InmuebleTestCase {
 	@Test
 	void seCalculaElPromedioDeLaCategoriaBuenTrato() {
 		//setUp
-		List<Calificacion> calificaciones = new ArrayList<Calificacion>();
+		//List<Calificacion> calificaciones = new ArrayList<Calificacion>();
 		Categoria buenTrato = mock(Categoria.class);
 		when(buenTrato.getNombre()).thenReturn("buen trato");
 		Categoria buenTrato1 = mock(Categoria.class);
@@ -229,15 +224,21 @@ class InmuebleTestCase {
 		List<Periodo> periodos1 = new ArrayList<Periodo>();
 		Periodo festival = mock(Periodo.class);
 		when(festival.getPrecioPorDia()).thenReturn(200.0);
-		when(festival.esFechaDePeriodo(null)).thenReturn(true);
+		when(festival.esFechaDePeriodo(LocalDate.of(2002, 3, 1))).thenReturn(true);
+		when(festival.esFechaDePeriodo(LocalDate.of(2002, 3, 2))).thenReturn(true);
+		when(festival.esFechaDePeriodo(LocalDate.of(2002, 3, 3))).thenReturn(true);
 		periodos1.add(festival);
 		
-		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 100.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, periodos1, this.gestionador, this.sistema);
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 100.0, this.casa,
+										this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, 
+										periodos1, this.gestionador, this.sistema);
+		
+		//exercise
+		double precio =  hotel.getPrecioDePeriodo(LocalDate.of(2002, 3, 1), LocalDate.of(2002, 3, 5));
 		
 		//verify
-		assertEquals(600.0, hotel.getPrecioDePeriodo(LocalDate.of(2002, 3, 1), LocalDate.of(2002, 3, 5)));
-		//verify(festival).getPrecioPorDia();
-		verify(festival).esFechaDePeriodo(mock(LocalDate.class));
+		assertEquals(800.0, precio );
+		verify(festival, times(3)).getPrecioPorDia();
 	}
 	
 	@Test
@@ -277,11 +278,144 @@ class InmuebleTestCase {
 		
 		assertEquals(3, alquiler1.getFotos().size());
 	}
-	
+	/* ---------ESTE TEST SE SACO PORQUE EL INMUEBLE SOLO GUARDA LAS RESERVAS ACEPTADAS O CONDICIONALES, LAS PENDIENTES NO----
 	@Test
 	void testSeReservaUnInmueble() {
 		when(tarjeta.getNombre()).thenReturn("tarjeta");
 		alquiler1.reservar(mock(Inquilino.class), LocalDate.of(2025, 5, 4), LocalDate.of(2025,5, 14), tarjeta);
 		assertEquals(1, alquiler1.getReservas().size());
+	}*/
+	
+//----------------------------- INICIAR RESERVA ------------------------------------------------------------
+	@Test
+	void test_seVerificaQueSeIniciaUnaReservaDeUnInmueble_IngresandoMedioDePagoValido() {
+		
+		//SETUP
+		Propietario propietario = mock(Propietario.class);
+		Inquilino inquilino = mock(Inquilino.class);
+		
+		MedioDePago tarjeta = mock(MedioDePago.class);
+		when(tarjeta.getNombre()).thenReturn("tarjeta");
+		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  
+		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
+										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
+										 this.periodos, this.gestionador, this.sistema);
+		
+		//EXERCISE
+		inmueble.reservar(inquilino, LocalDate.of(2024, 12, 15), LocalDate.of(2024, 12, 25), tarjeta);
+		
+		
+		//VERIFY
+		verify(tarjeta, atLeastOnce()).getNombre();
+		assertFalse(inmueble.getReservas().isEmpty());
+		assertTrue(inmueble.getReservasAceptadas().isEmpty()); // todavia la tiene que aceptar el propietario
+	
 	}
+	
+	@Test
+	void test_SeVerificaQueSeIngresaUnMedioDePagoInvalido_entoncesSeLanzaUnaExcepcion() {
+		//SETUP
+		Propietario propietario = mock(Propietario.class);
+		Inquilino inquilino = mock(Inquilino.class);
+		
+		MedioDePago tarjeta = mock(MedioDePago.class);
+		when(tarjeta.getNombre()).thenReturn("tarjeta");
+		
+		MedioDePago modo = mock(MedioDePago.class);
+		when(modo.getNombre()).thenReturn("modo");
+		
+		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  
+		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
+										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
+										 this.periodos, this.gestionador, this.sistema);
+		
+		//EXERCISE
+		RuntimeException error = 
+				assertThrows(RuntimeException.class, () -> inmueble.reservar(inquilino, LocalDate.of(2024, 12, 15)
+																			 , LocalDate.of(2024, 12, 25), modo));
+		
+		
+		//VERIFY
+		verify(tarjeta).getNombre();
+		verify(modo).getNombre();
+		verifyNoInteractions(propietario);
+		verifyNoInteractions(sistema);
+		assertTrue(inmueble.getReservas().isEmpty());
+		assertTrue(inmueble.getReservasCondicionales().isEmpty() );
+		assertEquals("El medio de pago ingresado no es valido", error.getMessage());
+		
+	
+	}
+	
+	
+	@Test
+	void test_seVerificaQueSeIniciaUnaReservaQueNoEstaDisponible_entoncesSeAgregaALaListaDeReservasCondicionales() {
+		
+		//SETUP
+		Propietario propietario = mock(Propietario.class);
+		Inquilino inquilino = mock(Inquilino.class);
+		MedioDePago tarjeta = mock(MedioDePago.class);
+		when(tarjeta.getNombre()).thenReturn("tarjeta");
+		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  		
+		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
+										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
+										 this.periodos, this.gestionador, this.sistema);
+		Reserva reserva = mock(Reserva.class);
+		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 12, 9));
+		when(reserva.getFechaFin()).thenReturn(LocalDate.of(2024, 12, 17));
+		when(reserva.esAceptada()).thenReturn(true);
+		
+		//EXERCISE
+		inmueble.agregarReserva(reserva);
+		inmueble.reservar(inquilino, LocalDate.of(2024, 12, 15), LocalDate.of(2024, 12, 25), tarjeta);
+		
+		
+		//VERIFY
+		assertFalse(inmueble.getReservasCondicionales().isEmpty());
+		verify(reserva).getFechaInicio();
+		verify(reserva).getFechaFin();
+		verifyNoInteractions(propietario);
+		verifyNoInteractions(sistema);
+		
+	}
+	
+	@Test 
+	void test_seVerificaQueSeProcesaLaListaDeCondicionalesCuandoSeCancelaUnaReserva() {
+		//setup
+		Propietario propietario = mock(Propietario.class);
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
+				 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
+				 this.periodos, this.gestionador, this.sistema);
+		
+		LocalDate fechaIni = LocalDate.of(2024, 8 , 5);
+		LocalDate fechaFin = LocalDate.of(2024, 8, 10);
+		
+		Reserva reservaCond1 = mock(Reserva.class);
+		when(reservaCond1.estaDentroDeFechas(fechaIni, fechaFin)).thenReturn(true);
+		
+		Reserva reservaCond2 = mock(Reserva.class);
+		when(reservaCond2.estaDentroDeFechas(fechaIni, fechaFin)).thenReturn(false);
+		
+		inmueble.agregarReservaCondicional(reservaCond1);
+		inmueble.agregarReservaCondicional(reservaCond2);
+		
+		//exercise
+		inmueble.procesarReservasCondicionalesPara(fechaIni , fechaFin );
+		
+		//verify
+		assertFalse(inmueble.getReservasCondicionales().contains(reservaCond1));
+		assertTrue(inmueble.getReservas().contains(reservaCond1));
+		verify(propietario).agregarReserva(reservaCond1);
+		verify(sistema).registrar(reservaCond1);
+		
+	}
+	
+	
+	
+	
+	
+	
 }

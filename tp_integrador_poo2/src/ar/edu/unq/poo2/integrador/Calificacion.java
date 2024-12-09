@@ -1,7 +1,5 @@
 package ar.edu.unq.poo2.integrador;
 
-import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
-
 public class Calificacion {
 	
 	private Categoria categoria;

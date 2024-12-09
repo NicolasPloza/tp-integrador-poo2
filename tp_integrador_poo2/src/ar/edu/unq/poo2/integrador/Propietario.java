@@ -43,11 +43,30 @@ public class Propietario extends Usuario{
 		this.getInmuebles().add(inmueble);
 		this.getSistema().registrarInmueble(inmueble);
 	}
-
+	
+	public void aceptarReserva(Reserva reserva) {
+		reserva.concretar();
+	}
+	
+	
 	@Override
 	public void agregarCalificacion(Calificacion calificacion) {
 		if(this.getSistema().tieneCategoriaPara(Calificable.PROPIETARIO, calificacion.getCategoria())) {
 			this.getCalificaciones().add(calificacion);
 		}
 	}
+
+	public int getCantidadDeInmuebles() {
+		return this.getInmuebles().size();
+	}
+
+	public int cantidadTotalDeAlquileres() {
+		
+		return  this.getInmuebles()
+					.stream()
+					.mapToInt(i -> i.cantidadDeAlquileres())
+					.sum() ; 
+	}
+
+	
 }

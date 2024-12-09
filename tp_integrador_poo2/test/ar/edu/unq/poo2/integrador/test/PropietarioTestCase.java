@@ -55,7 +55,7 @@ class PropietarioTestCase {
 	@Test
 	void test_propietarioSabeHaceCuantoQueEsUsuario() {
 		//setup
-		Propietario propietario = new Propietario();
+		Propietario propietario = new Propietario(nombre, email, tel, fechaDeIngreso, sistema);
 		propietario.setFechaDeIngreso(LocalDate.of(2022, 11, 11));
 		
 		//exercise
@@ -102,5 +102,44 @@ class PropietarioTestCase {
 		assertEquals(0, this.propietario.getCalificaciones().size());
 		assertFalse(this.propietario.getCalificaciones().contains(this.calificacion));
 	}
+	
+	@Test
+	void test_seVerificaQueUnPropietarioSabeLaCantidadDeInmueblesDadosDeAltaQueTiene() {
+		//setup
+		Inmueble casa = mock(Inmueble.class);
+		Inmueble rancho = mock(Inmueble.class);
+		Inmueble palacio = mock(Inmueble.class);
+		propietario.realizarAlta(casa);
+		propietario.realizarAlta(rancho);
+		propietario.realizarAlta(palacio);
+		
+		//exercise
+		int cantidadDeInmuebles =  propietario.getCantidadDeInmuebles();
+		
+		//verify
+		assertEquals(3 , cantidadDeInmuebles);
+	}
+	
+	
+	@Test
+	void test_seVerificaQueUnPropietarioSabeLaCantidadDeVecesQueAlquiloUnInmueble_yCantidadTotal() {
+		//setup
+		Inmueble casa = mock(Inmueble.class);
+		Inmueble rancho = mock(Inmueble.class);
+		Inmueble palacio = mock(Inmueble.class);
+		propietario.realizarAlta(casa);
+		propietario.realizarAlta(rancho);
+		propietario.realizarAlta(palacio);
+		
+		when(casa.cantidadDeAlquileres()).thenReturn(0);
+		when(rancho.cantidadDeAlquileres()).thenReturn(3);
+		when(palacio.cantidadDeAlquileres()).thenReturn(4);
+		
+		//exercise - verify
+
+		assertEquals(7 , propietario.cantidadTotalDeAlquileres() );
+	}
+	
+	
 	
 }    

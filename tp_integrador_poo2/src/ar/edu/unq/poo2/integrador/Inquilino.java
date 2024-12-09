@@ -1,10 +1,8 @@
 package ar.edu.unq.poo2.integrador;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
 public class Inquilino extends Usuario {
 
@@ -38,6 +36,11 @@ public class Inquilino extends Usuario {
 				.map(reserva -> reserva.getInmueble().getCiudad())
 				.toList();
 		return ciudades;
+	}
+
+	public long getCantidadDeAlquileres() {
+		
+		return this.getTodasLasReservas().stream().filter(r -> r.estaFinalizada()).count() ;
 	}
 	
 }

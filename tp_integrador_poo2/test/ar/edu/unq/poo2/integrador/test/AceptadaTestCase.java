@@ -26,7 +26,7 @@ class AceptadaTestCase {
 		
 		verify(this.reserva, never()).notificarReserva();
 	}
-	
+/*	
 	@Test
 	void testSeCancelaUnaReservaAceptada() {
 		when(this.reserva.tieneInquilinosEncolados()).thenReturn(false);
@@ -42,7 +42,7 @@ class AceptadaTestCase {
 		
 		verify(this.reserva).procesarCola();
 	}
-	
+*/	
 	@Test
 	void testSeIndicaSiUnaReservaAceptadaEstaAceptada() {
 		assertTrue(this.estado.estaAceptada());

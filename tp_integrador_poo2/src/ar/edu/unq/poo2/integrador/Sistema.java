@@ -1,8 +1,6 @@
 package ar.edu.unq.poo2.integrador;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumMap;
 import java.util.List;
 
@@ -84,12 +82,8 @@ public class Sistema {
 		this.getReservas().stream().filter(r->r == reserva).findFirst().ifPresent(r->r.cancelar());
 	}
 
-	public long cantidadDeAlquileresDePropietario(Usuario propietario) {
-		return this.getReservas().stream().
-				filter(r->r.getPropietario() == propietario && r.estaFinalizada())
-				.count();
-	}
 	
+
 	public List<String> getNombresDeTiposPermitidos() {
 		return this.inmueblesAceptados.stream().map(i->i.getNombre()).toList();
 	}
@@ -97,19 +91,33 @@ public class Sistema {
 	public List<String> getNombresDeServiciosPermitidos() {
 		return this.serviciosAceptados.stream().map(s->s.getNombre()).toList();
 	}
-
+	
+	public List<TipoInmueble> getTipoDeInmueblesAceptados() {
+		return inmueblesAceptados;
+	}
+	
+//------- refactorizar sabiendo que cada inmueble conoce sus reservas al igual que inquilino y prop------------------
+/*	
 	public Long cantidadVecesAlquilado(Inmueble inmueble) {
 		return this.getReservas().stream().
 				filter(r->r.getInmueble() == inmueble)
 				.count();
 	}
-
-	public List<TipoInmueble> getTipoDeInmueblesAceptados() {
-		return inmueblesAceptados;
+	
+	public long cantidadDeAlquileresDePropietario(Usuario propietario) {
+		return this.getReservas().stream().
+				filter(r->r.getPropietario() == propietario && r.estaFinalizada())
+				.count();
 	}
+*/	
+//--------------------------------------------------------------------------------------------------------------------
 	
-	//------------------------------------------------------------------------------------------------------
+
 	
+
+	
+//------------------ estos metodos ahora los tiene inmueble ----------------------------------------------------------
+/*
 	public boolean estaDisponible(Inmueble inmuebleDisponible, LocalDate fechaEntrada, LocalDate fechaSalida) {
 		
 		return	this.getReservasParaPeriodo(fechaEntrada, fechaSalida)
@@ -124,8 +132,7 @@ public class Sistema {
 				   .filter( r -> r.getFechaInicio().isAfter(fechaEntrada) && r.getFechaInicio().isBefore(fechaSalida))
 				   .toList();
 	}
-
-	public void agregarReserva(Reserva reserva) {
-		this.reservas.add(reserva);
-	}
+*/
+	
+	
 }

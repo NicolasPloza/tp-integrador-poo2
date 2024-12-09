@@ -23,12 +23,6 @@ public class Aceptada implements EstadoReserva {
 	@Override
 	public void cancelar(Reserva reserva) {
 		reserva.notificarCancelacion();
-		if(reserva.tieneInquilinosEncolados()) {
-			reserva.procesarCola();
-			reserva.setEstado(Pendiente.getInstance());
-		} else {
-			reserva.setEstado(Cancelada.getInstance());
-		}
 	}
 
 	@Override

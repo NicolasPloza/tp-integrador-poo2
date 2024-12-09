@@ -4,13 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ar.edu.unq.poo2.integrador.Aceptada;
 import ar.edu.unq.poo2.integrador.EstadoReserva;
 import ar.edu.unq.poo2.integrador.GestionadorDeNotificaciones;
 import ar.edu.unq.poo2.integrador.Inquilino;
@@ -22,12 +20,12 @@ import ar.edu.unq.poo2.integrador.inmueble.MedioDePago;
 class ReservaTestCase {
 	
 	private Reserva reserva;
-	private Reserva reservaDos;
-	private Inquilino potencialInquilino;
+//	private Reserva reservaDos;
+//	private Inquilino potencialInquilino;
 	private Propietario propietario;
 	private Inmueble inmueble;
 	private MedioDePago medioDepago;
-	private List<Inquilino> inquilinosInteresados;
+//	private List<Inquilino> inquilinosInteresados;
 	private EstadoReserva estado;
 	private GestionadorDeNotificaciones gestionador;
 	private Inquilino inquilino;
@@ -38,7 +36,7 @@ class ReservaTestCase {
 		this.propietario = mock(Propietario.class);
 		this.inmueble = mock(Inmueble.class);
 		this.medioDepago = mock(MedioDePago.class);
-		this.inquilinosInteresados = new ArrayList<Inquilino>();
+//		this.inquilinosInteresados = new ArrayList<Inquilino>();
 		this.estado = mock(EstadoReserva.class);
 		this.gestionador = mock(GestionadorDeNotificaciones.class);
 		this.reserva = new Reserva(this.inquilino, this.inmueble, LocalDate.of(1998, 2, 20), LocalDate.of(2000, 1, 1), this.medioDepago);
@@ -59,7 +57,7 @@ class ReservaTestCase {
 		
 		verify(this.estado).cancelar(this.reserva);
 	}
-	
+/*	
 	@Test
 	void testSeRegistraUnNuevoInquilinoParaUnaReserva() {
 		this.reserva.setPotenciaInquilino(this.inquilino);
@@ -78,7 +76,7 @@ class ReservaTestCase {
 	void testSeVerificaDeQueUnaReservaNoTengaInquilinosEncolados() {
 		assertFalse(this.reserva.tieneInquilinosEncolados());
 	}
-	
+*/
 	@Test
 	void testSeNotificaLaReservaDeUnInmueble() {
 		this.reserva.setGestionador(this.gestionador);
@@ -96,7 +94,7 @@ class ReservaTestCase {
 		
 		verify(this.gestionador).notificarCancelacion(this.reserva.getTipoDeInmueble(), this.reserva.getEmailDelPropietario());
 	}
-	
+	/*
 	@Test
 	void testSeRegistraAUnNuevoInquilinoEncolado() {
 		this.reserva.añadirALaCola(this.inquilino);
@@ -104,7 +102,7 @@ class ReservaTestCase {
 		
 		assertFalse(this.reserva.tieneInquilinosEncolados());
 	}
-	
+	*/
 	@Test
 	void testSeObtieneElPrecioDeLaReserva() {
 		when(this.inmueble.getPrecioDePeriodo(this.reserva.getFechaInicio(), this.reserva.getFechaFin())).thenReturn(4500d);

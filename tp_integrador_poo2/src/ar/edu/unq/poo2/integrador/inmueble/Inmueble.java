@@ -154,7 +154,7 @@ public class Inmueble implements Rankeable{
 
 	public double getPrecioDePeriodo(LocalDate fechaDeInicio, LocalDate fechaDeFin) {
 		double precioDePeriodo = 0.0;
-		while(!fechaDeInicio.isAfter(fechaDeFin.plusDays(1))) {
+		while(!fechaDeInicio.isAfter(fechaDeFin)) {
 			if(this.perteneceAAlgunPeriodo(fechaDeInicio)) {
 				precioDePeriodo += this.getPeriodo(fechaDeInicio).getPrecioPorDia();
 			} else {
@@ -219,22 +219,35 @@ public class Inmueble implements Rankeable{
 	}
 	
 	public void reservar(Inquilino inquilino, LocalDate fechaInicial, LocalDate fechaFin, MedioDePago medioDePago) {
+		
 		if(!this.tieneMedioDePago(medioDePago)) {
-			Reserva reserva = new Reserva(inquilino, this, fechaInicial, fechaFin, medioDePago);
+			throw new RuntimeException("El medio de pago ingresado no es valido");
+		}
+		
+		
+		Reserva reserva = new Reserva(inquilino, this, fechaInicial, fechaFin, medioDePago);
+		
+		if(this.estaDisponibleEn(fechaInicial, fechaFin) ) {						
 			this.propietario.agregarReserva(reserva);
-			this.sistema.agregarReserva(reserva);
-			this.reservas.add(reserva);
+			this.sistema.registrar(reserva);
+			this.agregarReserva(reserva); 
 		}else {
-			//Excepcion!!! a confirmar
+			this.agregarReservaCondicional(reserva);
 		}
 	}
 
-	private boolean tieneMedioDePago(MedioDePago medioDePago) {
+	public boolean tieneMedioDePago(MedioDePago medioDePago) {
 		return this.mediosDePago.stream().anyMatch(mp-> mp.getNombre().equals(medioDePago.getNombre()));
 	}
 	
-	public List<Reserva> getReservas() {
-		return reservas;
+	public List<Reserva> getReservas(){
+		return this.reservas;
+	}
+	
+	public List<Reserva> getReservasAceptadas() {
+		return 	reservas.stream()
+						.filter( r -> r.esAceptada() )
+						.toList() ;
 	}
 	
 	public void agregarFoto(Foto foto) {
@@ -244,16 +257,51 @@ public class Inmueble implements Rankeable{
 	}
 
 	public boolean estaDisponibleEn(LocalDate fechaEntrada, LocalDate fechaSalida) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return  this.getReservasAceptadas()
+					.stream()
+					.allMatch(r -> r.getFechaInicio().isAfter(fechaSalida) || r.getFechaFin().isBefore(fechaEntrada));
 	}
-	
-	/*
-	 * if(this.sistema.estaDisponible(this, fechaInicial, fechaFin)) {
+
+	public void agregarReserva(Reserva reserva) {
 		this.reservas.add(reserva);
-	 } else {
-		this.reservasCondicionales.add(reserva);
+		
 	}
-	 * */
+
+	public List<Reserva> getReservasCondicionales() {
+		
+		return reservasCondicionales;
+	}
+
+	public void procesarReservasCondicionalesPara(LocalDate fechaInicio, LocalDate fechaFin) {
+	
+		Reserva reserva = 
+				this.getReservasCondicionales().stream()
+					.filter(r -> r.estaDentroDeFechas(fechaInicio, fechaFin)).findFirst().orElse(null);
+		
+		if(reserva != null) {
+			this.getReservasCondicionales().remove(reserva);
+			this.propietario.agregarReserva(reserva);
+			this.sistema.registrar(reserva);
+			this.agregarReserva(reserva);
+		}
+		
+	}
+
+	public void agregarReservaCondicional(Reserva reservaCondicional) {
+		
+		this.reservasCondicionales.add(reservaCondicional);
+	}
+
+	public int cantidadDeAlquileres() {
+		
+		return this.getReservas().stream()
+								 .filter(r -> r.estaFinalizada())
+								 .toList().size();
+	}
+
+
+	
+	
 	
 }

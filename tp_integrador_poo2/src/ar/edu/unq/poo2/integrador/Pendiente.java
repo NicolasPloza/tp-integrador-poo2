@@ -17,6 +17,7 @@ public class Pendiente implements EstadoReserva {
 
 	@Override
 	public void concretar(Reserva reserva) {
+		reserva.getPropietario().removerReserva(reserva); // lo saca de la lista de pendientes del propietario
 		reserva.notificarReserva();
 		reserva.setEstado(Aceptada.getInstance());
 	}

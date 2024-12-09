@@ -129,5 +129,27 @@ class InquilinoTestCase {
 		assertTrue(this.inquilino.getCiudadesDeReservas().contains("Mar del Plata"));
 		assertTrue(this.inquilino.getCiudadesDeReservas().contains("Posadas"));
 	}
-
+	
+	@Test
+	void test_seVerificaQueUnInquilinoSabeResponderLaCantidadDeAlquileresQueTuvo() {
+		//setup
+		Reserva reservaEnCurso = mock(Reserva.class);
+		
+		inquilino.agregarReserva(reservaEnCurso);
+		inquilino.agregarReserva(reservaEnCarlosPaz);
+		inquilino.agregarReserva(reservaEnMarDelPlata);
+		inquilino.agregarReserva(reservaEnMisiones);
+		when(reservaEnCarlosPaz.estaFinalizada()).thenReturn(true);
+		when(reservaEnMarDelPlata.estaFinalizada()).thenReturn(true);
+		when(reservaEnMisiones.estaFinalizada()).thenReturn(true);
+		when(reservaEnCurso.estaFinalizada()).thenReturn(false);
+		
+		//exercise
+		long cantidadDealquileres =  inquilino.getCantidadDeAlquileres();
+		
+		//verify
+		assertEquals(cantidadDealquileres, 3);
+	}
+	
+	
 }

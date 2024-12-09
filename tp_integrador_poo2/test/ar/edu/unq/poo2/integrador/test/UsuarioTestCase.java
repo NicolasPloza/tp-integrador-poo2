@@ -21,7 +21,7 @@ class UsuarioTestCase {
 	@BeforeEach
 	void setUp() throws Exception {
 		sistema = mock(Sistema.class);
-		usuarioDePrueba = new Usuario("nombre apellido", "email@mail.com", 1554987566, sistema);
+		usuarioDePrueba = new Inquilino("nombre apellido", "email@mail.com", 1554987566, sistema);
 		puntualidad = crearMockCategoria("Puntualidad", "descripcion");
 		buenTrato = crearMockCategoria("Buen trato", "descripcion");
 		servicio = crearMockCategoria("Servicio", "descripcion");
@@ -33,7 +33,7 @@ class UsuarioTestCase {
 		String email = "useremail@mail.com";
 		int tel = 1522334455;
 		
-		Usuario user = new Usuario(nombre, email, tel, sistema);
+		Usuario user = new Inquilino(nombre, email, tel, sistema);
 		
 		assertEquals(nombre, user.getNombre());
 		assertEquals(email, user.getEmail());
@@ -42,15 +42,15 @@ class UsuarioTestCase {
 	
 	@Test 
 	void test_usuarioPuedeSetearSusDatos() {
-		Usuario user = new Usuario();
 		
-		user.setNombre("usuario");
-		user.setEmail("mail");
-		user.setTelefono(112244556);
 		
-		assertEquals("usuario", user.getNombre());
-		assertEquals("mail", user.getEmail());
-		assertEquals(112244556, user.getTelefono());
+		usuarioDePrueba.setNombre("usuario");
+		usuarioDePrueba.setEmail("mail");
+		usuarioDePrueba.setTelefono(112244556);
+		
+		assertEquals("usuario", usuarioDePrueba.getNombre());
+		assertEquals("mail", usuarioDePrueba.getEmail());
+		assertEquals(112244556, usuarioDePrueba.getTelefono());
 	}
 	
 	@Test
@@ -116,6 +116,31 @@ class UsuarioTestCase {
 		
 	}
 	
+	@Test
+	void test_seVerificaQueUnUsuarioAgregaUnaReservaASuLista() {
+		//setup
+		Reserva reserva =  mock(Reserva.class);
+		
+		//exercise	
+		usuarioDePrueba.agregarReserva(reserva);
+				
+		//verify
+		assertTrue( usuarioDePrueba.tieneReservaRegistrada(reserva)  );
+		
+	}
+	
+	@Test
+	void test_seVerificaQueUnUsuarioBorraUnaReservaDeSuLista() {
+		//setup
+		Reserva reserva =  mock(Reserva.class);
+		
+		//exercise	
+		usuarioDePrueba.removerReserva(reserva);
+				
+		//verify
+		assertFalse( usuarioDePrueba.tieneReservaRegistrada(reserva)  );
+		
+	}
 	
 	
 	private Calificacion crearMockCalificacion(Categoria categoria, int puntaje){
@@ -137,6 +162,8 @@ class UsuarioTestCase {
 		
 		return mockCategoria;
 	}
+	
+	
 	
 	/* casos borde: 
 	   - creacion de usuario q no esta registrado

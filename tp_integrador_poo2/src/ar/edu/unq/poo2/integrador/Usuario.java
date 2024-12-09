@@ -104,4 +104,13 @@ public abstract class Usuario implements Rankeable{
 	public void agregarReserva(Reserva reserva) {
 		this.getTodasLasReservas().add(reserva);
 	}
+	
+	public void removerReserva(Reserva reserva){
+		this.getTodasLasReservas().remove(reserva);
+	}
+
+	public boolean tieneReservaRegistrada(Reserva reserva) {
+		
+		return this.getTodasLasReservas().contains(reserva);
+	}
 }
