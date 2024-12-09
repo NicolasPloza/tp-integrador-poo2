@@ -30,8 +30,7 @@ public class Sistema {
 	}
 	
 	public void registrarInmueble(Inmueble inmueble) {
-		
-		this.inmuebles.add(inmueble);
+		if(this.acepta(inmueble.getTipoDeInmueble(), inmueble.getServicio())) this.inmuebles.add(inmueble);
 	}
 	
 	public List<Inmueble> getInmuebles() {
@@ -94,6 +93,10 @@ public class Sistema {
 	
 	public List<TipoInmueble> getTipoDeInmueblesAceptados() {
 		return inmueblesAceptados;
+	}
+	
+	public boolean acepta(TipoInmueble tipoDeInmueble, List<Servicio> servicios) {
+		return (this.inmueblesAceptados.contains(tipoDeInmueble) && this.serviciosAceptados.containsAll(servicios));
 	}
 	
 //------- refactorizar sabiendo que cada inmueble conoce sus reservas al igual que inquilino y prop------------------

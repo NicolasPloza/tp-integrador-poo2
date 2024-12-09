@@ -69,10 +69,41 @@ class SistemaTestCase {
 	}
 	
 	@Test
-	void testSeRegistraUnInmueble() {
-		sis.registrarInmueble(mock(Inmueble.class));
+	void testSeRegistraUnInmuebleAceptadaPorUnSistema() {
+		Inmueble inmueble = mock(Inmueble.class);
+		when(inmueble.getTipoDeInmueble()).thenReturn(this.duplex);
+		when(inmueble.getServicio()).thenReturn(Arrays.asList(this.luz));
+		this.sis.agregarTipoDeInmueble(this.duplex);
+		this.sis.agregarServicio(this.luz);
+		this.sis.registrarInmueble(inmueble);
 		
 		assertEquals(1, sis.getInmuebles().size());
+		assertTrue(this.sis.getInmuebles().contains(inmueble));
+	}
+	
+	@Test
+	void testSeVerificaQueUnInmuebleNoPuedaRegistrarseEnUnSistema() {
+		Inmueble inmueble = mock(Inmueble.class);
+		this.sis.agregarTipoDeInmueble(this.duplex);
+		this.sis.agregarServicio(this.luz);
+		this.sis.registrarInmueble(inmueble);
+		
+		assertEquals(0, sis.getInmuebles().size());
+		assertFalse(this.sis.getInmuebles().contains(inmueble));
+	}
+	
+	@Test
+	void testSeVerificaQueUnInmuebleNoPuedaSerAceptadoPorNoTenerLosServiciosAceptadosPorUnSistema() {
+		Inmueble inmueble = mock(Inmueble.class);
+		Servicio agua = mock(Servicio.class);
+		when(inmueble.getTipoDeInmueble()).thenReturn(this.duplex);
+		when(inmueble.getServicio()).thenReturn(Arrays.asList(agua));
+		this.sis.agregarTipoDeInmueble(this.duplex);
+		this.sis.agregarServicio(this.luz);
+		this.sis.registrarInmueble(inmueble);
+		
+		assertEquals(0, sis.getInmuebles().size());
+		assertFalse(this.sis.getInmuebles().contains(inmueble));
 	}
 	
 	@Test
