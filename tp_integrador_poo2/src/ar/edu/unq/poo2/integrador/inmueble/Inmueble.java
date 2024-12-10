@@ -230,9 +230,11 @@ public class Inmueble implements Rankeable{
 		if(this.estaDisponibleEn(fechaInicial, fechaFin) ) {						
 			this.propietario.agregarReserva(reserva);
 			this.sistema.registrar(reserva);
-			this.agregarReserva(reserva); 
+			//this.agregarReserva(reserva);
+			this.reservas.add(reserva);
 		}else {
-			this.agregarReservaCondicional(reserva);
+			//this.agregarReservaCondicional(reserva);
+			this.reservasCondicionales.add(reserva);
 		}
 	}
 
@@ -243,12 +245,13 @@ public class Inmueble implements Rankeable{
 	public List<Reserva> getReservas(){
 		return this.reservas;
 	}
-	
-	public List<Reserva> getReservasAceptadas() {
+	/*
+	 * public List<Reserva> getReservasAceptadas() {
 		return 	reservas.stream()
 						.filter( r -> r.esAceptada() )
 						.toList() ;
 	}
+	 * */
 	
 	public void agregarFoto(Foto foto) {
 		if(this.fotos.size() < 5) {
@@ -258,15 +261,16 @@ public class Inmueble implements Rankeable{
 
 	public boolean estaDisponibleEn(LocalDate fechaEntrada, LocalDate fechaSalida) {
 		
-		return  this.getReservasAceptadas()
+		return  this.getReservas()
 					.stream()
 					.allMatch(r -> r.getFechaInicio().isAfter(fechaSalida) || r.getFechaFin().isBefore(fechaEntrada));
 	}
-
-	public void agregarReserva(Reserva reserva) {
+	/*PARA QUE NADIE PUEDE AGREGAR RESERVAS DE FORMA DIRECTA
+	 * public void agregarReserva(Reserva reserva) {
 		this.reservas.add(reserva);
 		
 	}
+	 * */
 
 	public List<Reserva> getReservasCondicionales() {
 		
@@ -283,15 +287,18 @@ public class Inmueble implements Rankeable{
 			this.getReservasCondicionales().remove(reserva);
 			this.propietario.agregarReserva(reserva);
 			this.sistema.registrar(reserva);
-			this.agregarReserva(reserva);
+			//this.agregarReserva(reserva);
+			this.reservas.add(reserva);
+			
 		}
 		
 	}
-
-	public void agregarReservaCondicional(Reserva reservaCondicional) {
+	/*	PARA QUE NADIE PUEDA AGREGAR RESERVAS CONDICIONALES
+	 * public void agregarReservaCondicional(Reserva reservaCondicional) {
 		
 		this.reservasCondicionales.add(reservaCondicional);
 	}
+	 * */
 
 	public int cantidadDeAlquileres() {
 		
