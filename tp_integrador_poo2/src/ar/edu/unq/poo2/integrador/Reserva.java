@@ -53,7 +53,6 @@ public class Reserva {
 	}
 	
 	public void notificarCancelacion() {
-		this.getInmueble().procesarReservasCondicionalesPara(this.getFechaInicio(),this.getFechaFin());
 		this.gestionador.notificarCancelacion(this.getTipoDeInmueble(), this.getEmailDelPropietario());
 	}
 	

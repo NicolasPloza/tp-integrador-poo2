@@ -17,7 +17,7 @@ public class TipoInmueble {
 	public Object getDescripcion() {
 		return descripcion;
 	}
-	
+	/*
 	public boolean equals(Object o) {
 		if(o == this) return true;
 		if(!(o instanceof TipoInmueble)) return false;
@@ -35,5 +35,5 @@ public class TipoInmueble {
 		if (this.descripcion != null) result = 31 * result + this.descripcion.hashCode();
 		return result;
 	}
-
+*/
 }

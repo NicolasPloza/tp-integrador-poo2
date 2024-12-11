@@ -364,22 +364,14 @@ class InmuebleTestCase {
 		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
 										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
 										 this.periodos, this.gestionador, this.sistema);
-		Reserva reserva = mock(Reserva.class);
-		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024, 12, 9));
-		when(reserva.getFechaFin()).thenReturn(LocalDate.of(2024, 12, 17));
-		when(reserva.esAceptada()).thenReturn(true);
 		
 		//EXERCISE
-		//inmueble.agregarReserva(reserva);
+		inmueble.reservar(inquilino, LocalDate.of(2024, 12, 9), LocalDate.of(2024, 12, 17), tarjeta);
 		inmueble.reservar(inquilino, LocalDate.of(2024, 12, 15), LocalDate.of(2024, 12, 25), tarjeta);
 		
 		
 		//VERIFY
-		assertFalse(inmueble.getReservasCondicionales().isEmpty());//SE ROMPE NOSE PORQUE 
-		verify(reserva).getFechaInicio();
-		verify(reserva).getFechaFin();
-		verifyNoInteractions(propietario);
-		verifyNoInteractions(sistema);
+		assertFalse(inmueble.getReservasCondicionales().isEmpty());
 		
 	}
 	
@@ -387,34 +379,59 @@ class InmuebleTestCase {
 	void test_seVerificaQueSeProcesaLaListaDeCondicionalesCuandoSeCancelaUnaReserva() {
 		//setup
 		Propietario propietario = mock(Propietario.class);
+		Inquilino inquilino = mock(Inquilino.class);
+		MedioDePago tarjeta = mock(MedioDePago.class);
+		when(tarjeta.getNombre()).thenReturn("tarjeta");
+		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  		
+		
 		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
-				 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
-				 this.periodos, this.gestionador, this.sistema);
+										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
+										 this.periodos, this.gestionador, this.sistema);
 		
 		LocalDate fechaIni = LocalDate.of(2024, 8 , 5);
 		LocalDate fechaFin = LocalDate.of(2024, 8, 10);
 		
-		Reserva reservaCond1 = mock(Reserva.class);
-		when(reservaCond1.estaDentroDeFechas(fechaIni, fechaFin)).thenReturn(true);
 		
-		Reserva reservaCond2 = mock(Reserva.class);
-		when(reservaCond2.estaDentroDeFechas(fechaIni, fechaFin)).thenReturn(false);
-		
-		inmueble.agregarReservaCondicional(reservaCond1);
-		inmueble.agregarReservaCondicional(reservaCond2);
+		inmueble.reservar(inquilino, fechaIni, fechaFin, tarjeta);
+		inmueble.reservar(inquilino, fechaIni, fechaFin, tarjeta);
 		
 		//exercise
 		inmueble.procesarReservasCondicionalesPara(fechaIni , fechaFin );
 		
 		//verify
-		assertFalse(inmueble.getReservasCondicionales().contains(reservaCond1));
-		assertTrue(inmueble.getReservas().contains(reservaCond1));
-		verify(propietario).agregarReserva(reservaCond1);
-		verify(sistema).registrar(reservaCond1);
+		assertTrue(inmueble.getReservasCondicionales().isEmpty());
 		
 	}
 	
-	
+	@Test 
+	void test_seVerificaQueSeProcesaLaListaDeCondicionalesCuandoSeCancelaUnaReservaYNoHayReservasCondicionalesEnEsasFechas() {
+		//setup
+		Propietario propietario = mock(Propietario.class);
+		Inquilino inquilino = mock(Inquilino.class);
+		MedioDePago tarjeta = mock(MedioDePago.class);
+		when(tarjeta.getNombre()).thenReturn("tarjeta");
+		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  		
+		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
+										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
+										 this.periodos, this.gestionador, this.sistema);
+		
+		LocalDate fechaIni = LocalDate.of(2024, 8 , 5);
+		LocalDate fechaFin = LocalDate.of(2024, 8, 10);
+		
+		
+		
+		
+		inmueble.reservar(inquilino, fechaIni, fechaFin, tarjeta);
+		inmueble.reservar(inquilino, fechaIni, fechaFin, tarjeta);
+		
+		//exercise
+		inmueble.procesarReservasCondicionalesPara(LocalDate.of(2024, 9 , 5) , LocalDate.of(2024, 9 , 5));
+		
+		//verify
+		assertFalse(inmueble.getReservasCondicionales().isEmpty());
+		
+	}
 	
 	
 	

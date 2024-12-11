@@ -17,7 +17,7 @@ public class Servicio {
 	public String getDescripcion() {
 		return descripcion;
 	}
-	
+	/*
 	public boolean equals(Object o) {
 		if(o == this) return true;
 		if(!(o instanceof Servicio)) return false;
@@ -35,5 +35,5 @@ public class Servicio {
 		if (this.descripcion != null) result = 32 * result + this.descripcion.hashCode();
 		return result;
 	}
-
+*/
 }

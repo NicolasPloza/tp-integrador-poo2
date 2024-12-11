@@ -39,15 +39,9 @@ public class Propietario extends Usuario{
 	}
 	
 	public void realizarAlta(Inmueble inmueble) {
-
-		this.getInmuebles().add(inmueble);
 		this.getSistema().registrarInmueble(inmueble);
+		if(this.getSistema().acepta(inmueble.getTipoDeInmueble(), inmueble.getServicio())) this.getInmuebles().add(inmueble);
 	}
-	
-	public void aceptarReserva(Reserva reserva) {
-		reserva.concretar();
-	}
-	
 	
 	@Override
 	public void agregarCalificacion(Calificacion calificacion) {

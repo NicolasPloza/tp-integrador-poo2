@@ -17,14 +17,16 @@ public class Pendiente implements EstadoReserva {
 
 	@Override
 	public void concretar(Reserva reserva) {
-		reserva.getPropietario().removerReserva(reserva); // lo saca de la lista de pendientes del propietario
+		reserva.getPropietario().removerReserva(reserva);
 		reserva.notificarReserva();
 		reserva.setEstado(Aceptada.getInstance());
 	}
 
 	@Override
 	public void cancelar(Reserva reserva) {
-		
+		reserva.notificarCancelacion();
+		reserva.getInmueble().procesarReservasCondicionalesPara(reserva.getFechaInicio(),reserva.getFechaFin());
+		reserva.setEstado(Cancelada.getInstance());
 	}
 
 	@Override
