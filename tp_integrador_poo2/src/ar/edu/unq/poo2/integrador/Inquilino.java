@@ -52,5 +52,4 @@ public class Inquilino extends Usuario {
 	public boolean esPropietario() {
 		return false;
 	}
-	
 }
