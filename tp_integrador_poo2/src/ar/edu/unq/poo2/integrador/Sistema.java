@@ -1,8 +1,10 @@
 package ar.edu.unq.poo2.integrador;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 import ar.edu.unq.poo2.integrador.inmueble.Servicio;
@@ -98,6 +100,28 @@ public class Sistema {
 	public boolean acepta(TipoInmueble tipoDeInmueble, List<Servicio> servicios) {
 		return (this.inmueblesAceptados.contains(tipoDeInmueble) && this.serviciosAceptados.containsAll(servicios));
 	}
+
+	public List<Usuario> topTenDeInquilinosConMasAlquileres() {
+		
+		PriorityQueue<Usuario> queue =  new PriorityQueue<Usuario>(Comparator.comparingInt(Usuario :: getCantidadDeAlquileres));
+		
+		this.usuarios.stream()
+					.filter( u -> u.esInquilino())
+					.forEach(u -> { queue.offer(u); if(queue.size() > 10 ) { queue.poll();}});
+		
+		List<Usuario> topTen = new ArrayList<>(queue);
+		topTen.sort((u1,u2) -> Integer.compare(u2.getCantidadDeAlquileres(), u1.getCantidadDeAlquileres()));
+		
+		return topTen;
+		
+		
+		/*return this.usuarios.stream()
+							.filter( u -> u.esInquilino())
+							.sorted((u1,u2) -> Integer.compare(u2.getCantidadDeAlquileres(), u1.getCantidadDeAlquileres())).limit(10).toList();*/
+								
+}
+	
+	
 	
 //------- refactorizar sabiendo que cada inmueble conoce sus reservas al igual que inquilino y prop------------------
 /*	

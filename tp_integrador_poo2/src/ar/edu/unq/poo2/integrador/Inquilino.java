@@ -42,5 +42,15 @@ public class Inquilino extends Usuario {
 		
 		return this.getTodasLasReservas().stream().filter(r -> r.estaFinalizada()).toList().size() ;
 	}
+
+	@Override
+	public boolean esInquilino() {
+		return true;
+	}
+
+	@Override
+	public boolean esPropietario() {
+		return false;
+	}
 	
 }

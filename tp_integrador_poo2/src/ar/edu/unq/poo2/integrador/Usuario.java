@@ -33,6 +33,9 @@ public abstract class Usuario implements Rankeable{
 	}
 
 	public abstract void agregarCalificacion(Calificacion calificacion);
+	public abstract int getCantidadDeAlquileres();
+	public abstract boolean esInquilino();
+	public abstract boolean esPropietario();
 
 	public List<Calificacion> getCalificaciones() {
 	

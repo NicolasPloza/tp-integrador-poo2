@@ -62,5 +62,22 @@ public class Propietario extends Usuario{
 					.sum() ; 
 	}
 
+	@Override
+	public boolean esInquilino() {
+		return false;
+	}
+
+	@Override
+	public boolean esPropietario() {
+		return true;
+	}
+
+	@Override
+	public int getCantidadDeAlquileres() {
+		return this.inmuebles.stream()
+							 .mapToInt( i -> i.cantidadDeAlquileres())
+							 .sum();
+	}
+
 	
 }
