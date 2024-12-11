@@ -131,5 +131,9 @@ public class Reserva {
 		return (this.getFechaInicio().isEqual(fechaInicio) || this.getFechaInicio().isAfter(fechaInicio))
 				&& (this.getFechaFin().isEqual(fechaFin) || this.getFechaFin().isBefore(fechaFin) )   ;
 	}
+	
+	public boolean esFechaDeReservaAceptada(LocalDate fecha) {
+		return this.getFechaInicio().isBefore(LocalDate.now()) && this.getFechaFin().isAfter(LocalDate.now()) && this.esAceptada();
+	}
 
 }

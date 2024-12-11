@@ -43,6 +43,8 @@ class InmuebleTestCase {
 		this.fotos = new ArrayList<Foto>();
 		this.fotos.add(mock(Foto.class));
 		this.fotos.add(mock(Foto.class));
+		this.fotos.add(mock(Foto.class));
+		this.fotos.add(mock(Foto.class));
 		this.mediosDePago = new ArrayList<MedioDePago>();
 		this.tarjeta = mock(MedioDePago.class);
 		mediosDePago.add(tarjeta);
@@ -79,7 +81,6 @@ class InmuebleTestCase {
 		assertEquals(x, alquiler.getPropietario());
 		assertEquals(cancelacion, alquiler.getPoliticaDeCancelacion());
 		assertEquals(gestionador, alquiler.getGestionadorDeNotificaciones());
-		assertEquals(false, alquiler.getAlquilado());
 		assertEquals(fotos, alquiler.getFotos());
 	}
 	
@@ -276,7 +277,7 @@ class InmuebleTestCase {
 	void testSeAgregaUnaFotoAUnInmueble() {
 		alquiler1.agregarFoto(mock(Foto.class));
 		
-		assertEquals(3, alquiler1.getFotos().size());
+		assertEquals(5, alquiler1.getFotos().size());
 	}
 	/* ---------ESTE TEST SE SACO PORQUE EL INMUEBLE SOLO GUARDA LAS RESERVAS ACEPTADAS O CONDICIONALES, LAS PENDIENTES NO----
 	@Test
@@ -433,7 +434,60 @@ class InmuebleTestCase {
 		
 	}
 	
+	@Test
+	void testSeVerificaQueUnInmuebleTengaCapacidadParaTresPersonas() {
+		assertTrue(this.alquiler1.tieneCapacidadDe(3));
+	}
 	
+	@Test
+	void testSeVerificaQueUnInmuebleNoTengaCapacidadParaCuatroPersonas() {
+		assertFalse(this.alquiler1.tieneCapacidadDe(4));
+	}
 	
+	@Test
+	void testSeVerificaQueUnInmuebleSeaDeLaCiudadDeRosario() {
+		assertTrue(this.alquiler1.esDeCiudad("Rosario"));
+	}
+	
+	@Test
+	void testSeVerificaQueElPrecioDefaultDeUnInmuebleEsMayorA3000() {
+		assertTrue(this.alquiler1.precioDefaultMenorOIgualA(5000));
+		assertFalse(this.alquiler1.precioDefaultMayorOIgualA(5000));
+	}
+	
+	@Test
+	void testSeVerificaQueElPrecioDefaultDeUnInmuebleEsMenorA3000() {
+		assertTrue(this.alquiler1.precioDefaultMayorOIgualA(2000));
+		assertFalse(this.alquiler1.precioDefaultMenorOIgualA(2000));
+	}
+	
+	@Test
+	void testSeVerificaSiUnInmuebleEstaAlquiladoEnLaFechaActual() {
+		Propietario propietario = mock(Propietario.class);
+		Inquilino inquilino = mock(Inquilino.class);
+		MedioDePago tarjeta = mock(MedioDePago.class);
+		when(tarjeta.getNombre()).thenReturn("tarjeta");
+		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
+										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
+										 this.periodos, this.gestionador, this.sistema);
+		LocalDate fechaIni = LocalDate.now().minusDays(1);
+		LocalDate fechaFin = LocalDate.now().plusDays(1);
+		inmueble.reservar(inquilino, fechaIni, fechaFin, tarjeta);
+		Reserva reserva = inmueble.getReservas().get(0);
+		when(reserva.esFechaDeReservaAceptada(LocalDate.now())).thenReturn(true);
+		
+		assertTrue(inmueble.estaAlquilado());
+	}
+	
+	@Test
+	void testSeVerificaQueUnaFotoNoPuedeSerAgregadaAUnInmuebleSiTieneMasDeCincoFotosAgregadas() {
+		Foto fotoUno = mock(Foto.class);
+		Foto fotoDos = mock(Foto.class);
+		this.alquiler1.agregarFoto(fotoUno);
+		this.alquiler1.agregarFoto(fotoDos);
+		
+		assertEquals(5, this.alquiler1.getFotos().size());
+	}
 	
 }

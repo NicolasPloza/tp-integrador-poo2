@@ -14,7 +14,6 @@ public class Inmueble implements Rankeable{
 	private String checkIn;
 	private String checkOut;
 	private List<Calificacion> calificaciones;
-	private boolean alquilado;
 	private double precioDefault;
 	private TipoInmueble tipoDeInmueble;
 	private Propietario propietario;
@@ -40,13 +39,12 @@ public class Inmueble implements Rankeable{
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.calificaciones = new ArrayList<Calificacion>();
-		this.alquilado = false;
 		this.precioDefault = precioDefault;
 		this.tipoDeInmueble = tipoDeInmueble;
 		this.mediosDePago = mediosDePago;
 		this.servicios = servicios;
 		this.propietario = propietario;
-		this.fotos = fotos;
+		this.fotos = fotos; // hay que validar que si llegan por aca que sean 5 o menos fotos, sino se debe ajustar
 		this.politicaDeCancelacion = politica;
 		this.periodos = periodos;
 		this.gestionadorDeNotificaciones = gestionador;
@@ -78,10 +76,6 @@ public class Inmueble implements Rankeable{
 	
 	public String getCheckIn() {
 		return checkIn;
-	}
-	
-	public boolean getAlquilado() {
-		return alquilado;
 	}
 	
 	public List<Calificacion> getCalificaciones() {
@@ -186,19 +180,12 @@ public class Inmueble implements Rankeable{
 	}
 	
 	public double getPromedioTotalDePuntajes() {
-		
-		long cantidadDePuntajes;
-		Double totalPuntajes;
-		
-		totalPuntajes=calificaciones.stream()
-									.mapToDouble( c -> c.getPuntaje() )
-									.sum();
-		
-		cantidadDePuntajes =  calificaciones.stream()
-											.count();
-		
+		long cantidadDePuntajes = calificaciones.stream()
+				.count();
+		Double totalPuntajes = calificaciones.stream()
+				.mapToDouble(calificacion -> calificacion.getPuntaje())
+				.sum();
 		double promedio = totalPuntajes/cantidadDePuntajes;
-		
 		return Math.round(promedio * 100.0) / 100.0;
 	}
 
@@ -230,16 +217,16 @@ public class Inmueble implements Rankeable{
 		if(this.estaDisponibleEn(fechaInicial, fechaFin) ) {						
 			this.propietario.agregarReserva(reserva);
 			this.sistema.registrar(reserva);
-			//this.agregarReserva(reserva);
 			this.reservas.add(reserva);
 		}else {
-			//this.agregarReservaCondicional(reserva);
 			this.reservasCondicionales.add(reserva);
 		}
 	}
 
 	public boolean tieneMedioDePago(MedioDePago medioDePago) {
-		return this.mediosDePago.stream().anyMatch(mp-> mp.getNombre().equals(medioDePago.getNombre()));
+		boolean tieneElMedioDePago = this.mediosDePago.stream()
+				.anyMatch(pago-> pago.getNombre().equals(medioDePago.getNombre()));
+		return tieneElMedioDePago;
 	}
 	
 	public List<Reserva> getReservas(){
@@ -254,16 +241,14 @@ public class Inmueble implements Rankeable{
 	 * */
 	
 	public void agregarFoto(Foto foto) {
-		if(this.fotos.size() < 5) {
-			this.fotos.add(foto);
-		}
+		if(this.fotos.size() < 5) this.fotos.add(foto);
 	}
 
 	public boolean estaDisponibleEn(LocalDate fechaEntrada, LocalDate fechaSalida) {
 		
 		return  this.getReservas()
 					.stream()
-					.allMatch(r -> r.getFechaInicio().isAfter(fechaSalida) || r.getFechaFin().isBefore(fechaEntrada));
+					.allMatch(reserva -> reserva.getFechaInicio().isAfter(fechaSalida) || reserva.getFechaFin().isBefore(fechaEntrada));
 	}
 	/*PARA QUE NADIE PUEDE AGREGAR RESERVAS DE FORMA DIRECTA
 	 * public void agregarReserva(Reserva reserva) {
@@ -278,16 +263,13 @@ public class Inmueble implements Rankeable{
 	}
 
 	public void procesarReservasCondicionalesPara(LocalDate fechaInicio, LocalDate fechaFin) {
-	
-		Reserva reserva = 
-				this.getReservasCondicionales().stream()
-					.filter(r -> r.estaDentroDeFechas(fechaInicio, fechaFin)).findFirst().orElse(null);
-		
+		Reserva reserva = this.getReservasCondicionales().stream()
+					.filter(reservaCondicional -> reservaCondicional.estaDentroDeFechas(fechaInicio, fechaFin))
+					.findFirst().orElse(null);
 		if(reserva != null) {
 			this.getReservasCondicionales().remove(reserva);
 			this.propietario.agregarReserva(reserva);
 			this.sistema.registrar(reserva);
-			//this.agregarReserva(reserva);
 			this.reservas.add(reserva);
 			
 		}
@@ -301,14 +283,18 @@ public class Inmueble implements Rankeable{
 	 * */
 
 	public int cantidadDeAlquileres() {
-		
-		return this.getReservas().stream()
-								 .filter(r -> r.estaFinalizada())
-								 .toList().size();
+		int cantidad = this.getReservas().stream()
+				.filter(reserva -> reserva.estaFinalizada())
+				.toList()
+				.size(); 
+		return cantidad;
 	}
 
 
-	
-	
+	public boolean estaAlquilado() {
+		boolean alquilado = this.reservas.stream()
+				.anyMatch(reserva -> reserva.esFechaDeReservaAceptada(LocalDate.now()));
+		return alquilado;
+	}
 	
 }

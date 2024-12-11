@@ -38,8 +38,15 @@ class PeriodoTestCase {
 		assertTrue(vacaciones.esFechaDePeriodo(fechaAVerificar));
 	}
 	@Test
-	void testFechaNoSeEncuetraDentroDelPeriodo() {
+	void testFechaNoSeEncuetraDentroDelPeriodoPorSerMayorALaFechaFin() {
 		LocalDate fechaAVerificar = LocalDate.of(2025, 3, 15);
+		
+		assertFalse(vacaciones.esFechaDePeriodo(fechaAVerificar));
+	}
+	
+	@Test
+	void testFechaNoSeEncuetraDentroDelPeriodoPorSerMenorALaFechaInicio() {
+		LocalDate fechaAVerificar = LocalDate.of(2024, 12, 12);
 		
 		assertFalse(vacaciones.esFechaDePeriodo(fechaAVerificar));
 	}
