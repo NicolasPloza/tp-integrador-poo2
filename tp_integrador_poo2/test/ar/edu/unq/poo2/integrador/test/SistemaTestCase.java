@@ -159,6 +159,80 @@ class SistemaTestCase {
 		
 		verify(reserva).cancelar();;
 	}
+	
+	@Test
+    void testSeObtieneLosInquilinosQueMasHanAlquiladoEnUnSistema() {
+        Propietario propietario = mock(Propietario.class);
+        Inquilino inquilinoUno = mock(Inquilino.class);
+        Inquilino inquilinoDos = mock(Inquilino.class);
+        Inquilino inquilinoTres = mock(Inquilino.class);
+        Inquilino inquilinoCuatro = mock(Inquilino.class);
+        Inquilino inquilinoCinco = mock(Inquilino.class);
+        Inquilino inquilinoSeis = mock(Inquilino.class);
+        Inquilino inquilinoSiete = mock(Inquilino.class);
+        Inquilino inquilinoOcho = mock(Inquilino.class);
+        Inquilino inquilinoNueve = mock(Inquilino.class);
+        Inquilino inquilinoDiez = mock(Inquilino.class);
+        Inquilino inquilinoOnce = mock(Inquilino.class);
+        Inquilino inquilinoDoce = mock(Inquilino.class);
+        
+        this.sis.añadirUsuario(propietario);
+        this.sis.añadirUsuario(inquilinoUno);
+        this.sis.añadirUsuario(inquilinoDos);
+        this.sis.añadirUsuario(inquilinoTres);
+        this.sis.añadirUsuario(inquilinoCuatro);
+        this.sis.añadirUsuario(inquilinoCinco);
+        this.sis.añadirUsuario(inquilinoSeis);
+        this.sis.añadirUsuario(inquilinoSiete);
+        this.sis.añadirUsuario(inquilinoOcho);
+        this.sis.añadirUsuario(inquilinoNueve);
+        this.sis.añadirUsuario(inquilinoDiez);
+        this.sis.añadirUsuario(inquilinoOnce);
+        this.sis.añadirUsuario(inquilinoDoce);
+        
+        when(propietario.esInquilino()).thenReturn(false);
+        when(inquilinoUno.esInquilino()).thenReturn(true);
+        when(inquilinoDos.esInquilino()).thenReturn(true);
+        when(inquilinoTres.esInquilino()).thenReturn(true);
+        when(inquilinoCuatro.esInquilino()).thenReturn(true);
+        when(inquilinoCinco.esInquilino()).thenReturn(true);
+        when(inquilinoSeis.esInquilino()).thenReturn(true);
+        when(inquilinoSiete.esInquilino()).thenReturn(true);
+        when(inquilinoOcho.esInquilino()).thenReturn(true);
+        when(inquilinoNueve.esInquilino()).thenReturn(true);
+        when(inquilinoDiez.esInquilino()).thenReturn(true);
+        when(inquilinoOnce.esInquilino()).thenReturn(true);
+        when(inquilinoDoce.esInquilino()).thenReturn(true);
+        when(inquilinoUno.getCantidadDeAlquileres()).thenReturn(100);
+        when(inquilinoDos.getCantidadDeAlquileres()).thenReturn(110);
+        when(inquilinoTres.getCantidadDeAlquileres()).thenReturn(120);
+        when(inquilinoCuatro.getCantidadDeAlquileres()).thenReturn(130);
+        when(inquilinoCinco.getCantidadDeAlquileres()).thenReturn(140);
+        when(inquilinoSeis.getCantidadDeAlquileres()).thenReturn(150);
+        when(inquilinoSiete.getCantidadDeAlquileres()).thenReturn(160);
+        when(inquilinoOcho.getCantidadDeAlquileres()).thenReturn(170);
+        when(inquilinoNueve.getCantidadDeAlquileres()).thenReturn(180);
+        when(inquilinoDiez.getCantidadDeAlquileres()).thenReturn(190);
+        when(inquilinoOnce.getCantidadDeAlquileres()).thenReturn(200);
+        when(inquilinoDoce.getCantidadDeAlquileres()).thenReturn(210);
+        List<Usuario> inquilinos = this.sis.topTenDeInquilinos();
+        
+        assertEquals(10, inquilinos.size());
+        assertTrue(inquilinos.contains(inquilinoDoce));
+        assertTrue(inquilinos.contains(inquilinoOnce));
+        assertTrue(inquilinos.contains(inquilinoDiez));
+        assertTrue(inquilinos.contains(inquilinoNueve));
+        assertTrue(inquilinos.contains(inquilinoOcho));
+        assertTrue(inquilinos.contains(inquilinoSiete));
+        assertTrue(inquilinos.contains(inquilinoSeis));
+        assertTrue(inquilinos.contains(inquilinoCinco));
+        assertTrue(inquilinos.contains(inquilinoCuatro));
+        assertTrue(inquilinos.contains(inquilinoTres));
+        assertFalse(inquilinos.contains(inquilinoDos));
+        assertFalse(inquilinos.contains(inquilinoUno));
+        assertFalse(inquilinos.contains(propietario));
+    }
+
 	/*
 	@Test 
 	void seCuentanLaCantidadDeAlquileresDeUnPropietario() {

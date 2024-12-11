@@ -100,8 +100,17 @@ public class Sistema {
 	public boolean acepta(TipoInmueble tipoDeInmueble, List<Servicio> servicios) {
 		return (this.inmueblesAceptados.contains(tipoDeInmueble) && this.serviciosAceptados.containsAll(servicios));
 	}
-
-	public List<Usuario> topTenDeInquilinosConMasAlquileres() {
+	
+	public List<Usuario> topTenDeInquilinos() {
+        List<Usuario> inquilinos = this.usuarios.stream()
+                .filter(usuario -> usuario.esInquilino())
+                .sorted(Comparator.comparing(Usuario::getCantidadDeAlquileres).reversed())
+                .limit(10)
+                .toList();
+        return inquilinos;
+    }
+	
+	/*	public List<Usuario> topTenDeInquilinosConMasAlquileres() {
 		
 		PriorityQueue<Usuario> queue =  new PriorityQueue<Usuario>(Comparator.comparingInt(Usuario :: getCantidadDeAlquileres));
 		
@@ -113,13 +122,16 @@ public class Sistema {
 		topTen.sort((u1,u2) -> Integer.compare(u2.getCantidadDeAlquileres(), u1.getCantidadDeAlquileres()));
 		
 		return topTen;
-		
-		
+	 * 
+	 * */
+
 		/*return this.usuarios.stream()
 							.filter( u -> u.esInquilino())
 							.sorted((u1,u2) -> Integer.compare(u2.getCantidadDeAlquileres(), u1.getCantidadDeAlquileres())).limit(10).toList();*/
 								
-}
+
+	
+	
 	
 	
 	
