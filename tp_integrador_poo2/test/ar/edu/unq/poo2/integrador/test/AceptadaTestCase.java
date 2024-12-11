@@ -3,11 +3,15 @@ package ar.edu.unq.poo2.integrador.test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ar.edu.unq.poo2.integrador.Aceptada;
+import ar.edu.unq.poo2.integrador.Cancelada;
 import ar.edu.unq.poo2.integrador.Reserva;
+import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
 class AceptadaTestCase {
 	
@@ -26,23 +30,27 @@ class AceptadaTestCase {
 		
 		verify(this.reserva, never()).notificarReserva();
 	}
-/*	
+
 	@Test
 	void testSeCancelaUnaReservaAceptada() {
-		when(this.reserva.tieneInquilinosEncolados()).thenReturn(false);
-		this.estado.cancelar(this.reserva);
+		
+		LocalDate fechaIni = LocalDate.of(2024, 12, 11);
+		LocalDate fechaFin = LocalDate.of(2024, 12, 20);		
+		Inmueble inmueble =  mock(Inmueble.class);
+		
+		when(this.reserva.getInmueble()).thenReturn(inmueble);
+		when(this.reserva.getFechaInicio()).thenReturn(fechaIni);
+		when(this.reserva.getFechaFin()).thenReturn(fechaFin);
+		
+		//exercise 
+		this.estado.cancelar(reserva);
 		
 		verify(this.reserva).notificarCancelacion();
+		verify(inmueble).procesarReservasCondicionalesPara(fechaIni, fechaFin);
+		verify(this.reserva).setEstado(Cancelada.getInstance());
 	}
 	
-	@Test
-	void testSeCancelaUnaReservaAceptadaConInquilinosEncolados() {
-		when(this.reserva.tieneInquilinosEncolados()).thenReturn(true);
-		this.estado.cancelar(this.reserva);
-		
-		verify(this.reserva).procesarCola();
-	}
-*/	
+
 	@Test
 	void testSeIndicaSiUnaReservaAceptadaEstaAceptada() {
 		assertTrue(this.estado.estaAceptada());

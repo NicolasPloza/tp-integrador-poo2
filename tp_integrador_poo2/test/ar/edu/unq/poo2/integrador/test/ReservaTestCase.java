@@ -20,12 +20,9 @@ import ar.edu.unq.poo2.integrador.inmueble.MedioDePago;
 class ReservaTestCase {
 	
 	private Reserva reserva;
-//	private Reserva reservaDos;
-//	private Inquilino potencialInquilino;
 	private Propietario propietario;
 	private Inmueble inmueble;
 	private MedioDePago medioDepago;
-//	private List<Inquilino> inquilinosInteresados;
 	private EstadoReserva estado;
 	private GestionadorDeNotificaciones gestionador;
 	private Inquilino inquilino;
@@ -36,7 +33,6 @@ class ReservaTestCase {
 		this.propietario = mock(Propietario.class);
 		this.inmueble = mock(Inmueble.class);
 		this.medioDepago = mock(MedioDePago.class);
-//		this.inquilinosInteresados = new ArrayList<Inquilino>();
 		this.estado = mock(EstadoReserva.class);
 		this.gestionador = mock(GestionadorDeNotificaciones.class);
 		this.reserva = new Reserva(this.inquilino, this.inmueble, LocalDate.of(1998, 2, 20), LocalDate.of(2000, 1, 1), this.medioDepago);
@@ -57,26 +53,7 @@ class ReservaTestCase {
 		
 		verify(this.estado).cancelar(this.reserva);
 	}
-/*	
-	@Test
-	void testSeRegistraUnNuevoInquilinoParaUnaReserva() {
-		this.reserva.setPotenciaInquilino(this.inquilino);
-		
-		assertEquals(this.inquilino, this.reserva.getPotencialInquilino());
-	}
-	
-	@Test
-	void testSeAgregaUnInquilinoEnLaColaDeUnaReserva() {
-		this.reserva.añadirALaCola(this.inquilino);
-		
-		assertTrue(this.reserva.tieneInquilinosEncolados());
-	}
-	
-	@Test
-	void testSeVerificaDeQueUnaReservaNoTengaInquilinosEncolados() {
-		assertFalse(this.reserva.tieneInquilinosEncolados());
-	}
-*/
+
 	@Test
 	void testSeNotificaLaReservaDeUnInmueble() {
 		this.reserva.setGestionador(this.gestionador);
@@ -94,15 +71,7 @@ class ReservaTestCase {
 		
 		verify(this.gestionador).notificarCancelacion(this.reserva.getTipoDeInmueble(), this.reserva.getEmailDelPropietario());
 	}
-	/*
-	@Test
-	void testSeRegistraAUnNuevoInquilinoEncolado() {
-		this.reserva.añadirALaCola(this.inquilino);
-		this.reserva.procesarCola();
-		
-		assertFalse(this.reserva.tieneInquilinosEncolados());
-	}
-	*/
+
 	@Test
 	void testSeObtieneElPrecioDeLaReserva() {
 		when(this.inmueble.getPrecioDePeriodo(this.reserva.getFechaInicio(), this.reserva.getFechaFin())).thenReturn(4500d);
@@ -132,6 +101,24 @@ class ReservaTestCase {
 		Inmueble inmueble = this.reserva.getInmueble();
 		
 		assertEquals(inmueble, this.inmueble);
+	}
+	
+	@Test
+	void testUnaReservaSeteaUninquilino() {
+		
+		this.reserva.setPotenciaInquilino(inquilino);
+		
+		assertEquals(reserva.getPotencialInquilino(), inquilino);
+	}
+	
+	@Test
+	void testUnaReservaSeteaUnMedioDePago() {
+		when(inmueble.tieneMedioDePago(medioDepago)).thenReturn(true);
+		
+		this.reserva.setMedioDePago(medioDepago);;
+		
+		assertEquals(reserva.getMedioDePago() , medioDepago);
+		verify(inmueble).tieneMedioDePago(medioDepago);
 	}
 
 }

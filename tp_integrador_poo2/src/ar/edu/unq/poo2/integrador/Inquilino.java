@@ -38,9 +38,9 @@ public class Inquilino extends Usuario {
 		return ciudades;
 	}
 
-	public long getCantidadDeAlquileres() {
+	public int getCantidadDeAlquileres() {
 		
-		return this.getTodasLasReservas().stream().filter(r -> r.estaFinalizada()).count() ;
+		return this.getTodasLasReservas().stream().filter(r -> r.estaFinalizada()).toList().size() ;
 	}
 	
 }
