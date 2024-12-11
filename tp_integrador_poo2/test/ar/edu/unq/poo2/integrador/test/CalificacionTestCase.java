@@ -11,23 +11,30 @@ import ar.edu.unq.poo2.integrador.Categoria;
 
 class CalificacionTestCase {
 	
-	private Calificacion calificacion;
+	private Calificacion calificacionMayor;
+	private Calificacion calificacionMenor;
 	private Categoria categoria;
 
 	@BeforeEach
 	void setUp() {
 		this.categoria = mock(Categoria.class);
-		this.calificacion = new Calificacion(this.categoria, 10);
+		this.calificacionMayor = new Calificacion(this.categoria, 10);
+		this.calificacionMenor = new Calificacion(this.categoria, 0);
 	}
 
 	@Test
 	void testSeObtieneLaCategoriaDeUnaCalificacion() {
-		assertEquals(this.categoria, this.calificacion.getCategoria());
+		assertEquals(this.categoria, this.calificacionMayor.getCategoria());
 	}
 	
 	@Test
-	void testSeObtieneElPuntajeDeUnaCalificacion() {
-		assertEquals(10, this.calificacion.getPuntaje());
+	void testSeVerificaQueElMaximoPuntajePosibleSeaCinco() {
+		assertEquals(5, this.calificacionMayor.getPuntaje());
+	}
+	
+	@Test
+	void testSeVerificaQueElMinimoPuntajePosibleSeaUno() {
+		assertEquals(1, this.calificacionMenor.getPuntaje());
 	}
 
 }

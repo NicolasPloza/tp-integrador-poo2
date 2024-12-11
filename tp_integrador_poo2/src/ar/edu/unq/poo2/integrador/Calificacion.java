@@ -7,15 +7,15 @@ public class Calificacion {
 
 	public Calificacion(Categoria categoria, int puntaje) {
 		this.categoria = categoria;
-		this.puntaje = puntaje;
+		this.puntaje = Math.max(1, Math.min(5, puntaje));
 	}
 	
 	public Categoria getCategoria() {
-		return categoria;
+		return this.categoria;
 	}
 	
 	public int getPuntaje() {
-		return puntaje;
+		return this.puntaje;
 	}
 	
 }
