@@ -12,7 +12,6 @@ public class Reserva {
 	private LocalDate fechaInicio;
 	private LocalDate fechaFin;
 	private MedioDePago medioDePago;
-	//private List<Inquilino> inquilinosInteresados;
 	private EstadoReserva estado;
 	private GestionadorDeNotificaciones gestionador;
 	
@@ -22,7 +21,6 @@ public class Reserva {
 		this.fechaInicio=inicio;
 		this.fechaFin=fin;
 		this.medioDePago=medioDePago;
-		//this.inquilinosInteresados=new ArrayList<Inquilino>();
 		this.gestionador=new GestionadorDeNotificaciones();
 		this.estado=Pendiente.getInstance();
 	}
@@ -38,11 +36,6 @@ public class Reserva {
 	public void setPotenciaInquilino(Inquilino inquilino) {
 		this.inquilino=inquilino;
 	}
-	
-	/*
-	public void añadirALaCola(Inquilino inquilino) {
-		this.inquilinosInteresados.add(inquilino);
-	}*/
 	
 	public void notificarReserva() {
 		this.gestionador.notificarReserva(this.getEmailDelInquilino());
@@ -67,17 +60,7 @@ public class Reserva {
 	public void setEstado(EstadoReserva estado) {
 		this.estado=estado;
 	}
-	
-	/*
-	public boolean tieneInquilinosEncolados() {
-		return !this.inquilinosInteresados.isEmpty();
-	}
-	
-	public void procesarCola() {
-		this.setPotenciaInquilino(this.inquilinosInteresados.get(0));
-		this.inquilinosInteresados.remove(0);
-	}*/
-	
+
 	public double precioParaFechaElegida() {
 		return this.inmueble.getPrecioDePeriodo(this.fechaInicio, this.fechaFin);
 	}
@@ -115,7 +98,6 @@ public class Reserva {
 		return this.estado.estaAceptada();
 	}
 
-	//-----------se agregaron getters y setters de MedioDePAgo
 	public MedioDePago getMedioDePago() {
 		return medioDePago;
 	}

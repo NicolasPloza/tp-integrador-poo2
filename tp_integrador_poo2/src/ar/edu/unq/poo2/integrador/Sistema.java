@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.PriorityQueue;
 
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 import ar.edu.unq.poo2.integrador.inmueble.Servicio;
@@ -32,7 +31,7 @@ public class Sistema {
 	}
 	
 	public void registrarInmueble(Inmueble inmueble) {
-		if(this.acepta(inmueble.getTipoDeInmueble(), inmueble.getServicio())) this.inmuebles.add(inmueble);
+		if(this.acepta(inmueble.getTipoDeInmueble(), inmueble.getServicios())) this.inmuebles.add(inmueble);
 	}
 	
 	public List<Inmueble> getInmuebles() {
@@ -113,69 +112,28 @@ public class Sistema {
 	public boolean aceptaServicio(Servicio servicio) {
 		return this.serviciosAceptados.contains(servicio);
 	}
-	
-	/*	public List<Usuario> topTenDeInquilinosConMasAlquileres() {
-		
-		PriorityQueue<Usuario> queue =  new PriorityQueue<Usuario>(Comparator.comparingInt(Usuario :: getCantidadDeAlquileres));
-		
-		this.usuarios.stream()
-					.filter( u -> u.esInquilino())
-					.forEach(u -> { queue.offer(u); if(queue.size() > 10 ) { queue.poll();}});
-		
-		List<Usuario> topTen = new ArrayList<>(queue);
-		topTen.sort((u1,u2) -> Integer.compare(u2.getCantidadDeAlquileres(), u1.getCantidadDeAlquileres()));
-		
-		return topTen;
-	 * 
-	 * */
 
-		/*return this.usuarios.stream()
-							.filter( u -> u.esInquilino())
-							.sorted((u1,u2) -> Integer.compare(u2.getCantidadDeAlquileres(), u1.getCantidadDeAlquileres())).limit(10).toList();*/
-								
-
-	
-	
-	
-	
-	
-//------- refactorizar sabiendo que cada inmueble conoce sus reservas al igual que inquilino y prop------------------
-/*	
-	public Long cantidadVecesAlquilado(Inmueble inmueble) {
-		return this.getReservas().stream().
-				filter(r->r.getInmueble() == inmueble)
-				.count();
-	}
-	
-	public long cantidadDeAlquileresDePropietario(Usuario propietario) {
-		return this.getReservas().stream().
-				filter(r->r.getPropietario() == propietario && r.estaFinalizada())
-				.count();
-	}
-*/	
-//--------------------------------------------------------------------------------------------------------------------
-	
-
-	
-
-	
-//------------------ estos metodos ahora los tiene inmueble ----------------------------------------------------------
-/*
-	public boolean estaDisponible(Inmueble inmuebleDisponible, LocalDate fechaEntrada, LocalDate fechaSalida) {
+	public List<Inmueble> getInmueblesLibres() {
 		
-		return	this.getReservasParaPeriodo(fechaEntrada, fechaSalida)
-				.stream()
-				.anyMatch( r -> r.getInmueble() == inmuebleDisponible);
+		return this.getInmuebles()
+					.stream()
+					.filter(inmueble -> !(inmueble.estaAlquilado()) ).toList() ;
 	}
 
-	public List<Reserva> getReservasParaPeriodo(LocalDate fechaEntrada, LocalDate fechaSalida) {
+	public double getTasaDeOcupacion() {
 		
-		return this.getReservas()
-				   .stream()
-				   .filter( r -> r.getFechaInicio().isAfter(fechaEntrada) && r.getFechaInicio().isBefore(fechaSalida))
-				   .toList();
+		double inmueblesAlquilados =   this.inmuebles
+										.stream()
+										.filter(inmueble -> inmueble.estaAlquilado())
+										.toList().size();	
+		
+		return  inmueblesAlquilados / this.inmuebles.size() ; 
 	}
-*/
+	
+
+
+	
+
 	
 	
 }

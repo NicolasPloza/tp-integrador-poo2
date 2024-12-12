@@ -40,7 +40,7 @@ public class Propietario extends Usuario{
 	
 	public void realizarAlta(Inmueble inmueble) {
 		this.getSistema().registrarInmueble(inmueble);
-		if(this.getSistema().acepta(inmueble.getTipoDeInmueble(), inmueble.getServicio())) this.getInmuebles().add(inmueble);
+		if(this.getSistema().acepta(inmueble.getTipoDeInmueble(), inmueble.getServicios())) this.getInmuebles().add(inmueble);
 	}
 	
 	@Override

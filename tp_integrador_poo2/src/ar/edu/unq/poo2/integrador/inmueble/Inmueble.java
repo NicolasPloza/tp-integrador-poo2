@@ -97,7 +97,7 @@ public class Inmueble implements Rankeable{
 		return mediosDePago;
 	}
 	
-	public List<Servicio> getServicio() {
+	public List<Servicio> getServicios() {
 		return servicios;
 	}
 	
@@ -239,13 +239,6 @@ public class Inmueble implements Rankeable{
 	public List<Reserva> getReservas(){
 		return this.reservas;
 	}
-	/*
-	 * public List<Reserva> getReservasAceptadas() {
-		return 	reservas.stream()
-						.filter( r -> r.esAceptada() )
-						.toList() ;
-	}
-	 * */
 	
 	public void agregarFoto(Foto foto) {
 		if(this.fotos.size() < 5) this.fotos.add(foto);
@@ -257,12 +250,6 @@ public class Inmueble implements Rankeable{
 					.stream()
 					.allMatch(reserva -> reserva.getFechaInicio().isAfter(fechaSalida) || reserva.getFechaFin().isBefore(fechaEntrada));
 	}
-	/*PARA QUE NADIE PUEDE AGREGAR RESERVAS DE FORMA DIRECTA
-	 * public void agregarReserva(Reserva reserva) {
-		this.reservas.add(reserva);
-		
-	}
-	 * */
 
 	public List<Reserva> getReservasCondicionales() {
 		
@@ -282,12 +269,6 @@ public class Inmueble implements Rankeable{
 		}
 		
 	}
-	/*	PARA QUE NADIE PUEDA AGREGAR RESERVAS CONDICIONALES
-	 * public void agregarReservaCondicional(Reserva reservaCondicional) {
-		
-		this.reservasCondicionales.add(reservaCondicional);
-	}
-	 * */
 
 	public int cantidadDeAlquileres() {
 		int cantidad = this.getReservas().stream()
