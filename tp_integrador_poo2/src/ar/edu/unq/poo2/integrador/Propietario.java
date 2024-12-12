@@ -12,20 +12,15 @@ public class Propietario extends Usuario{
 	private LocalDate fechaDeIngreso;
 	private List<Inmueble> inmuebles;
 	
-	public Propietario(String nombre, String email, int tel, LocalDate fechaDeIngreso, Sistema sistema) {
+	public Propietario(String nombre, String email, int tel, Sistema sistema) {
 		super(nombre,email,tel,sistema);
-		this.fechaDeIngreso = fechaDeIngreso;
+		this.fechaDeIngreso = LocalDate.now();
 		this.inmuebles = new ArrayList<Inmueble>();
 	}
 
 	public LocalDate getFechaDeIngreso() {
 
 		return this.fechaDeIngreso;
-	}
-
-	public void setFechaDeIngreso(LocalDate fecha) {
-		
-		this.fechaDeIngreso = fecha;
 	}
 	
 	public List<Inmueble> getInmuebles(){

@@ -78,12 +78,6 @@ public class Sistema {
 		this.usuarios.add(usuario);
 	}
 
-	public void cancelarReserva(Reserva reserva) {
-		this.getReservas().stream().filter(r->r == reserva).findFirst().ifPresent(r->r.cancelar());
-	}
-
-	
-
 	public List<String> getNombresDeTiposPermitidos() {
 		return this.inmueblesAceptados.stream().map(i->i.getNombre()).toList();
 	}

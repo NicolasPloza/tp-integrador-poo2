@@ -2,7 +2,6 @@ package ar.edu.unq.poo2.integrador.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -126,18 +125,6 @@ class SistemaTestCase {
 		when(luz.getNombre()).thenReturn("Luz");
 		
 		assertEquals(servicios, sis.getNombresDeServiciosPermitidos());
-	}
-	
-	@Test
-	void seCancelaUnaReserva() {
-		Reserva reserva = mock(Reserva.class);
-		Reserva reserva1 = mock(Reserva.class);
-		sis.registrar(reserva);
-		sis.registrar(reserva1);
-		
-		sis.cancelarReserva(reserva);
-		
-		verify(reserva).cancelar();;
 	}
 	
 	@Test

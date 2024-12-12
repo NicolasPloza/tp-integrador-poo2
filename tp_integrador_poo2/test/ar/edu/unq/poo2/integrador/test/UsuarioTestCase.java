@@ -147,7 +147,7 @@ class UsuarioTestCase {
 	void test_seVerificaQueUnUsuarioSabeSiesInquilinoOPropietario() {
 		//setup
 		Usuario inquilino = new Inquilino("nombre apellido", "email@mail.com", 1554987566, sistema);
-		Usuario propietario = new Propietario("prop", "email", 11556688, LocalDate.of(2024, 8, 24), sistema);
+		Usuario propietario = new Propietario("prop", "email", 11556688, sistema);
 		
 		//exercise			
 		//verify
