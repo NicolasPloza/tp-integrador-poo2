@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ar.edu.unq.poo2.integrador.Aceptada;
+import ar.edu.unq.poo2.integrador.Inquilino;
 import ar.edu.unq.poo2.integrador.Pendiente;
 import ar.edu.unq.poo2.integrador.Propietario;
 import ar.edu.unq.poo2.integrador.Reserva;
@@ -44,13 +45,18 @@ class PendienteTestCase {
 		LocalDate fechaIni = LocalDate.of(2024, 12, 11);
 		LocalDate fechaFin = LocalDate.of(2024, 12, 20);		
 		Inmueble inmueble =  mock(Inmueble.class);
+		Inquilino inquilino = mock(Inquilino.class);
+		Propietario propietario = mock(Propietario.class);
 		
 		when(this.reserva.getInmueble()).thenReturn(inmueble);
 		when(this.reserva.getFechaInicio()).thenReturn(fechaIni);
 		when(this.reserva.getFechaFin()).thenReturn(fechaFin);
+		when(this.reserva.getPotencialInquilino()).thenReturn(inquilino);
+		when(this.reserva.getPropietario()).thenReturn(propietario);
 		
 		//exercise 
 		this.estado.cancelar(reserva);
+	
 		
 		verify(this.reserva).notificarCancelacion();
 		verify(inmueble).procesarReservasCondicionalesPara(fechaIni, fechaFin);

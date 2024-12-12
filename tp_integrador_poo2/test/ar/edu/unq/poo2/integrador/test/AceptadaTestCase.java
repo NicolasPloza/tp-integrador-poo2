@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import ar.edu.unq.poo2.integrador.Aceptada;
 import ar.edu.unq.poo2.integrador.Cancelada;
+import ar.edu.unq.poo2.integrador.Inquilino;
 import ar.edu.unq.poo2.integrador.Reserva;
 import ar.edu.unq.poo2.integrador.inmueble.Inmueble;
 
@@ -37,10 +38,12 @@ class AceptadaTestCase {
 		LocalDate fechaIni = LocalDate.of(2024, 12, 11);
 		LocalDate fechaFin = LocalDate.of(2024, 12, 20);		
 		Inmueble inmueble =  mock(Inmueble.class);
+		Inquilino inquilino = mock(Inquilino.class);
 		
 		when(this.reserva.getInmueble()).thenReturn(inmueble);
 		when(this.reserva.getFechaInicio()).thenReturn(fechaIni);
 		when(this.reserva.getFechaFin()).thenReturn(fechaFin);
+		when(this.reserva.getPotencialInquilino()).thenReturn(inquilino);
 		
 		//exercise 
 		this.estado.cancelar(reserva);
