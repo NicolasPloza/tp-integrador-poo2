@@ -23,6 +23,7 @@ public class Aceptada implements EstadoReserva {
 	@Override
 	public void cancelar(Reserva reserva) {
 		reserva.notificarCancelacion();
+		reserva.getPotencialInquilino().removerReserva(reserva);
 		reserva.getInmueble().procesarReservasCondicionalesPara(reserva.getFechaInicio(),reserva.getFechaFin());
 		reserva.setEstado(Cancelada.getInstance());
 	}

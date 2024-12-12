@@ -24,6 +24,8 @@ public class Pendiente implements EstadoReserva {
 
 	@Override
 	public void cancelar(Reserva reserva) {
+		reserva.getPropietario().removerReserva(reserva);
+		reserva.getPotencialInquilino().removerReserva(reserva);
 		reserva.notificarCancelacion();
 		reserva.getInmueble().procesarReservasCondicionalesPara(reserva.getFechaInicio(),reserva.getFechaFin());
 		reserva.setEstado(Cancelada.getInstance());

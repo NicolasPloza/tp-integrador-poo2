@@ -223,6 +223,7 @@ public class Inmueble implements Rankeable{
 		
 		if(this.estaDisponibleEn(fechaInicial, fechaFin) ) {						
 			this.propietario.agregarReserva(reserva);
+			inquilino.agregarReserva(reserva);
 			this.sistema.registrar(reserva);
 			this.reservas.add(reserva);
 		}else {
