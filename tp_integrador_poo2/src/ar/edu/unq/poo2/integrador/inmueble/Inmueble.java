@@ -249,6 +249,7 @@ public class Inmueble implements Rankeable{
 		
 		return  this.getReservas()
 					.stream()
+					.filter(reserva->!reserva.estaCancelada())
 					.allMatch(reserva -> reserva.getFechaInicio().isAfter(fechaSalida) || reserva.getFechaFin().isBefore(fechaEntrada));
 	}
 

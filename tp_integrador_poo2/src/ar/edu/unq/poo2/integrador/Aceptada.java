@@ -33,4 +33,9 @@ public class Aceptada implements EstadoReserva {
 		return true;
 	}
 
+	@Override
+	public boolean estaCancelada() {
+		return false;
+	}
+
 }

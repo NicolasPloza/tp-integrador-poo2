@@ -7,5 +7,7 @@ public interface EstadoReserva {
 	public void cancelar(Reserva reserva);
 	
 	public boolean estaAceptada();
+	
+	public boolean estaCancelada();
 
 }

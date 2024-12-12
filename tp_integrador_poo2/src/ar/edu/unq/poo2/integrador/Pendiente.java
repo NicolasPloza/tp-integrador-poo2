@@ -36,4 +36,9 @@ public class Pendiente implements EstadoReserva {
 		return false;
 	}
 
+	@Override
+	public boolean estaCancelada() {
+		return false;
+	}
+
 }

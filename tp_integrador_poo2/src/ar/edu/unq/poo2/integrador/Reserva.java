@@ -93,6 +93,10 @@ public class Reserva {
 	
 		return this.estado.estaAceptada();
 	}
+	
+	public boolean estaCancelada() {
+		return this.estado.estaAceptada();
+	}
 
 	public MedioDePago getMedioDePago() {
 		return medioDePago;
