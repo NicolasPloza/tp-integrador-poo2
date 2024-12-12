@@ -104,14 +104,6 @@ class ReservaTestCase {
 	}
 	
 	@Test
-	void testUnaReservaSeteaUninquilino() {
-		
-		this.reserva.setPotenciaInquilino(inquilino);
-		
-		assertEquals(reserva.getPotencialInquilino(), inquilino);
-	}
-	
-	@Test
 	void testUnaReservaSeteaUnMedioDePago() {
 		when(inmueble.tieneMedioDePago(medioDepago)).thenReturn(true);
 		

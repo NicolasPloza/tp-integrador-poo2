@@ -33,10 +33,6 @@ public class Reserva {
 		this.estado.cancelar(this);
 	}
 	
-	public void setPotenciaInquilino(Inquilino inquilino) {
-		this.inquilino=inquilino;
-	}
-	
 	public void notificarReserva() {
 		this.gestionador.notificarReserva(this.getEmailDelInquilino());
 	}

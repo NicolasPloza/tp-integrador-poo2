@@ -143,9 +143,9 @@ public class Inmueble implements Rankeable{
 	}
 
 	public double getPromedio(Categoria categoria) {
-		List<Calificacion> categoriasIguales = this.getCalificaciones().stream().filter(calificacion1 -> calificacion1.getCategoria().getNombre() == categoria.getNombre()).toList();
+		List<Calificacion> categoriasIguales = this.getCalificaciones().stream().filter(calificacion1 -> calificacion1.getCategoria().getNombre().equals(categoria.getNombre())).toList();
 		int cantidadDeCategoriasIguales = categoriasIguales.size();
-		int puntajeTotalDeUnaMismaCategoria = categoriasIguales.stream().mapToInt(c->c.getPuntaje()).sum();
+		int puntajeTotalDeUnaMismaCategoria = categoriasIguales.stream().mapToInt(calificacion->calificacion.getPuntaje()).sum();
 		return puntajeTotalDeUnaMismaCategoria / cantidadDeCategoriasIguales;
 	}
 
