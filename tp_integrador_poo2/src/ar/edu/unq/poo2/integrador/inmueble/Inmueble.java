@@ -29,9 +29,8 @@ public class Inmueble implements Rankeable{
 	private List<Reserva> reservasCondicionales;
 	
 	public Inmueble(double superficie, String pais, String ciudad, int capacidad, String checkIn, String checkOut,
-			double precioDefault, TipoInmueble tipoDeInmueble, List<MedioDePago> mediosDePago,
-			List<Servicio> servicios, Propietario propietario, List<Foto> fotos,
-			PoliticaDeCancelacion politica, List<Periodo> periodos, GestionadorDeNotificaciones gestionador, Sistema sistema) {
+			double precioDefault, TipoInmueble tipoDeInmueble, Propietario propietario,
+			PoliticaDeCancelacion politica, GestionadorDeNotificaciones gestionador, Sistema sistema) {
 		this.superficie = superficie;
 		this.pais = pais;
 		this.ciudad = ciudad;
@@ -41,12 +40,12 @@ public class Inmueble implements Rankeable{
 		this.calificaciones = new ArrayList<Calificacion>();
 		this.precioDefault = precioDefault;
 		this.tipoDeInmueble = tipoDeInmueble;
-		this.mediosDePago = mediosDePago;
-		this.servicios = servicios;
+		this.mediosDePago = new ArrayList<MedioDePago>();
+		this.servicios = new ArrayList<Servicio>();
 		this.propietario = propietario;
-		this.fotos = fotos; // hay que validar que si llegan por aca que sean 5 o menos fotos, sino se debe ajustar
+		this.fotos = new ArrayList<Foto>();
 		this.politicaDeCancelacion = politica;
-		this.periodos = periodos;
+		this.periodos = new ArrayList<Periodo>();
 		this.gestionadorDeNotificaciones = gestionador;
 		this.comentarios = new ArrayList<String>();
 		this.sistema=sistema;
@@ -90,6 +89,10 @@ public class Inmueble implements Rankeable{
 		return tipoDeInmueble;
 	}
 	
+	public void agregarMedioDePago(MedioDePago medioDePago) {
+		this.mediosDePago.add(medioDePago);
+	}
+	
 	public List<MedioDePago> getMediosDePago() {
 		return mediosDePago;
 	}
@@ -109,11 +112,11 @@ public class Inmueble implements Rankeable{
 	public PoliticaDeCancelacion getPoliticaDeCancelacion() {
 		return politicaDeCancelacion;
 	}
-
-	public void setServicios(List<Servicio> nuevosServicios) {
-		this.servicios = nuevosServicios;
+	
+	public void agregarServicio(Servicio servicio) {
+		if(this.sistema.aceptaServicio(servicio)) this.servicios.add(servicio);
 	}
-
+	
 	public void setPrecioDefault(double nuevoPrecioDefault) {
 		if(nuevoPrecioDefault < this.getPrecioDefault()) {
 			this.notificarBajaDePrecio(nuevoPrecioDefault);
@@ -165,6 +168,10 @@ public class Inmueble implements Rankeable{
 	
 	private boolean perteneceAAlgunPeriodo(LocalDate fechaDeInicio) {
 		return this.getPeriodos().stream().anyMatch(p->p.esFechaDePeriodo(fechaDeInicio));
+	}
+	
+	public void agregarPeriodo(Periodo periodo) {
+		this.periodos.add(periodo);
 	}
 	
 	public List<Periodo> getPeriodos() {

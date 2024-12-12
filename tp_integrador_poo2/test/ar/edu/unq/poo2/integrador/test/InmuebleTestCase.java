@@ -25,13 +25,11 @@ import java.util.*;
 
 class InmuebleTestCase {
 	private TipoInmueble casa;
-	private List<Servicio> servicios;
 	private List<MedioDePago> mediosDePago;
 	private Propietario x;
 	private List<Foto> fotos;
 	private Inmueble alquiler1;
 	private PoliticaDeCancelacion cancelacion;
-	private List<Periodo> periodos;
 	private GestionadorDeNotificaciones gestionador;
 	private Sistema sistema;
 	private Calificacion calificacion;
@@ -50,23 +48,20 @@ class InmuebleTestCase {
 		mediosDePago.add(tarjeta);
 		mediosDePago.add(mock(MedioDePago.class));
 		this.casa = mock(TipoInmueble.class);
-		this.servicios = Arrays.asList(mock(Servicio.class), mock(Servicio.class));
 		this.gestionador = mock(GestionadorDeNotificaciones.class);
-		this.cancelacion = mock(Cancelacion.class);
-		this.periodos = Arrays.asList(mock(Periodo.class), mock(Periodo.class));
+		this.cancelacion = mock(PoliticaDeCancelacion.class);
 		this.sistema = mock(Sistema.class);
 		this.calificacion = mock(Calificacion.class);
 		this.ambiente = mock(Categoria.class);
-		this.alquiler1 = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, casa, mediosDePago, servicios, x, fotos, cancelacion, periodos, gestionador, this.sistema);
+		this.alquiler1 = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, casa, x, cancelacion, gestionador, this.sistema);
 	}
 	
 	@Test
 	/**Este test chequea que se halla inicializado correctamente un inmueble*/
 	void testInicializacion() {
-		Inmueble alquiler = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, this.periodos, this.gestionador, this.sistema);
+		Inmueble alquiler = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.x, this.cancelacion, this.gestionador, this.sistema);
 		
 		assertEquals(casa, alquiler.getTipoDeInmueble());
-		assertEquals(servicios, alquiler.getServicio());
 		assertEquals(30.0, alquiler.getSuperficie());
 		assertEquals("Argentina", alquiler.getPais());
 		assertEquals("Rosario", alquiler.getCiudad());
@@ -75,26 +70,34 @@ class InmuebleTestCase {
 		assertEquals("11PM", alquiler.getCheckOut());
 		assertEquals(3000.0, alquiler.getPrecioDefault());
 		assertEquals(casa, alquiler.getTipoDeInmueble());
-		assertEquals(mediosDePago, alquiler.getMediosDePago());
-		assertEquals(servicios, alquiler.getServicio());
 		assertEquals(x, alquiler.getPropietario());
 		assertEquals(x, alquiler.getPropietario());
 		assertEquals(cancelacion, alquiler.getPoliticaDeCancelacion());
 		assertEquals(gestionador, alquiler.getGestionadorDeNotificaciones());
-		assertEquals(fotos, alquiler.getFotos());
 	}
 	
 	@Test
-	void testCambiarServicios() {
+	void testSeVerificaQueSePuedenAgregarServiciosAUnInmueble() {
 		//setUp
-		List<Servicio> nuevosServicios = Arrays.asList(mock(Servicio.class), mock(Servicio.class),
-				mock(Servicio.class));
-		
+		Servicio agua = mock(Servicio.class);
+		when(this.sistema.aceptaServicio(agua)).thenReturn(true);
 		//exercise
-		alquiler1.setServicios(nuevosServicios);
+		this.alquiler1.agregarServicio(agua);
 		
 		//verify
-		assertEquals(nuevosServicios, alquiler1.getServicio());
+		assertTrue(this.alquiler1.getServicio().contains(agua));
+	}
+	
+	@Test
+	void testSeVerificaQueNoSePuedenAgregarServiciosAUnInmueble() {
+		//setUp
+		Servicio agua = mock(Servicio.class);
+		when(this.sistema.aceptaServicio(agua)).thenReturn(false);
+		//exercise
+		this.alquiler1.agregarServicio(agua);
+		
+		//verify
+		assertFalse(this.alquiler1.getServicio().contains(agua));
 	}
 	
 	@Test
@@ -122,7 +125,7 @@ class InmuebleTestCase {
 		Reserva reserva = mock(Reserva.class);
 		when(reserva.precioParaFechaElegida()).thenReturn(1000.0);
 		SinCancelacion sinCancelacion = mock(SinCancelacion.class);
-		Inmueble casaSinCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, sinCancelacion, this.periodos, this.gestionador, this.sistema);
+		Inmueble casaSinCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.x, sinCancelacion, this.gestionador, this.sistema);
 		when(reserva.getInmueble()).thenReturn(casaSinCancelacion);
 		when(sinCancelacion.costo(reserva)).thenReturn(1000.0);
 		
@@ -136,7 +139,7 @@ class InmuebleTestCase {
 		Reserva reserva = mock(Reserva.class);
 		when(reserva.precioParaFechaElegida()).thenReturn(1000.0);
 		Cancelacion cancelacion = mock(Cancelacion.class);
-		Inmueble casaConCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, casa, mediosDePago, servicios, x, fotos, cancelacion, periodos, gestionador, this.sistema);
+		Inmueble casaConCancelacion = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, casa, x, cancelacion, gestionador, this.sistema);
 		when(reserva.getInmueble()).thenReturn(casaConCancelacion);
 		when(cancelacion.costo(reserva)).thenReturn(100.0);
 		
@@ -149,7 +152,7 @@ class InmuebleTestCase {
 		Reserva reserva = mock(Reserva.class);
 		when(reserva.precioParaFechaElegida()).thenReturn(500.0);
 		Intermedia intermedia = mock(Intermedia.class);
-		Inmueble casaConIntermedia = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, intermedia, this.periodos, this.gestionador, this.sistema);
+		Inmueble casaConIntermedia = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.x, intermedia, this.gestionador, this.sistema);
 		when(reserva.getInmueble()).thenReturn(casaConIntermedia);
 		when(intermedia.costo(reserva)).thenReturn(250.0);
 		
@@ -196,7 +199,7 @@ class InmuebleTestCase {
 		Calificacion cIluminacion = mock(Calificacion.class);
 		when(cIluminacion.getCategoria()).thenReturn(iluminacion);
 		
-		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, this.periodos, this.gestionador, this.sistema);
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, this.x, this.cancelacion, this.gestionador, this.sistema);
 		when(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, iluminacion)).thenReturn(true);
 		hotel.agregarCalificacion(cIluminacion);
 		when(this.sistema.tieneCategoriaPara(Calificable.INMUEBLE, buenTrato)).thenReturn(true);
@@ -215,25 +218,29 @@ class InmuebleTestCase {
 	}
 	@Test
 	void seObtieneLaListaDePeriodosDeUnInmueble() {
-		assertEquals(2,alquiler1.getPeriodos().size());
+		Periodo carnaval = mock(Periodo.class);
+		Periodo temporadaAlta = mock(Periodo.class);
+		
+		this.alquiler1.agregarPeriodo(carnaval);
+		this.alquiler1.agregarPeriodo(temporadaAlta);
+		
+		assertEquals(2,this.alquiler1.getPeriodos().size());
+		assertTrue(this.alquiler1.getPeriodos().contains(carnaval));
+		assertTrue(this.alquiler1.getPeriodos().contains(temporadaAlta));
 	}
 	
 	
 	@Test
 	void seCalculaElPrecioParaUnPeriodoEntreDosFechas() {
 		//setUp
-		List<Periodo> periodos1 = new ArrayList<Periodo>();
 		Periodo festival = mock(Periodo.class);
 		when(festival.getPrecioPorDia()).thenReturn(200.0);
 		when(festival.esFechaDePeriodo(LocalDate.of(2002, 3, 1))).thenReturn(true);
 		when(festival.esFechaDePeriodo(LocalDate.of(2002, 3, 2))).thenReturn(true);
 		when(festival.esFechaDePeriodo(LocalDate.of(2002, 3, 3))).thenReturn(true);
-		periodos1.add(festival);
 		
-		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 100.0, this.casa,
-										this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, 
-										periodos1, this.gestionador, this.sistema);
-		
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 100.0, this.casa, this.x, this.cancelacion, this.gestionador, this.sistema);
+		hotel.agregarPeriodo(festival);
 		//exercise
 		double precio =  hotel.getPrecioDePeriodo(LocalDate.of(2002, 3, 1), LocalDate.of(2002, 3, 5));
 		
@@ -248,9 +255,10 @@ class InmuebleTestCase {
 		when(vacaciones.esFechaDePeriodo(LocalDate.of(2002, 6, 3))).thenReturn(true);
 		Periodo carnaval = mock(Periodo.class);
 		when(carnaval.esFechaDePeriodo(LocalDate.of(2002, 6, 3))).thenReturn(false);
-		List<Periodo> periodos1 = Arrays.asList(vacaciones, carnaval);
 		
-		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 100.0, this.casa, this.mediosDePago, this.servicios, this.x, this.fotos, this.cancelacion, periodos1, this.gestionador, this.sistema);
+		Inmueble hotel = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 100.0, this.casa, this.x, this.cancelacion, this.gestionador, this.sistema);
+		hotel.agregarPeriodo(vacaciones);
+		hotel.agregarPeriodo(carnaval);
 		
 		assertEquals(vacaciones, hotel.getPeriodo(LocalDate.of(2002, 6, 3)));
 	}
@@ -275,9 +283,11 @@ class InmuebleTestCase {
 	 
 	@Test
 	void testSeAgregaUnaFotoAUnInmueble() {
-		alquiler1.agregarFoto(mock(Foto.class));
+		Foto foto = mock(Foto.class);
+		alquiler1.agregarFoto(foto);
 		
-		assertEquals(5, alquiler1.getFotos().size());
+		assertEquals(1, alquiler1.getFotos().size());
+		assertTrue(this.alquiler1.getFotos().contains(foto));
 	}
 	/* ---------ESTE TEST SE SACO PORQUE EL INMUEBLE SOLO GUARDA LAS RESERVAS ACEPTADAS O CONDICIONALES, LAS PENDIENTES NO----
 	@Test
@@ -297,12 +307,8 @@ class InmuebleTestCase {
 		
 		MedioDePago tarjeta = mock(MedioDePago.class);
 		when(tarjeta.getNombre()).thenReturn("tarjeta");
-		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  
-		
-		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
-										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
-										 this.periodos, this.gestionador, this.sistema);
-		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, propietario, this.cancelacion, this.gestionador, this.sistema);
+		inmueble.agregarMedioDePago(tarjeta);
 		//EXERCISE
 		inmueble.reservar(inquilino, LocalDate.of(2024, 12, 15), LocalDate.of(2024, 12, 25), tarjeta);
 		
@@ -326,13 +332,8 @@ class InmuebleTestCase {
 		
 		MedioDePago modo = mock(MedioDePago.class);
 		when(modo.getNombre()).thenReturn("modo");
-		
-		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  
-		
-		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
-										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
-										 this.periodos, this.gestionador, this.sistema);
-		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, propietario, this.cancelacion, this.gestionador, this.sistema);
+		inmueble.agregarMedioDePago(tarjeta);
 		//EXERCISE
 		RuntimeException error = 
 				assertThrows(RuntimeException.class, () -> inmueble.reservar(inquilino, LocalDate.of(2024, 12, 15)
@@ -360,12 +361,8 @@ class InmuebleTestCase {
 		Inquilino inquilino = mock(Inquilino.class);
 		MedioDePago tarjeta = mock(MedioDePago.class);
 		when(tarjeta.getNombre()).thenReturn("tarjeta");
-		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  		
-		
-		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
-										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
-										 this.periodos, this.gestionador, this.sistema);
-		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, propietario, this.cancelacion, this.gestionador, this.sistema);
+		inmueble.agregarMedioDePago(tarjeta);
 		//EXERCISE
 		inmueble.reservar(inquilino, LocalDate.of(2024, 12, 9), LocalDate.of(2024, 12, 17), tarjeta);
 		inmueble.reservar(inquilino, LocalDate.of(2024, 12, 15), LocalDate.of(2024, 12, 25), tarjeta);
@@ -383,12 +380,8 @@ class InmuebleTestCase {
 		Inquilino inquilino = mock(Inquilino.class);
 		MedioDePago tarjeta = mock(MedioDePago.class);
 		when(tarjeta.getNombre()).thenReturn("tarjeta");
-		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  		
-		
-		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
-										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
-										 this.periodos, this.gestionador, this.sistema);
-		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, propietario, this.cancelacion, this.gestionador, this.sistema);
+		inmueble.agregarMedioDePago(tarjeta);
 		LocalDate fechaIni = LocalDate.of(2024, 8 , 5);
 		LocalDate fechaFin = LocalDate.of(2024, 8, 10);
 		
@@ -411,12 +404,8 @@ class InmuebleTestCase {
 		Inquilino inquilino = mock(Inquilino.class);
 		MedioDePago tarjeta = mock(MedioDePago.class);
 		when(tarjeta.getNombre()).thenReturn("tarjeta");
-		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  		
-		
-		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
-										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
-										 this.periodos, this.gestionador, this.sistema);
-		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, propietario, this.cancelacion, this.gestionador, this.sistema);
+		inmueble.agregarMedioDePago(tarjeta);
 		LocalDate fechaIni = LocalDate.of(2024, 8 , 5);
 		LocalDate fechaFin = LocalDate.of(2024, 8, 10);
 		
@@ -466,11 +455,9 @@ class InmuebleTestCase {
 		Propietario propietario = mock(Propietario.class);
 		Inquilino inquilino = mock(Inquilino.class);
 		MedioDePago tarjeta = mock(MedioDePago.class);
-		when(tarjeta.getNombre()).thenReturn("tarjeta");
-		List<MedioDePago> mediosDePago = Arrays.asList(tarjeta);  		
-		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, 
-										 mediosDePago,this.servicios, propietario, this.fotos, this.cancelacion, 
-										 this.periodos, this.gestionador, this.sistema);
+		when(tarjeta.getNombre()).thenReturn("tarjeta"); 		
+		Inmueble inmueble = new Inmueble(30.0,"Argentina", "Rosario", 3, "8AM", "11PM", 3000.0, this.casa, propietario, this.cancelacion, this.gestionador, this.sistema);
+		inmueble.agregarMedioDePago(tarjeta);
 		LocalDate fechaIni = LocalDate.now().minusDays(1);
 		LocalDate fechaFin = LocalDate.now().plusDays(1);
 		inmueble.reservar(inquilino, fechaIni, fechaFin, tarjeta);
@@ -484,10 +471,31 @@ class InmuebleTestCase {
 	void testSeVerificaQueUnaFotoNoPuedeSerAgregadaAUnInmuebleSiTieneMasDeCincoFotosAgregadas() {
 		Foto fotoUno = mock(Foto.class);
 		Foto fotoDos = mock(Foto.class);
+		Foto fotoTres = mock(Foto.class);
+		Foto fotoCuatro = mock(Foto.class);
+		Foto fotoCinco = mock(Foto.class);
+		Foto fotoSeis = mock(Foto.class);
 		this.alquiler1.agregarFoto(fotoUno);
 		this.alquiler1.agregarFoto(fotoDos);
+		this.alquiler1.agregarFoto(fotoTres);
+		this.alquiler1.agregarFoto(fotoCuatro);
+		this.alquiler1.agregarFoto(fotoCinco);
+		this.alquiler1.agregarFoto(fotoSeis);
 		
 		assertEquals(5, this.alquiler1.getFotos().size());
+		assertTrue(this.alquiler1.getFotos().contains(fotoUno));
+		assertTrue(this.alquiler1.getFotos().contains(fotoDos));
+		assertTrue(this.alquiler1.getFotos().contains(fotoTres));
+		assertTrue(this.alquiler1.getFotos().contains(fotoCuatro));
+		assertTrue(this.alquiler1.getFotos().contains(fotoCinco));
+		assertFalse(this.alquiler1.getFotos().contains(fotoSeis));
+	}
+	
+	@Test
+	void testSeVerificaQueSeRegistraUnMedioDePagoEnElInmueble() {
+		this.alquiler1.agregarMedioDePago(this.tarjeta);
+		
+		assertTrue(this.alquiler1.getMediosDePago().add(this.tarjeta));
 	}
 	
 }

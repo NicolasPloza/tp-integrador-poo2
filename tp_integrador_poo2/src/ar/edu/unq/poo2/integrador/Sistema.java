@@ -110,6 +110,10 @@ public class Sistema {
         return inquilinos;
     }
 	
+	public boolean aceptaServicio(Servicio servicio) {
+		return this.serviciosAceptados.contains(servicio);
+	}
+	
 	/*	public List<Usuario> topTenDeInquilinosConMasAlquileres() {
 		
 		PriorityQueue<Usuario> queue =  new PriorityQueue<Usuario>(Comparator.comparingInt(Usuario :: getCantidadDeAlquileres));
