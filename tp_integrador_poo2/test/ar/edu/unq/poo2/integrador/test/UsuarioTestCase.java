@@ -2,6 +2,7 @@ package ar.edu.unq.poo2.integrador.test;
 
 import ar.edu.unq.poo2.integrador.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -142,6 +143,21 @@ class UsuarioTestCase {
 		
 	}
 	
+	@Test
+	void test_seVerificaQueUnUsuarioSabeSiesInquilinoOPropietario() {
+		//setup
+		Usuario inquilino = new Inquilino("nombre apellido", "email@mail.com", 1554987566, sistema);
+		Usuario propietario = new Propietario("prop", "email", 11556688, LocalDate.of(2024, 8, 24), sistema);
+		
+		//exercise			
+		//verify
+		assertFalse( inquilino.esPropietario() );
+		assertTrue(inquilino.esInquilino());
+		assertFalse(propietario.esInquilino());
+		assertTrue(propietario.esPropietario());
+		
+	}
+	
 	
 	private Calificacion crearMockCalificacion(Categoria categoria, int puntaje){
 		
@@ -165,10 +181,6 @@ class UsuarioTestCase {
 	
 	
 	
-	/* casos borde: 
-	   - creacion de usuario q no esta registrado
-	   - puntajes invalidos (que no sean del 1 al 5)
-	   - tiene que conocer a sistema?
-	*/
+	
 	
 }

@@ -85,7 +85,7 @@ class InmuebleTestCase {
 		this.alquiler1.agregarServicio(agua);
 		
 		//verify
-		assertTrue(this.alquiler1.getServicio().contains(agua));
+		assertTrue(this.alquiler1.getServicios().contains(agua));
 	}
 	
 	@Test
@@ -97,7 +97,7 @@ class InmuebleTestCase {
 		this.alquiler1.agregarServicio(agua);
 		
 		//verify
-		assertFalse(this.alquiler1.getServicio().contains(agua));
+		assertFalse(this.alquiler1.getServicios().contains(agua));
 	}
 	
 	@Test
@@ -460,9 +460,10 @@ class InmuebleTestCase {
 		inmueble.agregarMedioDePago(tarjeta);
 		LocalDate fechaIni = LocalDate.now().minusDays(1);
 		LocalDate fechaFin = LocalDate.now().plusDays(1);
+		
 		inmueble.reservar(inquilino, fechaIni, fechaFin, tarjeta);
 		Reserva reserva = inmueble.getReservas().get(0);
-		when(reserva.esFechaDeReservaAceptada(LocalDate.now())).thenReturn(true);
+		reserva.setEstado(Aceptada.getInstance());
 		
 		assertTrue(inmueble.estaAlquilado());
 	}

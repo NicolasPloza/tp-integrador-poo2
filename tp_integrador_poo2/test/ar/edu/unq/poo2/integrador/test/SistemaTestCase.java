@@ -5,8 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,33 +25,15 @@ import ar.edu.unq.poo2.integrador.inmueble.TipoInmueble;
 class SistemaTestCase {
 	
 	private Sistema sis;
-	private Reserva reserva;
-	private Reserva reserva1;
-	private Inquilino x;
-	private Inquilino y;
-	private Reserva reserva2;
-	private List<Reserva> reservasDeInquilino;
-	private Inmueble casa;
-	private Inmueble hotel;
 	private Servicio luz;
 	private TipoInmueble duplex;
 	private List<Servicio> servicios;
-	private List<TipoInmueble> tiposInmuebles;
 	private Calificable propietario;
 	private Categoria buenServicio;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		this.sis = new Sistema();
-		this.reserva = mock(Reserva.class);
-		this.reserva1 = mock(Reserva.class);
-		this.y = mock(Inquilino.class);
-		this.x = mock(Inquilino.class);
-		this.reserva2 = mock(Reserva.class);
-		this.reservasDeInquilino = Arrays.asList(reserva,reserva1);
-		this.casa = mock(Inmueble.class);
-		this.hotel = mock(Inmueble.class);
-		this.tiposInmuebles = Arrays.asList(duplex);
 		this.duplex = mock(TipoInmueble.class);
 		this.luz = mock(Servicio.class);
 		this.servicios = Arrays.asList(luz);
@@ -72,7 +52,7 @@ class SistemaTestCase {
 	void testSeRegistraUnInmuebleAceptadaPorUnSistema() {
 		Inmueble inmueble = mock(Inmueble.class);
 		when(inmueble.getTipoDeInmueble()).thenReturn(this.duplex);
-		when(inmueble.getServicio()).thenReturn(Arrays.asList(this.luz));
+		when(inmueble.getServicios()).thenReturn(Arrays.asList(this.luz));
 		this.sis.agregarTipoDeInmueble(this.duplex);
 		this.sis.agregarServicio(this.luz);
 		this.sis.registrarInmueble(inmueble);
@@ -97,7 +77,7 @@ class SistemaTestCase {
 		Inmueble inmueble = mock(Inmueble.class);
 		Servicio agua = mock(Servicio.class);
 		when(inmueble.getTipoDeInmueble()).thenReturn(this.duplex);
-		when(inmueble.getServicio()).thenReturn(Arrays.asList(agua));
+		when(inmueble.getServicios()).thenReturn(Arrays.asList(agua));
 		this.sis.agregarTipoDeInmueble(this.duplex);
 		this.sis.agregarServicio(this.luz);
 		this.sis.registrarInmueble(inmueble);
@@ -232,129 +212,107 @@ class SistemaTestCase {
         assertFalse(inquilinos.contains(inquilinoUno));
         assertFalse(inquilinos.contains(propietario));
     }
+	
 
-	/*
+	
 	@Test 
-	void seCuentanLaCantidadDeAlquileresDeUnPropietario() {
-		Propietario propietario = mock(Propietario.class);
-		when(reserva.estaFinalizada()).thenReturn(true);
-		when(reserva.getPropietario()).thenReturn(propietario);
+	void test_seVerificaQueElSistemaConoceLosInmueblesLibres() {
+		Inmueble inmueble1 = mock(Inmueble.class);
+		Inmueble inmueble2 = mock(Inmueble.class);
+		Inmueble inmueble3 = mock(Inmueble.class);
+		Inmueble inmueble4 = mock(Inmueble.class);
 		
-		Propietario propietario1 = mock(Propietario.class);
-		when(reserva1.getPropietario()).thenReturn(propietario1);
-		when(reserva1.estaFinalizada()).thenReturn(false);
+		when(inmueble1.estaAlquilado()).thenReturn(true);
+		when(inmueble1.getServicios()).thenReturn(servicios);
+		when(inmueble1.getTipoDeInmueble()).thenReturn(duplex);
 		
-		sis.añadirUsuario(propietario);
-		sis.añadirUsuario(propietario1);
-		sis.registrar(reserva);
-		sis.registrar(reserva1);
+		when(inmueble2.estaAlquilado()).thenReturn(true);
+		when(inmueble2.getServicios()).thenReturn(servicios);
+		when(inmueble2.getTipoDeInmueble()).thenReturn(duplex);
 		
-		assertEquals(1, sis.cantidadDeAlquileresDePropietario(propietario));
+		when(inmueble3.estaAlquilado()).thenReturn(false);
+		when(inmueble3.getServicios()).thenReturn(servicios);
+		when(inmueble3.getTipoDeInmueble()).thenReturn(duplex);
+		
+		when(inmueble4.estaAlquilado()).thenReturn(false);
+		when(inmueble4.getServicios()).thenReturn(servicios);
+		when(inmueble4.getTipoDeInmueble()).thenReturn(duplex);
+		
+		sis.agregarServicio(luz);
+		sis.agregarTipoDeInmueble(duplex);
+		
+		sis.registrarInmueble(inmueble1);
+		sis.registrarInmueble(inmueble2);
+		sis.registrarInmueble(inmueble3);
+		sis.registrarInmueble(inmueble4);
+		
+		//exercise
+		List<Inmueble> inmueblesLibres = sis.getInmueblesLibres();
+		
+		//verify
+		assertFalse(inmueblesLibres.contains(inmueble1));
+		assertFalse(inmueblesLibres.contains(inmueble2));
+		assertTrue(inmueblesLibres.contains(inmueble3));
+		assertTrue(inmueblesLibres.contains(inmueble4));
+		
 	}
 	
 	@Test
-	void seCuentaLaCantidadDeVecesQueSeAlquiloUnInmueble() {		
-		when(reserva.getInmueble()).thenReturn(casa);
-		when(reserva.estaFinalizada()).thenReturn(true);
-		when(reserva1.getInmueble()).thenReturn(hotel);
-		when(reserva1.estaFinalizada()).thenReturn(true);
+	void test_seVerificaQueElSistemaConoceLaTasaDeOcupacion(){
+		Inmueble inmueble1 = mock(Inmueble.class);
+		Inmueble inmueble2 = mock(Inmueble.class);
+		Inmueble inmueble3 = mock(Inmueble.class);
+		Inmueble inmueble4 = mock(Inmueble.class);
 		
-		sis.registrar(reserva);
-		sis.registrar(reserva1);
+		when(inmueble1.estaAlquilado()).thenReturn(true);
+		when(inmueble1.getServicios()).thenReturn(servicios);
+		when(inmueble1.getTipoDeInmueble()).thenReturn(duplex);
 		
-		assertEquals(1, sis.cantidadVecesAlquilado(casa));
-	}*/
-/*	
-	@Test
-	void seObtieneLasReservasDeUnInquilino() {
-		when(reserva.getPotencialInquilino()).thenReturn(x);
-		when(reserva1.getPotencialInquilino()).thenReturn(x);
-		when(reserva2.getPotencialInquilino()).thenReturn(y);
+		when(inmueble2.estaAlquilado()).thenReturn(true);
+		when(inmueble2.getServicios()).thenReturn(servicios);
+		when(inmueble2.getTipoDeInmueble()).thenReturn(duplex);
 		
-		sis.registrar(reserva);
-		sis.registrar(reserva1);
-		sis.registrar(reserva2);
+		when(inmueble3.estaAlquilado()).thenReturn(false);
+		when(inmueble3.getServicios()).thenReturn(servicios);
+		when(inmueble3.getTipoDeInmueble()).thenReturn(duplex);
 		
-		assertEquals(reservasDeInquilino, sis.reservasDeInquilino(x));
+		when(inmueble4.estaAlquilado()).thenReturn(false);
+		when(inmueble4.getServicios()).thenReturn(servicios);
+		when(inmueble4.getTipoDeInmueble()).thenReturn(duplex);
+		
+		sis.agregarServicio(luz);
+		sis.agregarTipoDeInmueble(duplex);
+		
+		sis.registrarInmueble(inmueble1);
+		sis.registrarInmueble(inmueble2);
+		sis.registrarInmueble(inmueble3);
+		sis.registrarInmueble(inmueble4);
+		
+		//exercise
+		double tasaDeOcupacion =  sis.getTasaDeOcupacion();
+		
+		//verify
+		assertEquals( 0.5 , tasaDeOcupacion);
+		
 	}
 	
-	@Test
-	void seObtieneLasReservasFuturas() {
-		when(reserva.getPotencialInquilino()).thenReturn(x);
-		when(reserva1.getPotencialInquilino()).thenReturn(x);
-		when(reserva2.getPotencialInquilino()).thenReturn(y);
-		when(reserva.estaFinalizada()).thenReturn(false);
-		when(reserva1.estaFinalizada()).thenReturn(false);
-		when(reserva2.estaFinalizada()).thenReturn(true);
-		
-		sis.registrar(reserva);
-		sis.registrar(reserva1);
-		sis.registrar(reserva2);
-		
-		assertEquals(reservasDeInquilino, sis.reservasDeInquilinoFuturas(x));
-	}
 	
-	@Test
-	void SeObtienenLasReservasDeUnInquilinoEnUnaCiudad() {
-		when(casa.getCiudad()).thenReturn("Rosario");
-		when(hotel.getCiudad()).thenReturn("Buenos Aires");
-		
-		when(reserva.getInmueble()).thenReturn(casa);
-		when(reserva.getPotencialInquilino()).thenReturn(x);
-		
-		when(reserva1.getInmueble()).thenReturn(casa);
-		when(reserva1.getPotencialInquilino()).thenReturn(x);
-		
-		when(reserva2.getInmueble()).thenReturn(hotel);
-		when(reserva2.getPotencialInquilino()).thenReturn(x);
-		
-		sis.registrar(reserva);
-		sis.registrar(reserva1);
-		sis.registrar(reserva2);
-		
-		assertEquals(reservasDeInquilino, sis.reservasDeInquilinoEnCiudad(x, "Rosario"));
-	}
 	
-	@Test
-	void testSeVerificaQueUnInmuebleEsteDisponibleEnUnPeriodo() {	
-		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024,11, 3));
-		when(reserva.getInmueble()).thenReturn(casa);
-		when(reserva.getFechaFin()).thenReturn(LocalDate.of(2024,11, 10));
-		
-		when(reserva1.getFechaInicio()).thenReturn(LocalDate.of(2024,11, 5));
-		when(reserva1.getInmueble()).thenReturn(hotel);
-		when(reserva1.getFechaFin()).thenReturn(LocalDate.of(2024,11, 15));
-		
-		when(reserva2.getFechaInicio()).thenReturn(LocalDate.of(2024,12, 5));
-		when(reserva2.getInmueble()).thenReturn(hotel);
-		when(reserva2.getFechaFin()).thenReturn(LocalDate.of(2024,12, 30));
-		
-		sis.registrar(reserva);
-		sis.registrar(reserva1);
-		sis.registrar(reserva2);
-		
-		assertTrue(sis.estaDisponible(casa, LocalDate.of(2024, 11, 5), LocalDate.of(2024, 11, 8)));
-	}
 	
-	@Test
-	void seObtieneLasReservasParaUnPeriodoDado() {
-		List<Reserva> reservas = new ArrayList<Reserva>();
-		reservas.add(reserva);
-		reservas.add(reserva1);
-		when(reserva.getFechaInicio()).thenReturn(LocalDate.of(2024,11, 3));
-		when(reserva.getFechaFin()).thenReturn(LocalDate.of(2024,11, 10));
-
-		when(reserva1.getFechaInicio()).thenReturn(LocalDate.of(2024,11, 5));
-		when(reserva1.getFechaFin()).thenReturn(LocalDate.of(2024,11, 15));
-		
-		when(reserva2.getFechaInicio()).thenReturn(LocalDate.of(2024,12, 5));
-		when(reserva2.getFechaFin()).thenReturn(LocalDate.of(2024,12, 15));
-		
-		sis.registrar(reserva);
-		sis.registrar(reserva1);
-		sis.registrar(reserva2);
-		
-		assertEquals(reservas, sis.getReservasParaPeriodo(LocalDate.of(2024, 11, 1), LocalDate.of(2024,11,30)));
-	}
-	*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
